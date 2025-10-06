@@ -338,7 +338,7 @@ export function CoordinatesProvider({
     if (!isHydrated || !staticNodes) {
       return emptyArray as NodesCoordinates;
     }
-    if (!liveMode || !typesIdMap) {
+    if (!liveMode || !typesIdMap || Object.keys(typesIdMap).length === 0) {
       return privateGroups.concat(staticNodes);
     }
     const debug = isDebug();
