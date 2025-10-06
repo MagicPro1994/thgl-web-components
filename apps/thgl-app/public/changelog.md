@@ -1,3 +1,7 @@
+# 2.10.0
+
+- Feat: **Palia** Add live tracking support for Elderwood Decor and Treasures
+
 # 2.9.0
 
 - Feat: **Dune Awakening** Add Overmap/Overworld support (blank placeholder for now, working on it. But the app automatically switches to the overworld map when you are in it)
