@@ -117,5 +117,4 @@ export const APP_CONFIG: AppConfig = {
     "config.keywords.resources",
     "config.keywords.trainers",
   ],
-  withoutLiveMode: true,
 };

@@ -112,7 +112,6 @@ export function StreamingReceiver({
 
   // Persist selection while in a mesh; keep for future reconnect
   useEffect(() => {
-    console.log("Me sender changed", meSenderId);
     if (inPeer) {
       const previousSender = previousMeSenderIdRef.current;
 
@@ -179,7 +178,10 @@ export function StreamingReceiver({
 
   // Automatic Live Mode control based on Me selection and AutoLiveMode setting
   useEffect(() => {
-    if (withoutLiveMode) return; // Don't control Live Mode if disabled
+    if (withoutLiveMode) {
+      setLiveMode(false);
+      return; // Don't control Live Mode if disabled
+    }
 
     const shouldBeLive = Boolean(inPeer && meSenderId && autoLiveModeWithMe);
     setLiveMode(shouldBeLive);
