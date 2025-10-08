@@ -1,3 +1,7 @@
+# 2.11.0
+
+- Feat: Add support for Blue Protocol: Star Resonance (BPSR) - player position tracking is not supported yet
+
 # 2.10.0
 
 - Feat: **Palia** Add live tracking support for Elderwood Decor and Treasures

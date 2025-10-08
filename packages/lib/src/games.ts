@@ -9,6 +9,44 @@ export const DEFAULT_PATREON_TIER_IDS = [
 
 export const games: Array<Game> = [
   {
+    id: "blue-protocol-star-resonance",
+    discordId: "blue-protocol-star-resonance",
+    title: "Blue Protocol: Star Resonance",
+    logo: "https://www.th.gl/global_icons/starresonance.webp",
+    companion: {
+      baseURL: "/apps/blue-protocol-star-resonance",
+      controllerURL: "/apps/blue-protocol-star-resonance/controller",
+      desktopURL: "/apps/blue-protocol-star-resonance",
+      overlayURL: "/apps/blue-protocol-star-resonance/overlay",
+      markerOptions: {
+        radius: 6,
+        // playerIcon: "player.webp",
+        imageSprite: true,
+        zPos: {
+          xyMaxDistance: 10000,
+          zDistance: 400,
+        },
+      },
+      games: [
+        {
+          title: "BPSR",
+          processNames: ["Star.exe"],
+        },
+      ],
+      defaultHotkeys: {
+        [HOTKEYS.TOGGLE_APP]: "F6",
+        [HOTKEYS.TOGGLE_LOCK_APP]: "F9",
+        [HOTKEYS.ZOOM_IN_APP]: "F7",
+        [HOTKEYS.ZOOM_OUT_APP]: "F8",
+        [HOTKEYS.DISCOVER_NODE]: "F10",
+        [HOTKEYS.TOGGLE_LIVE_MODE]: "F5",
+        [HOTKEYS.TOGGLE_OVERLAY_FULLSCREEN]: "SHIFT+F9",
+      },
+    },
+    web: "https://starresonance.th.gl",
+    patreonTierIDs: DEFAULT_PATREON_TIER_IDS,
+  },
+  {
     id: "chrono-odyssey",
     discordId: "chrono-odyssey",
     title: "Chrono Odyssey",
