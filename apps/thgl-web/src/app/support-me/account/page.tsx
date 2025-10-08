@@ -67,6 +67,17 @@ export default async function SupportMeAccount() {
                 , perks are unlocked directly inside the app — no action needed
                 here.
               </p>
+              <p className="text-muted-foreground text-sm max-w-xl mx-auto mt-4">
+                <strong>Discord Role:</strong> To get your Discord supporter
+                role,{" "}
+                <Link
+                  href="/faq/discord-supporter-role"
+                  className="text-brand underline"
+                >
+                  link your Discord account to Patreon
+                </Link>
+                .
+              </p>
 
               <section className="space-y-4">
                 <h3 className="text-lg font-semibold">User</h3>

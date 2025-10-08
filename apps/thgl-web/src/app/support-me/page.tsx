@@ -65,6 +65,14 @@ export default function SupportMe() {
           upcoming features and app updates — available through the apps and
           websites.
         </p>
+        <p className="italic">
+          All subscribers also receive a <strong>Discord supporter role</strong>{" "}
+          based on their tier.{" "}
+          <Link href="/faq/discord-supporter-role" className="text-brand underline">
+            Learn how to activate it
+          </Link>
+          .
+        </p>
       </div>
 
       {/* Authentication Section */}

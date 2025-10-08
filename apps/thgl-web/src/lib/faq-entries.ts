@@ -99,8 +99,35 @@ If you've subscribed and still see ads in the Overwolf ads, make sure to:
 - If that fails, use "Copy Secret" and paste it inside the app (click the heart icon)
 
 **Note:** The Enthusiast tier does not remove ads.
+
+**Other subscriber benefits:**
+- Discord supporter role (see [how to get it](/faq/discord-supporter-role))
     `.trim(),
     labels: ["Overwolf", "Subscription"],
+  },
+  {
+    id: "discord-supporter-role",
+    headline: "How to get the Discord supporter role",
+    question: "How do I get the Discord supporter role?",
+    answer: `
+To get the Discord supporter role, you need to link your Discord account to your Patreon account.
+
+**Steps:**
+1. Log into your Patreon account
+2. Go to your account settings
+3. Connect your Discord account to Patreon
+4. The supporter role will be automatically assigned based on your subscription tier
+
+For detailed instructions, see Patreon's official guide: [Getting Discord access](https://support.patreon.com/hc/en-us/articles/212052266-Getting-Discord-access)
+
+**Note:** Make sure you're a member of The Hidden Gaming Lair Discord server for the role to appear.
+
+**Subscriber benefits:**
+- Discord supporter role based on your tier
+- Ad removal in Overwolf apps (see [unlocking guide](/faq/ads-still-visible))
+- Access to the [account page](/support-me/account) to manage your subscription
+    `.trim(),
+    labels: ["General", "Subscription"],
   },
   {
     id: "locations-wrong-position",
