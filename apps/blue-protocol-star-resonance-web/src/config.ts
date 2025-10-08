@@ -94,6 +94,12 @@ export const APP_CONFIG: AppConfig = {
       iconName: "BookOpen",
     },
     {
+      href: "/db/dictionary",
+      title: "Lore Dictionary",
+      linkText: "Browse the Lore Dictionary",
+      iconName: "BookOpen",
+    },
+    {
       href: "/guides",
       title: "config.internalLinks.guides.title",
       linkText: "config.internalLinks.guides.linkText",
