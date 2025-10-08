@@ -25,6 +25,9 @@ export function FilterTooltip({ id }: { id: string }) {
     [discoveredNodes, filterNode],
   );
 
+  const hasTypeIDsMap = typesIdMap && Object.keys(typesIdMap).length > 0;
+  const supportsLiveMode =
+    hasTypeIDsMap && Object.values(typesIdMap).includes(id);
   return (
     <>
       <p className="font-bold text-md">{t(id)}</p>
@@ -32,10 +35,10 @@ export function FilterTooltip({ id }: { id: string }) {
         {t("filters.tooltip.total")} {filterNode?.spawns.length || 0} –{" "}
         {t("filters.tooltip.discovered")} {discoveredSpawns.length}
       </p>
-      {typesIdMap && Object.keys(typesIdMap).length > 0 && (
+      {hasTypeIDsMap && (
         <p>
           {t("filters.tooltip.liveMode")}
-          {Object.values(typesIdMap).includes(id) ? (
+          {supportsLiveMode ? (
             <span className="text-primary mx-1">
               {t("filters.tooltip.supported")}
             </span>
@@ -53,7 +56,7 @@ export function FilterTooltip({ id }: { id: string }) {
       )}
       <p>
         {t("filters.tooltip.spawnType")}
-        {filterNode?.static ? (
+        {filterNode?.static || !supportsLiveMode ? (
           <span className="mx-1">{t("filters.tooltip.static")}</span>
         ) : (
           <span className="mx-1">{t("filters.tooltip.dynamic")}</span>
