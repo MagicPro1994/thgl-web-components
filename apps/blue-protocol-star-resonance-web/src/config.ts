@@ -88,6 +88,12 @@ export const APP_CONFIG: AppConfig = {
       linkText: "Explore the Skimmer's Lair Map",
     },
     {
+      href: "/db/reading-books",
+      title: "Reading Books",
+      linkText: "Explore all Reading Books",
+      iconName: "BookOpen",
+    },
+    {
       href: "/guides",
       title: "config.internalLinks.guides.title",
       linkText: "config.internalLinks.guides.linkText",
