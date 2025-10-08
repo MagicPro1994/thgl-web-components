@@ -62,6 +62,32 @@
         "typescript": "5.8.3",
       },
     },
+    "apps/blue-protocol-star-resonance-web": {
+      "name": "blue-protocol-star-resonance-web",
+      "version": "0.0.0",
+      "dependencies": {
+        "@repo/lib": "workspace:*",
+        "@repo/ui": "workspace:*",
+        "fuse.js": "7.0.0",
+        "next": "15.3.4",
+        "react": "18.3.1",
+        "react-dom": "18.3.1",
+      },
+      "devDependencies": {
+        "@next/eslint-plugin-next": "15.3.1",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/next-config": "workspace:*",
+        "@repo/tailwind-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "22.7.9",
+        "@types/react": "18.3.12",
+        "@types/react-dom": "18.3.1",
+        "autoprefixer": "10.4.20",
+        "postcss": "8.5.6",
+        "tailwindcss": "3.4.14",
+        "typescript": "5.8.3",
+      },
+    },
     "apps/chrono-odyssey-web": {
       "name": "chrono-odyssey-web",
       "version": "0.0.0",
@@ -1614,6 +1640,8 @@
     "binary-extensions": ["binary-extensions@2.3.0", "", {}, "sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw=="],
 
     "bl": ["bl@4.1.0", "", { "dependencies": { "buffer": "^5.5.0", "inherits": "^2.0.4", "readable-stream": "^3.4.0" } }, "sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w=="],
+
+    "blue-protocol-star-resonance-web": ["blue-protocol-star-resonance-web@workspace:apps/blue-protocol-star-resonance-web"],
 
     "brace-expansion": ["brace-expansion@1.1.12", "", { "dependencies": { "balanced-match": "^1.0.0", "concat-map": "0.0.1" } }, "sha512-9T9UjW3r0UW5c1Q7GTwllptXwhvYmEzFhzMfZ9H7FQWt+uZePjZPjBP/W1ZEyZ1twGWom5/56TF4lPcqjnDHcg=="],
 
