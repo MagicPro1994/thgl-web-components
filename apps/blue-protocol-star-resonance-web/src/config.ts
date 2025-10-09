@@ -129,6 +129,12 @@ export const APP_CONFIG: AppConfig = {
       linkText: "Discover all Engram Hubs",
       iconName: "BookOpen",
     },
+    {
+      href: "/activities-tracker",
+      title: "Activities Tracker",
+      linkText: "Track Daily & Weekly Activities",
+      iconName: "SquareCheckBig",
+    },
   ],
   promoLinks: [],
   externalLinks: [],

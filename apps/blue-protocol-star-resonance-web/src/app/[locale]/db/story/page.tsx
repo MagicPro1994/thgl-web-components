@@ -1,17 +1,50 @@
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import { type Database } from "@repo/ui/providers";
-import { fetchDatabase } from "@repo/lib";
+import { fetchDatabase, DEFAULT_LOCALE, getMetadataAlternates } from "@repo/lib";
 import { APP_CONFIG } from "@/config";
 
-export const metadata: Metadata = {
-  alternates: {
-    canonical: "/db/story",
-  },
-  title: "Story Episodes – Blue Protocol Star Resonance – The Hidden Gaming Lair",
-  description:
-    "Follow the epic story of Blue Protocol: Star Resonance through detailed episode summaries and quest phases.",
+type PageProps = {
+  params: Promise<{ locale?: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale = DEFAULT_LOCALE } = await params;
+
+  const title = "Story Episodes – Blue Protocol: Star Resonance";
+  const description =
+    "Follow the epic story of Blue Protocol: Star Resonance through detailed episode summaries and quest phases.";
+
+  const { canonical, languageAlternates } = getMetadataAlternates(
+    "/db/story",
+    locale,
+    APP_CONFIG.supportedLocales,
+  );
+
+  return {
+    title,
+    description,
+    keywords: [
+      ...APP_CONFIG.keywords,
+      "Story Episodes",
+      "Main Story",
+      "Quest Phases",
+      "Lore",
+      "Campaign",
+    ],
+    alternates: {
+      canonical,
+      languages: languageAlternates,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+    },
+  };
+}
 
 export default async function StoryPage() {
   const database = await fetchDatabase(APP_CONFIG.name);

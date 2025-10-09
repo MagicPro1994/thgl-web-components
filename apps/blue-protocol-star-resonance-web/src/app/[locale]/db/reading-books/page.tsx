@@ -1,17 +1,50 @@
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import { type Database } from "@repo/ui/providers";
-import { fetchDatabase } from "@repo/lib";
+import { fetchDatabase, DEFAULT_LOCALE, getMetadataAlternates } from "@repo/lib";
 import { APP_CONFIG } from "@/config";
 
-export const metadata: Metadata = {
-  alternates: {
-    canonical: "/db/reading-books",
-  },
-  title: "All Reading Books – Blue Protocol Star Resonance – The Hidden Gaming Lair",
-  description:
-    "A comprehensive collection of reading books found throughout Blue Protocol Star Resonance. Discover lore, stories, travel guides, letters, posters, and more.",
+type PageProps = {
+  params: Promise<{ locale?: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale = DEFAULT_LOCALE } = await params;
+
+  const title = "Reading Books – Blue Protocol: Star Resonance";
+  const description =
+    "A comprehensive collection of reading books found throughout Blue Protocol: Star Resonance. Discover lore, stories, travel guides, letters, posters, and more.";
+
+  const { canonical, languageAlternates } = getMetadataAlternates(
+    "/db/reading-books",
+    locale,
+    APP_CONFIG.supportedLocales,
+  );
+
+  return {
+    title,
+    description,
+    keywords: [
+      ...APP_CONFIG.keywords,
+      "Reading Books",
+      "Lore Books",
+      "Travel Guides",
+      "Letters",
+      "Collectibles",
+    ],
+    alternates: {
+      canonical,
+      languages: languageAlternates,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+    },
+  };
+}
 
 export default async function ReadingBooksPage() {
   const database = await fetchDatabase(APP_CONFIG.name);

@@ -1,17 +1,17 @@
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import { type Database } from "@repo/ui/providers";
-import { fetchDatabase } from "@repo/lib";
+import { fetchDatabase, DEFAULT_LOCALE, getMetadataAlternates } from "@repo/lib";
 import { APP_CONFIG } from "@/config";
 
-type Params = Promise<{ id: string }>;
+type Params = Promise<{ id: string; locale?: string }>;
 
 export async function generateMetadata({
   params,
 }: {
   params: Params;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale = DEFAULT_LOCALE } = await params;
   const database = await fetchDatabase(APP_CONFIG.name);
 
   const category = database.find((item) =>
@@ -25,9 +25,34 @@ export async function generateMetadata({
     return {};
   }
 
+  const title = `${item.props.title} – Reading Books – Blue Protocol: Star Resonance`;
+  const description = item.props.description || item.props.content?.substring(0, 160);
+
+  const { canonical, languageAlternates } = getMetadataAlternates(
+    `/db/reading-books/${id}`,
+    locale,
+    APP_CONFIG.supportedLocales,
+  );
+
   return {
-    title: `${item.props.title} – Reading Books – Blue Protocol Star Resonance – The Hidden Gaming Lair`,
-    description: item.props.description || item.props.content?.substring(0, 160),
+    title,
+    description,
+    keywords: [
+      ...APP_CONFIG.keywords,
+      "Reading Books",
+      item.props.title,
+      "Lore",
+      "Book",
+    ],
+    alternates: {
+      canonical,
+      languages: languageAlternates,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+    },
   };
 }
 
