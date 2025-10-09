@@ -27,16 +27,16 @@ export const APP_CONFIG: AppConfig = {
         "https://data.th.gl/blue-protocol-star-resonance/map-tiles/asterleeds/preview.webp",
       linkText: "Explore the Asterleeds Map",
     },
-    {
-      title: "Bahamar Highlands Map",
-      description:
-        "Navigate Blue Protocol: Star Resonance's Bahamar Highlands with our interactive maps.",
-      href: "/maps/Bahamar%20Highlands",
-      iconName: "Map",
-      bgImage:
-        "https://data.th.gl/blue-protocol-star-resonance/map-tiles/bahamar_highlands/preview.webp",
-      linkText: "Explore the Bahamar Highlands Map",
-    },
+    // {
+    //   title: "Bahamar Highlands Map",
+    //   description:
+    //     "Navigate Blue Protocol: Star Resonance's Bahamar Highlands with our interactive maps.",
+    //   href: "/maps/Bahamar%20Highlands",
+    //   iconName: "Map",
+    //   bgImage:
+    //     "https://data.th.gl/blue-protocol-star-resonance/map-tiles/bahamar_highlands/preview.webp",
+    //   linkText: "Explore the Bahamar Highlands Map",
+    // },
     {
       title: "Windhowl Canyon Map",
       description:
@@ -132,5 +132,5 @@ export const APP_CONFIG: AppConfig = {
   ],
   promoLinks: [],
   externalLinks: [],
-  keywords: ["Bosses", "Guides", "Maps", "Rare Spawns", "Engram Hubs"],
+  keywords: ["BPSR", "Bosses", "Guides", "Maps", "Rare Spawns", "Engram Hubs"],
 };
