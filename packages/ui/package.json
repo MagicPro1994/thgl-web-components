@@ -62,7 +62,7 @@
     "preset": "@repo/jest-presets/jest/browser"
   },
   "devDependencies": {
-    "@overwolf/types": "3.24.7",
+    "@overwolf/types": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-presets": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
@@ -70,15 +70,15 @@
     "@types/jest": "29.5.14",
     "@types/js-cookie": "3.0.6",
     "@types/leaflet": "1.9.14",
-    "@types/node": "22.7.9",
+    "@types/node": "catalog:",
     "@types/qrcode": "1.5.5",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
-    "autoprefixer": "10.4.20",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "autoprefixer": "catalog:",
     "npm-run-all": "4.1.5",
-    "postcss": "8.5.6",
-    "tailwindcss": "3.4.14",
-    "typescript": "5.8.3"
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
     "@geoman-io/leaflet-geoman-free": "2.17.0",
@@ -117,13 +117,13 @@
     "leaflet": "1.9.4",
     "lucide-react": "0.525.0",
     "markdown-to-jsx": "7.7.3",
-    "next": "15.3.4",
+    "next": "catalog:",
     "next-themes": "0.3.0",
     "peerjs": "1.5.4",
     "plausible-tracker": "0.3.9",
     "qrcode": "1.5.4",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-hook-form": "7.53.1",
     "react-markdown": "10.1.0",
     "react-moveable": "0.56.0",
@@ -131,8 +131,8 @@
     "remark-gfm": "4.0.0",
     "sonner": "1.5.0",
     "swr": "2.2.5",
-    "tailwindcss-animate": "1.0.7",
+    "tailwindcss-animate": "catalog:",
     "zod": "3.23.8",
-    "zustand": "5.0.4"
+    "zustand": "catalog:"
   }
 }
