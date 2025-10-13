@@ -1,4 +1,4 @@
-import { type OverwolfAppConfig } from "@repo/lib";
+import type { OverwolfAppConfig } from "@repo/lib";
 
 export const APP_CONFIG: OverwolfAppConfig = {
   name: "palworld",

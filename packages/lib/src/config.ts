@@ -1,7 +1,6 @@
 import type { MarkerOptions } from "./types";
 import type { Region } from "./coordinates";
 import type { Drawing, PrivateNode } from "./settings";
-import type { LatLngExpression } from "leaflet";
 import { Game } from "./games";
 
 export type IconName =
@@ -103,6 +102,7 @@ export const DATA_FORGE_URL = "https://data.th.gl";
 
 export function fetchCached(url: string): Promise<any> {
   return fetch(url, {
+    // @ts-ignore
     next: { revalidate: 60 },
   });
 }
@@ -291,7 +291,7 @@ export type TileLayer = {
   minZoom?: number;
   maxZoom?: number;
   fitBounds?: [[number, number], [number, number]];
-  view?: { center: LatLngExpression; zoom?: number };
+  view?: { center?: [number, number]; zoom?: number };
   transformation?: [number, number, number, number];
   threshold?: number;
   rotation?: {
