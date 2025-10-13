@@ -5,7 +5,7 @@ export const APP_CONFIG: AppConfig = {
   title: "Blue Protocol: Star Resonance",
   domain: "starresonance",
   supportedLocales: ["en"],
-  appUrl: null,
+  appUrl: "https://www.th.gl/companion-app",
   internalLinks: [
     {
       title: "Asteria Plains Map",

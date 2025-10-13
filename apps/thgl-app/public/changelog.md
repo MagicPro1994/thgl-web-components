@@ -1,3 +1,7 @@
+# 2.12.0
+
+- Feat: **Blue Protocol: Star Resonance** Add support for player position and live tracking of NPCs and Monsters (experimental, needs testing)
+
 # 2.11.0
 
 - Feat: Add support for Blue Protocol: Star Resonance (BPSR) - player position tracking is not supported yet
