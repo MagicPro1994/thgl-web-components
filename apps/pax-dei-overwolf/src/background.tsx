@@ -3,6 +3,7 @@ import {
   closeMainWindow,
   initBackground,
   initGameEventsPlugin,
+  sendActorsToAPI as sendActorsToAPIHelper,
 } from "@repo/lib/overwolf";
 import { fetchVersion } from "@repo/lib";
 import { APP_CONFIG } from "./config";
@@ -68,17 +69,7 @@ async function sendActorsToAPI(actors: Actor[]) {
   if (newActors.length === 0) {
     return;
   }
-  try {
-    await fetch("https://actors-api.th.gl/actors/pax-dei", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newActors),
-    });
-  } catch (e) {
-    //
-  }
+  await sendActorsToAPIHelper("pax-dei", newActors);
 }
 
 let lastSendGT = 0;

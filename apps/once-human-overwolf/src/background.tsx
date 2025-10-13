@@ -5,6 +5,7 @@ import {
   initBackground,
   initGameEventsPlugin,
   MESSAGES,
+  sendActorsToAPI as sendActorsToAPIHelper,
 } from "@repo/lib/overwolf";
 import { APP_CONFIG } from "./config";
 import { fetchVersion } from "@repo/lib";
@@ -161,15 +162,7 @@ async function sendActorsToAPI(actors: Actor[]): Promise<void> {
     return;
   }
   try {
-    await fetch("https://actors-api.th.gl/actors/once-human", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newActors),
-    });
-  } catch (e) {
-    //
+    await sendActorsToAPIHelper("once-human", newActors);
   } finally {
     isSending = false;
   }

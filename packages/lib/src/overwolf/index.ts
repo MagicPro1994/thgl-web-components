@@ -1,3 +1,4 @@
+export * from "./actors-api";
 export * from "./background";
 export * from "./brotli";
 export * from "./discord";
