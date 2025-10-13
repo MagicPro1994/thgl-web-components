@@ -52,7 +52,9 @@ export function createWorld(
   } else if (options.fitBounds) {
     world.fitBounds(options.fitBounds, { animate: false });
   } else if (options.view) {
-    world.setView(options.view.center, options.view.zoom, { animate: false });
+    world.setView(options.view.center as LatLngExpression, options.view.zoom, {
+      animate: false,
+    });
   } else {
     world.setView([0, 0], 0, { animate: false });
   }
