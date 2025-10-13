@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "tsup --format esm ",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist node_modules",
     "dev": "tsup --format esm --watch --dts",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
