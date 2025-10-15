@@ -29,7 +29,7 @@
     "@vitejs/plugin-react-swc": "catalog:",
     "autoprefixer": "catalog:",
     "postcss": "catalog:",
-    "reflect-metadata": "0.2.2",
+    "reflect-metadata": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"

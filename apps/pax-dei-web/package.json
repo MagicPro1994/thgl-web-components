@@ -13,7 +13,7 @@
   "dependencies": {
     "@repo/lib": "workspace:*",
     "@repo/ui": "workspace:*",
-    "fuse.js": "7.0.0",
+    "fuse.js": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

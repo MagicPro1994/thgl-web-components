@@ -4,14 +4,14 @@
     "": {
       "name": "the-hidden-gaming-lair",
       "dependencies": {
-        "clsx": "catalog:",
-        "tailwind-merge": "catalog:",
+        "clsx": "2.1.1",
+        "tailwind-merge": "2.5.4",
       },
       "devDependencies": {
-        "@overwolf/types": "catalog:",
-        "prettier": "catalog:",
-        "rimraf": "catalog:",
-        "turbo": "catalog:",
+        "@overwolf/types": "3.24.7",
+        "prettier": "3.3.3",
+        "rimraf": "6.0.1",
+        "turbo": "2.5.4",
       },
     },
     "apps/avowed-overwolf": {
@@ -34,7 +34,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -46,7 +46,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -71,7 +71,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -97,7 +97,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -137,7 +137,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -149,7 +149,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -174,7 +174,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -200,7 +200,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -240,7 +240,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -252,7 +252,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -277,7 +277,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -302,7 +302,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -341,7 +341,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -353,7 +353,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -392,7 +392,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -404,7 +404,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -443,7 +443,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -455,7 +455,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -494,7 +494,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -506,7 +506,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -531,7 +531,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -556,7 +556,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -595,7 +595,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -607,7 +607,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -632,7 +632,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -658,9 +658,9 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "@vercel/kv": "3.0.0",
-        "fuse.js": "7.0.0",
-        "jsonwebtoken": "9.0.2",
+        "@vercel/kv": "catalog:",
+        "fuse.js": "catalog:",
+        "jsonwebtoken": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -686,21 +686,21 @@
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
         "@vercel/blob": "1.0.0",
-        "@vercel/kv": "3.0.0",
+        "@vercel/kv": "catalog:",
         "@vercel/postgres": "0.10.0",
-        "jsonwebtoken": "9.0.2",
+        "jsonwebtoken": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
-        "react-markdown": "10.1.0",
-        "remark-gfm": "4.0.1",
+        "react-markdown": "catalog:",
+        "remark-gfm": "catalog:",
       },
       "devDependencies": {
         "@next/eslint-plugin-next": "catalog:",
         "@repo/eslint-config": "workspace:*",
         "@repo/tailwind-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/jsonwebtoken": "9.0.9",
+        "@types/jsonwebtoken": "catalog:",
         "@types/node": "catalog:",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
@@ -730,7 +730,7 @@
         "@vitejs/plugin-react-swc": "catalog:",
         "autoprefixer": "catalog:",
         "postcss": "catalog:",
-        "reflect-metadata": "0.2.2",
+        "reflect-metadata": "catalog:",
         "tailwindcss": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
@@ -742,7 +742,7 @@
       "dependencies": {
         "@repo/lib": "workspace:*",
         "@repo/ui": "workspace:*",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
@@ -781,11 +781,13 @@
     "packages/config-tailwind": {
       "name": "@repo/tailwind-config",
       "version": "0.0.0",
+      "dependencies": {
+        "tailwindcss": "catalog:",
+        "tailwindcss-animate": "catalog:",
+      },
       "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "tailwindcss": "catalog:",
-        "tailwindcss-animate": "catalog:",
       },
     },
     "packages/config-typescript": {
@@ -809,11 +811,11 @@
         "brotli": "1.3.3",
         "buffer": "6.0.3",
         "cbor-x": "1.6.0",
-        "clsx": "catalog:",
-        "peerjs": "1.5.4",
+        "clsx": "2.1.1",
+        "peerjs": "catalog:",
         "react": "catalog:",
         "semver": "7.7.1",
-        "tailwind-merge": "catalog:",
+        "tailwind-merge": "2.5.4",
         "zustand": "catalog:",
       },
       "devDependencies": {
@@ -865,7 +867,7 @@
         "cmdk": "1.0.0",
         "embla-carousel-autoplay": "8.6.0",
         "embla-carousel-react": "8.3.0",
-        "fuse.js": "7.0.0",
+        "fuse.js": "catalog:",
         "jdenticon": "3.3.0",
         "js-cookie": "3.0.5",
         "leaflet": "1.9.4",
@@ -873,16 +875,16 @@
         "markdown-to-jsx": "7.7.3",
         "next": "catalog:",
         "next-themes": "0.3.0",
-        "peerjs": "1.5.4",
+        "peerjs": "catalog:",
         "plausible-tracker": "0.3.9",
         "qrcode": "1.5.4",
         "react": "catalog:",
         "react-dom": "catalog:",
         "react-hook-form": "7.53.1",
-        "react-markdown": "10.1.0",
+        "react-markdown": "catalog:",
         "react-moveable": "0.56.0",
         "rehype-raw": "7.0.0",
-        "remark-gfm": "4.0.0",
+        "remark-gfm": "catalog:",
         "sonner": "1.5.0",
         "swr": "2.2.5",
         "tailwindcss-animate": "catalog:",
@@ -914,24 +916,27 @@
     "@next/eslint-plugin-next": "15.3.1",
     "@overwolf/ow-cli": "0.1.2",
     "@overwolf/types": "3.24.7",
+    "@types/jsonwebtoken": "9.0.9",
     "@types/node": "22.7.9",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
+    "@vercel/kv": "3.0.0",
     "@vitejs/plugin-react-swc": "3.7.1",
     "autoprefixer": "10.4.20",
-    "clsx": "2.1.1",
     "eslint": "9.25.1",
     "eslint-config-turbo": "2.5.2",
-    "next": "15.3.4",
+    "fuse.js": "7.0.0",
+    "jsonwebtoken": "9.0.2",
+    "next": "15.5.5",
+    "peerjs": "1.5.4",
     "postcss": "8.5.6",
-    "prettier": "3.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "rimraf": "6.0.1",
-    "tailwind-merge": "2.5.4",
+    "react-markdown": "10.1.0",
+    "reflect-metadata": "0.2.2",
+    "remark-gfm": "4.0.1",
     "tailwindcss": "3.4.14",
     "tailwindcss-animate": "1.0.7",
-    "turbo": "2.5.4",
     "typescript": "5.8.3",
     "vite": "5.4.10",
     "zustand": "5.0.4",
@@ -1229,25 +1234,25 @@
 
     "@neondatabase/serverless": ["@neondatabase/serverless@0.9.5", "", { "dependencies": { "@types/pg": "8.11.6" } }, "sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug=="],
 
-    "@next/env": ["@next/env@15.3.4", "", {}, "sha512-ZkdYzBseS6UjYzz6ylVKPOK+//zLWvD6Ta+vpoye8cW11AjiQjGYVibF0xuvT4L0iJfAPfZLFidaEzAOywyOAQ=="],
+    "@next/env": ["@next/env@15.5.5", "", {}, "sha512-2Zhvss36s/yL+YSxD5ZL5dz5pI6ki1OLxYlh6O77VJ68sBnlUrl5YqhBgCy7FkdMsp9RBeGFwpuDCdpJOqdKeQ=="],
 
     "@next/eslint-plugin-next": ["@next/eslint-plugin-next@15.3.1", "", { "dependencies": { "fast-glob": "3.3.1" } }, "sha512-oEs4dsfM6iyER3jTzMm4kDSbrQJq8wZw5fmT6fg2V3SMo+kgG+cShzLfEV20senZzv8VF+puNLheiGPlBGsv2A=="],
 
-    "@next/swc-darwin-arm64": ["@next/swc-darwin-arm64@15.3.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-z0qIYTONmPRbwHWvpyrFXJd5F9YWLCsw3Sjrzj2ZvMYy9NPQMPZ1NjOJh4ojr4oQzcGYwgJKfidzehaNa1BpEg=="],
+    "@next/swc-darwin-arm64": ["@next/swc-darwin-arm64@15.5.5", "", { "os": "darwin", "cpu": "arm64" }, "sha512-lYExGHuFIHeOxf40mRLWoA84iY2sLELB23BV5FIDHhdJkN1LpRTPc1MDOawgTo5ifbM5dvAwnGuHyNm60G1+jw=="],
 
-    "@next/swc-darwin-x64": ["@next/swc-darwin-x64@15.3.4", "", { "os": "darwin", "cpu": "x64" }, "sha512-Z0FYJM8lritw5Wq+vpHYuCIzIlEMjewG2aRkc3Hi2rcbULknYL/xqfpBL23jQnCSrDUGAo/AEv0Z+s2bff9Zkw=="],
+    "@next/swc-darwin-x64": ["@next/swc-darwin-x64@15.5.5", "", { "os": "darwin", "cpu": "x64" }, "sha512-cacs/WQqa96IhqUm+7CY+z/0j9sW6X80KE07v3IAJuv+z0UNvJtKSlT/T1w1SpaQRa9l0wCYYZlRZUhUOvEVmg=="],
 
-    "@next/swc-linux-arm64-gnu": ["@next/swc-linux-arm64-gnu@15.3.4", "", { "os": "linux", "cpu": "arm64" }, "sha512-l8ZQOCCg7adwmsnFm8m5q9eIPAHdaB2F3cxhufYtVo84pymwKuWfpYTKcUiFcutJdp9xGHC+F1Uq3xnFU1B/7g=="],
+    "@next/swc-linux-arm64-gnu": ["@next/swc-linux-arm64-gnu@15.5.5", "", { "os": "linux", "cpu": "arm64" }, "sha512-tLd90SvkRFik6LSfuYjcJEmwqcNEnVYVOyKTacSazya/SLlSwy/VYKsDE4GIzOBd+h3gW+FXqShc2XBavccHCg=="],
 
-    "@next/swc-linux-arm64-musl": ["@next/swc-linux-arm64-musl@15.3.4", "", { "os": "linux", "cpu": "arm64" }, "sha512-wFyZ7X470YJQtpKot4xCY3gpdn8lE9nTlldG07/kJYexCUpX1piX+MBfZdvulo+t1yADFVEuzFfVHfklfEx8kw=="],
+    "@next/swc-linux-arm64-musl": ["@next/swc-linux-arm64-musl@15.5.5", "", { "os": "linux", "cpu": "arm64" }, "sha512-ekV76G2R/l3nkvylkfy9jBSYHeB4QcJ7LdDseT6INnn1p51bmDS1eGoSoq+RxfQ7B1wt+Qa0pIl5aqcx0GLpbw=="],
 
-    "@next/swc-linux-x64-gnu": ["@next/swc-linux-x64-gnu@15.3.4", "", { "os": "linux", "cpu": "x64" }, "sha512-gEbH9rv9o7I12qPyvZNVTyP/PWKqOp8clvnoYZQiX800KkqsaJZuOXkWgMa7ANCCh/oEN2ZQheh3yH8/kWPSEg=="],
+    "@next/swc-linux-x64-gnu": ["@next/swc-linux-x64-gnu@15.5.5", "", { "os": "linux", "cpu": "x64" }, "sha512-tI+sBu+3FmWtqlqD4xKJcj3KJtqbniLombKTE7/UWyyoHmOyAo3aZ7QcEHIOgInXOG1nt0rwh0KGmNbvSB0Djg=="],
 
-    "@next/swc-linux-x64-musl": ["@next/swc-linux-x64-musl@15.3.4", "", { "os": "linux", "cpu": "x64" }, "sha512-Cf8sr0ufuC/nu/yQ76AnarbSAXcwG/wj+1xFPNbyNo8ltA6kw5d5YqO8kQuwVIxk13SBdtgXrNyom3ZosHAy4A=="],
+    "@next/swc-linux-x64-musl": ["@next/swc-linux-x64-musl@15.5.5", "", { "os": "linux", "cpu": "x64" }, "sha512-kDRh+epN/ulroNJLr+toDjN+/JClY5L+OAWjOrrKCI0qcKvTw9GBx7CU/rdA2bgi4WpZN3l0rf/3+b8rduEwrQ=="],
 
-    "@next/swc-win32-arm64-msvc": ["@next/swc-win32-arm64-msvc@15.3.4", "", { "os": "win32", "cpu": "arm64" }, "sha512-ay5+qADDN3rwRbRpEhTOreOn1OyJIXS60tg9WMYTWCy3fB6rGoyjLVxc4dR9PYjEdR2iDYsaF5h03NA+XuYPQQ=="],
+    "@next/swc-win32-arm64-msvc": ["@next/swc-win32-arm64-msvc@15.5.5", "", { "os": "win32", "cpu": "arm64" }, "sha512-GDgdNPFFqiKjTrmfw01sMMRWhVN5wOCmFzPloxa7ksDfX6TZt62tAK986f0ZYqWpvDFqeBCLAzmgTURvtQBdgw=="],
 
-    "@next/swc-win32-x64-msvc": ["@next/swc-win32-x64-msvc@15.3.4", "", { "os": "win32", "cpu": "x64" }, "sha512-4kDt31Bc9DGyYs41FTL1/kNpDeHyha2TC0j5sRRoKCyrhNcfZ/nRQkAUlF27mETwm8QyHqIjHJitfcza2Iykfg=="],
+    "@next/swc-win32-x64-msvc": ["@next/swc-win32-x64-msvc@15.5.5", "", { "os": "win32", "cpu": "x64" }, "sha512-5kE3oRJxc7M8RmcTANP8RGoJkaYlwIiDD92gSwCjJY0+j8w8Sl1lvxgQ3bxfHY2KkHFai9tpy/Qx1saWV8eaJQ=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 
@@ -1724,8 +1729,6 @@
     "bufferutil": ["bufferutil@4.0.9", "", { "dependencies": { "node-gyp-build": "^4.3.0" } }, "sha512-WDtdLmJvAuNNPzByAYpRo2rF1Mmradw6gvWsQKf63476DDXmomT9zUiGypLcG4ibIM67vhAj8jJRdbmEws2Aqw=="],
 
     "bundle-require": ["bundle-require@5.1.0", "", { "dependencies": { "load-tsconfig": "^0.2.3" }, "peerDependencies": { "esbuild": ">=0.18" } }, "sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA=="],
-
-    "busboy": ["busboy@1.6.0", "", { "dependencies": { "streamsearch": "^1.1.0" } }, "sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA=="],
 
     "cac": ["cac@6.7.14", "", {}, "sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ=="],
 
@@ -2583,7 +2586,7 @@
 
     "natural-compare": ["natural-compare@1.4.0", "", {}, "sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw=="],
 
-    "next": ["next@15.3.4", "", { "dependencies": { "@next/env": "15.3.4", "@swc/counter": "0.1.3", "@swc/helpers": "0.5.15", "busboy": "1.6.0", "caniuse-lite": "^1.0.30001579", "postcss": "8.4.31", "styled-jsx": "5.1.6" }, "optionalDependencies": { "@next/swc-darwin-arm64": "15.3.4", "@next/swc-darwin-x64": "15.3.4", "@next/swc-linux-arm64-gnu": "15.3.4", "@next/swc-linux-arm64-musl": "15.3.4", "@next/swc-linux-x64-gnu": "15.3.4", "@next/swc-linux-x64-musl": "15.3.4", "@next/swc-win32-arm64-msvc": "15.3.4", "@next/swc-win32-x64-msvc": "15.3.4", "sharp": "^0.34.1" }, "peerDependencies": { "@opentelemetry/api": "^1.1.0", "@playwright/test": "^1.41.2", "babel-plugin-react-compiler": "*", "react": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", "react-dom": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", "sass": "^1.3.0" }, "optionalPeers": ["@opentelemetry/api", "@playwright/test", "babel-plugin-react-compiler", "sass"], "bin": { "next": "dist/bin/next" } }, "sha512-mHKd50C+mCjam/gcnwqL1T1vPx/XQNFlXqFIVdgQdVAFY9iIQtY0IfaVflEYzKiqjeA7B0cYYMaCrmAYFjs4rA=="],
+    "next": ["next@15.5.5", "", { "dependencies": { "@next/env": "15.5.5", "@swc/helpers": "0.5.15", "caniuse-lite": "^1.0.30001579", "postcss": "8.4.31", "styled-jsx": "5.1.6" }, "optionalDependencies": { "@next/swc-darwin-arm64": "15.5.5", "@next/swc-darwin-x64": "15.5.5", "@next/swc-linux-arm64-gnu": "15.5.5", "@next/swc-linux-arm64-musl": "15.5.5", "@next/swc-linux-x64-gnu": "15.5.5", "@next/swc-linux-x64-musl": "15.5.5", "@next/swc-win32-arm64-msvc": "15.5.5", "@next/swc-win32-x64-msvc": "15.5.5", "sharp": "^0.34.3" }, "peerDependencies": { "@opentelemetry/api": "^1.1.0", "@playwright/test": "^1.51.1", "babel-plugin-react-compiler": "*", "react": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", "react-dom": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", "sass": "^1.3.0" }, "optionalPeers": ["@opentelemetry/api", "@playwright/test", "babel-plugin-react-compiler", "sass"], "bin": { "next": "dist/bin/next" } }, "sha512-OQVdBPtpBfq7HxFN0kOVb7rXXOSIkt5lTzDJDGRBcOyVvNRIWFauMqi1gIHd1pszq1542vMOGY0HP4CaiALfkA=="],
 
     "next-themes": ["next-themes@0.3.0", "", { "peerDependencies": { "react": "^16.8 || ^17 || ^18", "react-dom": "^16.8 || ^17 || ^18" } }, "sha512-/QHIrsYpd6Kfk7xakK4svpDI5mmXP0gfvCoJdGpZQ2TOrQZmsW0QxjaiLn8wbIKjtm4BTSqLoix4lxYYOnLJ/w=="],
 
@@ -2825,7 +2828,7 @@
 
     "rehype-raw": ["rehype-raw@7.0.0", "", { "dependencies": { "@types/hast": "^3.0.0", "hast-util-raw": "^9.0.0", "vfile": "^6.0.0" } }, "sha512-/aE8hCfKlQeA8LmyeyQvQF3eBiLRGNlfBJEvWH7ivp9sBqs7TNqBL5X3v157rM4IFETqDnIOO+z5M/biZbo9Ww=="],
 
-    "remark-gfm": ["remark-gfm@4.0.0", "", { "dependencies": { "@types/mdast": "^4.0.0", "mdast-util-gfm": "^3.0.0", "micromark-extension-gfm": "^3.0.0", "remark-parse": "^11.0.0", "remark-stringify": "^11.0.0", "unified": "^11.0.0" } }, "sha512-U92vJgBPkbw4Zfu/IiW2oTZLSL3Zpv+uI7My2eq8JxKgqraFdU8YUGicEJCEgSbeaG+QDFqIcwwfMTOEelPxuA=="],
+    "remark-gfm": ["remark-gfm@4.0.1", "", { "dependencies": { "@types/mdast": "^4.0.0", "mdast-util-gfm": "^3.0.0", "micromark-extension-gfm": "^3.0.0", "remark-parse": "^11.0.0", "remark-stringify": "^11.0.0", "unified": "^11.0.0" } }, "sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg=="],
 
     "remark-mdx": ["remark-mdx@3.1.1", "", { "dependencies": { "mdast-util-mdx": "^3.0.0", "micromark-extension-mdxjs": "^3.0.0" } }, "sha512-Pjj2IYlUY3+D8x00UJsIOg5BEvfMyeI+2uLPn9VO9Wg4MEtN/VTIq2NEJQfde9PnX15KgtHyl9S0BcTnWrIuWg=="],
 
@@ -2954,8 +2957,6 @@
     "stack-utils": ["stack-utils@2.0.6", "", { "dependencies": { "escape-string-regexp": "^2.0.0" } }, "sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ=="],
 
     "stop-iteration-iterator": ["stop-iteration-iterator@1.1.0", "", { "dependencies": { "es-errors": "^1.3.0", "internal-slot": "^1.1.0" } }, "sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ=="],
-
-    "streamsearch": ["streamsearch@1.1.0", "", {}, "sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg=="],
 
     "string-length": ["string-length@4.0.2", "", { "dependencies": { "char-regex": "^1.0.2", "strip-ansi": "^6.0.0" } }, "sha512-+l6rNN5fYHNhZZy41RXsYptCjA2Igmq4EG7kZAYFQI1E1VTXarr6ZPXBg6eq7Y6eK4FEhY6AJlyuFIb/v/S0VQ=="],
 
@@ -3393,6 +3394,8 @@
 
     "fast-glob/glob-parent": ["glob-parent@5.1.2", "", { "dependencies": { "is-glob": "^4.0.1" } }, "sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow=="],
 
+    "fdir/picomatch": ["picomatch@4.0.3", "", {}, "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q=="],
+
     "figures/escape-string-regexp": ["escape-string-regexp@1.0.5", "", {}, "sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg=="],
 
     "filelist/minimatch": ["minimatch@5.1.6", "", { "dependencies": { "brace-expansion": "^2.0.1" } }, "sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g=="],
@@ -3488,8 +3491,6 @@
     "tailwindcss/postcss-load-config": ["postcss-load-config@4.0.2", "", { "dependencies": { "lilconfig": "^3.0.0", "yaml": "^2.3.4" }, "peerDependencies": { "postcss": ">=8.0.9", "ts-node": ">=9.0.0" }, "optionalPeers": ["postcss", "ts-node"] }, "sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ=="],
 
     "test-exclude/glob": ["glob@7.2.3", "", { "dependencies": { "fs.realpath": "^1.0.0", "inflight": "^1.0.4", "inherits": "2", "minimatch": "^3.1.1", "once": "^1.3.0", "path-is-absolute": "^1.0.0" } }, "sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q=="],
-
-    "thgl-web/remark-gfm": ["remark-gfm@4.0.1", "", { "dependencies": { "@types/mdast": "^4.0.0", "mdast-util-gfm": "^3.0.0", "micromark-extension-gfm": "^3.0.0", "remark-parse": "^11.0.0", "remark-stringify": "^11.0.0", "unified": "^11.0.0" } }, "sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg=="],
 
     "tinyglobby/picomatch": ["picomatch@4.0.3", "", {}, "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q=="],
 

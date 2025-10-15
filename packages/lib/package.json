@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "build": "tsup --format esm ",
+    "build": "tsup --format esm",
     "clean": "rimraf dist node_modules",
     "dev": "tsup --format esm --watch --dts",
     "lint": "eslint src/",
@@ -49,11 +49,11 @@
     "brotli": "1.3.3",
     "buffer": "6.0.3",
     "cbor-x": "1.6.0",
-    "clsx": "catalog:",
-    "peerjs": "1.5.4",
+    "clsx": "2.1.1",
+    "peerjs": "catalog:",
     "react": "catalog:",
     "semver": "7.7.1",
-    "tailwind-merge": "catalog:",
+    "tailwind-merge": "2.5.4",
     "zustand": "catalog:"
   }
 }

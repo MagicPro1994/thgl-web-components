@@ -33,10 +33,10 @@
     "update-deps": "bunx npm-check-updates -u -ws --root"
   },
   "devDependencies": {
-    "@overwolf/types": "catalog:",
-    "prettier": "catalog:",
-    "rimraf": "catalog:",
-    "turbo": "catalog:"
+    "@overwolf/types": "3.24.7",
+    "prettier": "3.3.3",
+    "rimraf": "6.0.1",
+    "turbo": "2.5.4"
   },
   "engines": {
     "node": ">=18"
@@ -47,13 +47,13 @@
     "packages/*"
   ],
   "dependencies": {
-    "clsx": "catalog:",
-    "tailwind-merge": "catalog:"
+    "clsx": "2.1.1",
+    "tailwind-merge": "2.5.4"
   },
   "catalog": {
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "next": "15.3.4",
+    "next": "15.5.5",
     "typescript": "5.8.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
@@ -69,11 +69,14 @@
     "eslint": "9.25.1",
     "@next/eslint-plugin-next": "15.3.1",
     "eslint-config-turbo": "2.5.2",
-    "prettier": "3.3.3",
-    "turbo": "2.5.4",
-    "rimraf": "6.0.1",
     "zustand": "5.0.4",
-    "clsx": "2.1.1",
-    "tailwind-merge": "2.5.4"
+    "fuse.js": "7.0.0",
+    "@vercel/kv": "3.0.0",
+    "peerjs": "1.5.4",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1",
+    "reflect-metadata": "0.2.2",
+    "jsonwebtoken": "9.0.2",
+    "@types/jsonwebtoken": "9.0.9"
   }
 }

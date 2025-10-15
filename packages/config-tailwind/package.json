@@ -6,10 +6,12 @@
     "exports": {
         ".": "./tailwind.config.ts"
     },
-    "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
+    "dependencies": {
         "tailwindcss": "catalog:",
         "tailwindcss-animate": "catalog:"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*"
     }
 }
