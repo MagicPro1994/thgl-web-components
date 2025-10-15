@@ -21,20 +21,32 @@ export type FAQEntry = {
 export const faqEntries: FAQEntry[] = [
   {
     id: "ticley-watch-scam",
-    headline: "Charged by Ticley Watch / thgl.app",
-    question: "I saw charges from THGL. Is this from The Hidden Gaming Lair?",
+    headline: "Unexpected charges from THGL.APP (NOT The Hidden Gaming Lair)",
+    question: "I see charges like 'THGL.APP-4Y...' or 'THGL' on my bank statement. Is this from The Hidden Gaming Lair?",
     answer: `
-The Hidden Gaming Lair lives at **www.th.gl** and only offers subscriptions through Patreon.
+**NO. These charges are NOT from The Hidden Gaming Lair.**
 
-If you see unexpected charges labeled "THGL" they likely come from the unrelated iOS app **Ticley Watch** at [thgl.app](https://thgl.app) ([App Store link](https://apps.apple.com/us/app/ticley-watch/id6745942105)). That project is not affiliated with The Hidden Gaming Lair.
+The Hidden Gaming Lair lives at **www.th.gl** (NOT thgl.app) and **only offers subscriptions through Patreon**. I never charge users directly.
 
-### What to do
-- Uninstall the Ticley Watch app
-- Cancel any active subscription on your Apple ID
-- Request a refund via the developer's [money-back page](https://thgl.app/money-back)
-- Leave a review to warn other users and report the app in the App Store
+### The Scam Apps
 
-I never charge users directly—only Patreon handles billing for the real THGL project.
+If you see unexpected charges labeled **"THGL.APP-4Y..."** or similar, they come from scam iOS apps at the domain **thgl.app** (note the different domain). These apps are **NOT affiliated** with The Hidden Gaming Lair:
+
+1. **Ticley Watch** - [App Store link](https://apps.apple.com/us/app/ticley-watch/id6745942105)
+2. **Holix Gallery** - [App Store link](https://apps.apple.com/us/app/holix-gallery/id6752016590)
+
+Both apps are from [thgl.app](https://thgl.app) and have nothing to do with this gaming project.
+
+### What to do immediately
+1. **Uninstall** the Ticley Watch or Holix Gallery app from your iPhone/iPad
+2. **Cancel the subscription** in your Apple ID settings
+3. **Request a refund** via the developer's [money-back page](https://thgl.app/money-back) or through Apple
+4. **Report the app** in the App Store and leave a warning review for others
+5. **Contact your bank** if refunds are denied
+
+### Remember
+- The Hidden Gaming Lair = **th.gl** (Patreon only)
+- The scam apps = **thgl.app** (iOS apps with deceptive charges)
     `.trim(),
     labels: ["General", "Subscription"],
   },
