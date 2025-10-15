@@ -36,7 +36,15 @@ export function NitroScript({
     }
     const now = Date.now();
     const intervalId = setInterval(() => {
-      if (Date.now() - now > 2000) {
+      if (
+        "nitroAds" in window &&
+        (window.nitroAds as NitroAds).siteId === 1487
+      ) {
+        setState("ready");
+        clearInterval(intervalId);
+        return;
+      }
+      if (Date.now() - now > 2500) {
         setState("error");
         clearInterval(intervalId);
       }
@@ -67,7 +75,7 @@ export function NitroScript({
             (window.nitroAds as NitroAds).siteId === 1487
           ) {
             setState("ready");
-          } else {
+          } else if (!("nads" in window)) {
             setState("error");
           }
         }}
