@@ -75,8 +75,6 @@ export function NitroScript({
             (window.nitroAds as NitroAds).siteId === 1487
           ) {
             setState("ready");
-          } else if (!("nads" in window)) {
-            setState("error");
           }
         }}
         src="https://s.nitropay.com/ads-1487.js"
