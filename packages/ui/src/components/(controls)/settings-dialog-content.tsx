@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Slider } from "../ui/slider";
+import { ProfileManager } from "./profile-manager";
 
 export function SettingsDialogContent({
   activeApp,
@@ -44,7 +45,7 @@ export function SettingsDialogContent({
   const settingsStore = useSettingsStore();
 
   return (
-    <DialogContent onMouseDown={(e) => e.stopPropagation()}>
+    <DialogContent onMouseDown={(e) => e.stopPropagation()} aria-describedby={undefined}>
       <DialogHeader>
         <DialogTitle>Settings</DialogTitle>
       </DialogHeader>
@@ -56,6 +57,12 @@ export function SettingsDialogContent({
               <Separator />
             </>
           ) : null}
+          <h4 className="text-md font-semibold">Profiles</h4>
+          <p className="text-muted-foreground text-xs">
+            Manage your settings profiles to quickly switch between different configurations.
+          </p>
+          <ProfileManager activeApp={activeApp} />
+          <Separator />
           <h4 className="text-md font-semibold">Discovered Nodes</h4>
           <p className="text-muted-foreground text-xs">
             You discovered {settingsStore.discoveredNodes.length} nodes.

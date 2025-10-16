@@ -71,6 +71,55 @@ export type ColorBlindMode =
   | "deuteranopia"
   | "tritanopia";
 
+export type ProfileData = {
+  // Discovered nodes
+  discoveredNodes: string[];
+  hideDiscoveredNodes: boolean;
+  // My Filters
+  myFilters: DrawingsAndNodes[];
+  // UI Settings
+  colorBlindMode: ColorBlindMode;
+  colorBlindSeverity: number;
+  fitBoundsOnChange: boolean;
+  transforms: Record<string, string>;
+  mapTransform: {
+    borderRadius: string;
+    transform: string;
+    width: string;
+    height: string;
+  } | null;
+  mapFilter: string;
+  // Icon sizes
+  baseIconSize: number;
+  playerIconSize: number;
+  iconSizeByGroup: Record<string, number>;
+  iconSizeByFilter: Record<string, number>;
+  // Trace line
+  showTraceLine: boolean;
+  traceLineLength: number;
+  traceLineRate: number;
+  traceLineColor: string;
+  // Grid and filters
+  showGrid: boolean;
+  showFilters: boolean;
+  expandedFilters: boolean;
+  // Drawing
+  drawingColor: string;
+  drawingSize: number;
+  textColor: string;
+  textSize: number;
+  // Presets
+  presets: Record<string, string[]>;
+};
+
+export type Profile = {
+  id: string;
+  name: string;
+  data: ProfileData;
+  createdAt: number;
+  updatedAt: number;
+};
+
 type SettingsStore = {
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
@@ -184,6 +233,17 @@ type SettingsStore = {
   setAutoJoinPeer: (autoJoin: boolean) => void;
   autoLiveModeWithMe: boolean;
   setAutoLiveModeWithMe: (autoLiveMode: boolean) => void;
+  // Profile Management
+  currentProfileId: string;
+  profiles: Profile[];
+  createProfile: (name: string) => void;
+  switchProfile: (profileId: string) => void;
+  updateCurrentProfile: () => void;
+  renameProfile: (profileId: string, newName: string) => void;
+  deleteProfile: (profileId: string) => void;
+  exportProfile: (profileId: string) => Profile | null;
+  importProfile: (profile: Profile) => void;
+  duplicateProfile: (profileId: string) => void;
   // Deprecated
   privateNodes?: PrivateNode[];
   privateDrawings?: Drawing[];
@@ -458,6 +518,237 @@ export const useSettingsStore = create(
         setAutoJoinPeer: (autoJoin: boolean) => set({ autoJoinPeer: autoJoin }),
         autoLiveModeWithMe: true,
         setAutoLiveModeWithMe: (autoLiveMode: boolean) => set({ autoLiveModeWithMe: autoLiveMode }),
+        // Profile Management
+        currentProfileId: "default",
+        profiles: [
+          {
+            id: "default",
+            name: "Default",
+            data: {
+              discoveredNodes: [],
+              hideDiscoveredNodes: false,
+              myFilters: [],
+              colorBlindMode: "none",
+              colorBlindSeverity: 1,
+              fitBoundsOnChange: false,
+              transforms: {},
+              mapTransform: null,
+              mapFilter: "none",
+              baseIconSize: 1,
+              playerIconSize: 1,
+              iconSizeByGroup: {},
+              iconSizeByFilter: {},
+              showTraceLine: true,
+              traceLineLength: 100,
+              traceLineRate: 5,
+              traceLineColor: "#1ccdd1B3",
+              showGrid: false,
+              showFilters: true,
+              expandedFilters: false,
+              drawingColor: "#FFFFFFAA",
+              drawingSize: 4,
+              textColor: "#1ccdd1",
+              textSize: 20,
+              presets: {},
+            },
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          },
+        ],
+        createProfile: (name: string) => {
+          const state = get();
+          const newProfile: Profile = {
+            id: `profile-${Date.now()}`,
+            name,
+            data: {
+              discoveredNodes: state.discoveredNodes,
+              hideDiscoveredNodes: state.hideDiscoveredNodes,
+              myFilters: state.myFilters,
+              colorBlindMode: state.colorBlindMode,
+              colorBlindSeverity: state.colorBlindSeverity,
+              fitBoundsOnChange: state.fitBoundsOnChange,
+              transforms: state.transforms,
+              mapTransform: state.mapTransform,
+              mapFilter: state.mapFilter,
+              baseIconSize: state.baseIconSize,
+              playerIconSize: state.playerIconSize,
+              iconSizeByGroup: state.iconSizeByGroup,
+              iconSizeByFilter: state.iconSizeByFilter,
+              showTraceLine: state.showTraceLine,
+              traceLineLength: state.traceLineLength,
+              traceLineRate: state.traceLineRate,
+              traceLineColor: state.traceLineColor,
+              showGrid: state.showGrid,
+              showFilters: state.showFilters,
+              expandedFilters: state.expandedFilters,
+              drawingColor: state.drawingColor,
+              drawingSize: state.drawingSize,
+              textColor: state.textColor,
+              textSize: state.textSize,
+              presets: state.presets,
+            },
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          set((state) => ({
+            profiles: [...state.profiles, newProfile],
+            currentProfileId: newProfile.id,
+          }));
+        },
+        switchProfile: (profileId: string) => {
+          const state = get();
+          const profile = state.profiles.find((p) => p.id === profileId);
+          if (!profile) return;
+          
+          // Update current profile before switching
+          state.updateCurrentProfile();
+          
+          // Apply the new profile data
+          set({
+            currentProfileId: profileId,
+            discoveredNodes: profile.data.discoveredNodes,
+            hideDiscoveredNodes: profile.data.hideDiscoveredNodes,
+            myFilters: profile.data.myFilters,
+            colorBlindMode: profile.data.colorBlindMode,
+            colorBlindSeverity: profile.data.colorBlindSeverity,
+            fitBoundsOnChange: profile.data.fitBoundsOnChange,
+            transforms: profile.data.transforms,
+            mapTransform: profile.data.mapTransform,
+            mapFilter: profile.data.mapFilter,
+            baseIconSize: profile.data.baseIconSize,
+            playerIconSize: profile.data.playerIconSize,
+            iconSizeByGroup: profile.data.iconSizeByGroup,
+            iconSizeByFilter: profile.data.iconSizeByFilter,
+            showTraceLine: profile.data.showTraceLine,
+            traceLineLength: profile.data.traceLineLength,
+            traceLineRate: profile.data.traceLineRate,
+            traceLineColor: profile.data.traceLineColor,
+            showGrid: profile.data.showGrid,
+            showFilters: profile.data.showFilters,
+            expandedFilters: profile.data.expandedFilters,
+            drawingColor: profile.data.drawingColor,
+            drawingSize: profile.data.drawingSize,
+            textColor: profile.data.textColor,
+            textSize: profile.data.textSize,
+            presets: profile.data.presets,
+          });
+        },
+        updateCurrentProfile: () => {
+          const state = get();
+          const currentProfile = state.profiles.find(
+            (p) => p.id === state.currentProfileId,
+          );
+          if (!currentProfile) return;
+          
+          currentProfile.data = {
+            discoveredNodes: state.discoveredNodes,
+            hideDiscoveredNodes: state.hideDiscoveredNodes,
+            myFilters: state.myFilters,
+            colorBlindMode: state.colorBlindMode,
+            colorBlindSeverity: state.colorBlindSeverity,
+            fitBoundsOnChange: state.fitBoundsOnChange,
+            transforms: state.transforms,
+            mapTransform: state.mapTransform,
+            mapFilter: state.mapFilter,
+            baseIconSize: state.baseIconSize,
+            playerIconSize: state.playerIconSize,
+            iconSizeByGroup: state.iconSizeByGroup,
+            iconSizeByFilter: state.iconSizeByFilter,
+            showTraceLine: state.showTraceLine,
+            traceLineLength: state.traceLineLength,
+            traceLineRate: state.traceLineRate,
+            traceLineColor: state.traceLineColor,
+            showGrid: state.showGrid,
+            showFilters: state.showFilters,
+            expandedFilters: state.expandedFilters,
+            drawingColor: state.drawingColor,
+            drawingSize: state.drawingSize,
+            textColor: state.textColor,
+            textSize: state.textSize,
+            presets: state.presets,
+          };
+          currentProfile.updatedAt = Date.now();
+          
+          set((state) => ({
+            profiles: state.profiles.map((p) =>
+              p.id === currentProfile.id ? currentProfile : p,
+            ),
+          }));
+        },
+        renameProfile: (profileId: string, newName: string) => {
+          set((state) => ({
+            profiles: state.profiles.map((p) =>
+              p.id === profileId
+                ? { ...p, name: newName, updatedAt: Date.now() }
+                : p,
+            ),
+          }));
+        },
+        deleteProfile: (profileId: string) => {
+          const state = get();
+          if (state.profiles.length <= 1) return; // Don't delete the last profile
+          if (profileId === "default") return; // Don't delete default profile
+          
+          set((state) => {
+            const newProfiles = state.profiles.filter((p) => p.id !== profileId);
+            const newCurrentProfileId =
+              state.currentProfileId === profileId
+                ? newProfiles[0].id
+                : state.currentProfileId;
+            
+            // If we're switching to a different profile, load its data
+            if (newCurrentProfileId !== state.currentProfileId) {
+              const newProfile = newProfiles.find((p) => p.id === newCurrentProfileId);
+              if (newProfile) {
+                return {
+                  profiles: newProfiles,
+                  currentProfileId: newCurrentProfileId,
+                  ...newProfile.data,
+                };
+              }
+            }
+            
+            return {
+              profiles: newProfiles,
+              currentProfileId: newCurrentProfileId,
+            };
+          });
+        },
+        exportProfile: (profileId: string) => {
+          const state = get();
+          const profile = state.profiles.find((p) => p.id === profileId);
+          return profile || null;
+        },
+        importProfile: (profile: Profile) => {
+          set((state) => {
+            // Check if profile with same ID already exists
+            const exists = state.profiles.some((p) => p.id === profile.id);
+            if (exists) {
+              // Generate new ID
+              profile.id = `profile-${Date.now()}`;
+            }
+            return {
+              profiles: [...state.profiles, profile],
+            };
+          });
+        },
+        duplicateProfile: (profileId: string) => {
+          const state = get();
+          const profile = state.profiles.find((p) => p.id === profileId);
+          if (!profile) return;
+          
+          const newProfile: Profile = {
+            ...profile,
+            id: `profile-${Date.now()}`,
+            name: `${profile.name} (Copy)`,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          
+          set((state) => ({
+            profiles: [...state.profiles, newProfile],
+          }));
+        },
       };
     },
     {
@@ -466,8 +757,46 @@ export const useSettingsStore = create(
         if (!state?._hasHydrated) {
           state?.setHasHydrated(true);
         }
+        // Initialize profiles if they don't exist
+        if (state && (!state.profiles || state.profiles.length === 0)) {
+          const defaultProfile: Profile = {
+            id: "default",
+            name: "Default",
+            data: {
+              discoveredNodes: state.discoveredNodes || [],
+              hideDiscoveredNodes: state.hideDiscoveredNodes || false,
+              myFilters: state.myFilters || [],
+              colorBlindMode: state.colorBlindMode || "none",
+              colorBlindSeverity: state.colorBlindSeverity || 1,
+              fitBoundsOnChange: state.fitBoundsOnChange || false,
+              transforms: state.transforms || {},
+              mapTransform: state.mapTransform || null,
+              mapFilter: state.mapFilter || "none",
+              baseIconSize: state.baseIconSize || 1,
+              playerIconSize: state.playerIconSize || 1,
+              iconSizeByGroup: state.iconSizeByGroup || {},
+              iconSizeByFilter: state.iconSizeByFilter || {},
+              showTraceLine: state.showTraceLine ?? true,
+              traceLineLength: state.traceLineLength || 100,
+              traceLineRate: state.traceLineRate || 5,
+              traceLineColor: state.traceLineColor || "#1ccdd1B3",
+              showGrid: state.showGrid || false,
+              showFilters: state.showFilters ?? true,
+              expandedFilters: state.expandedFilters || false,
+              drawingColor: state.drawingColor || "#FFFFFFAA",
+              drawingSize: state.drawingSize || 4,
+              textColor: state.textColor || "#1ccdd1",
+              textSize: state.textSize || 20,
+              presets: state.presets || {},
+            },
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          state.profiles = [defaultProfile];
+          state.currentProfileId = "default";
+        }
       },
-      version: 3,
+      version: 4,
       // @ts-ignore
       migrate: (persistedState, version) => {
         if (version < 3) {
@@ -478,6 +807,47 @@ export const useSettingsStore = create(
               const oldState = JSON.parse(oldStorage).state;
               Object.assign(persistedState || {}, oldState);
             }
+          }
+        }
+        if (version < 4) {
+          // Initialize profiles from existing settings
+          const state = persistedState as any;
+          if (!state.profiles || state.profiles.length === 0) {
+            const defaultProfile: Profile = {
+              id: "default",
+              name: "Default",
+              data: {
+                discoveredNodes: state.discoveredNodes || [],
+                hideDiscoveredNodes: state.hideDiscoveredNodes || false,
+                myFilters: state.myFilters || [],
+                colorBlindMode: state.colorBlindMode || "none",
+                colorBlindSeverity: state.colorBlindSeverity || 1,
+                fitBoundsOnChange: state.fitBoundsOnChange || false,
+                transforms: state.transforms || {},
+                mapTransform: state.mapTransform || null,
+                mapFilter: state.mapFilter || "none",
+                baseIconSize: state.baseIconSize || 1,
+                playerIconSize: state.playerIconSize || 1,
+                iconSizeByGroup: state.iconSizeByGroup || {},
+                iconSizeByFilter: state.iconSizeByFilter || {},
+                showTraceLine: state.showTraceLine ?? true,
+                traceLineLength: state.traceLineLength || 100,
+                traceLineRate: state.traceLineRate || 5,
+                traceLineColor: state.traceLineColor || "#1ccdd1B3",
+                showGrid: state.showGrid || false,
+                showFilters: state.showFilters ?? true,
+                expandedFilters: state.expandedFilters || false,
+                drawingColor: state.drawingColor || "#FFFFFFAA",
+                drawingSize: state.drawingSize || 4,
+                textColor: state.textColor || "#1ccdd1",
+                textSize: state.textSize || 20,
+                presets: state.presets || {},
+              },
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            };
+            state.profiles = [defaultProfile];
+            state.currentProfileId = "default";
           }
         }
         return persistedState;
