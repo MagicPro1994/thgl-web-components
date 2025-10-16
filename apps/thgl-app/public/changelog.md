@@ -1,3 +1,7 @@
+# 2.12.1
+
+- Fix: **Blue Protocol: Star Resonance** Player position detection after game update
+
 # 2.12.0
 
 - Feat: **Blue Protocol: Star Resonance** Add support for player position and live tracking of NPCs and Monsters (experimental, needs testing)
