@@ -1,4 +1,8 @@
-# 2.12.1
+# 2.15.0
+
+- Feat: **Blue Protocol: Star Resonance** Add live tracking support for Chests (more coming soon)
+
+# 2.14.1
 
 - Fix: **Blue Protocol: Star Resonance** Player position detection after game update
 
