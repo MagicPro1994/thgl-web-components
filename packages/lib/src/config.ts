@@ -2,6 +2,7 @@ import type { MarkerOptions } from "./types";
 import type { Region } from "./coordinates";
 import type { Drawing, PrivateNode } from "./settings";
 import { Game } from "./games";
+import { unstable_cache } from "next/cache";
 
 export type IconName =
   | "House"
@@ -110,11 +111,18 @@ export function getAppUrl(appName: string, path: string): string {
   return `${DATA_FORGE_URL}/${appName}${path}`;
 }
 
-export function fetchVersion(appName: string): Promise<Version> {
-  return fetchCached(getAppUrl(appName, "/version.json")).then((res) =>
-    res.json(),
-  );
-}
+export const fetchVersion = unstable_cache(
+  async (appName: string): Promise<Version> => {
+    const res = await fetch(getAppUrl(appName, "/version.json"), {
+      cache: "no-store",
+    });
+    return res.json();
+  },
+  ["version"],
+  {
+    revalidate: 60,
+  },
+);
 
 export function getMapNameFromVersion(
   version: Version,

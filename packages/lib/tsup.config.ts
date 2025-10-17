@@ -9,5 +9,6 @@ export default defineConfig((options: Options) => ({
   dts: true,
   format: ["esm"],
   target: "es2021",
+  external: ["next"],
   ...options,
 }));
