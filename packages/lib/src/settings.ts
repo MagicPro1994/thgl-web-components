@@ -599,10 +599,10 @@ export const useSettingsStore = create(
           const state = get();
           const profile = state.profiles.find((p) => p.id === profileId);
           if (!profile) return;
-          
+
           // Update current profile before switching
           state.updateCurrentProfile();
-          
+
           // Apply the new profile data
           set({
             currentProfileId: profileId,
@@ -639,7 +639,7 @@ export const useSettingsStore = create(
             (p) => p.id === state.currentProfileId,
           );
           if (!currentProfile) return;
-          
+
           currentProfile.data = {
             discoveredNodes: state.discoveredNodes,
             hideDiscoveredNodes: state.hideDiscoveredNodes,
@@ -668,7 +668,7 @@ export const useSettingsStore = create(
             presets: state.presets,
           };
           currentProfile.updatedAt = Date.now();
-          
+
           set((state) => ({
             profiles: state.profiles.map((p) =>
               p.id === currentProfile.id ? currentProfile : p,
@@ -688,14 +688,14 @@ export const useSettingsStore = create(
           const state = get();
           if (state.profiles.length <= 1) return; // Don't delete the last profile
           if (profileId === "default") return; // Don't delete default profile
-          
+
           set((state) => {
             const newProfiles = state.profiles.filter((p) => p.id !== profileId);
             const newCurrentProfileId =
               state.currentProfileId === profileId
                 ? newProfiles[0].id
                 : state.currentProfileId;
-            
+
             // If we're switching to a different profile, load its data
             if (newCurrentProfileId !== state.currentProfileId) {
               const newProfile = newProfiles.find((p) => p.id === newCurrentProfileId);
@@ -707,7 +707,7 @@ export const useSettingsStore = create(
                 };
               }
             }
-            
+
             return {
               profiles: newProfiles,
               currentProfileId: newCurrentProfileId,
@@ -736,7 +736,7 @@ export const useSettingsStore = create(
           const state = get();
           const profile = state.profiles.find((p) => p.id === profileId);
           if (!profile) return;
-          
+
           const newProfile: Profile = {
             ...profile,
             id: `profile-${Date.now()}`,
@@ -744,7 +744,7 @@ export const useSettingsStore = create(
             createdAt: Date.now(),
             updatedAt: Date.now(),
           };
-          
+
           set((state) => ({
             profiles: [...state.profiles, newProfile],
           }));
@@ -758,7 +758,7 @@ export const useSettingsStore = create(
           state?.setHasHydrated(true);
         }
         // Initialize profiles if they don't exist
-        if (state && (!state.profiles || state.profiles.length === 0)) {
+        if (state && !state.profiles?.length) {
           const defaultProfile: Profile = {
             id: "default",
             name: "Default",
@@ -812,7 +812,7 @@ export const useSettingsStore = create(
         if (version < 4) {
           // Initialize profiles from existing settings
           const state = persistedState as any;
-          if (!state.profiles || state.profiles.length === 0) {
+          if (!state.profiles?.length) {
             const defaultProfile: Profile = {
               id: "default",
               name: "Default",

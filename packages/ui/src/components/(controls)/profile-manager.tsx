@@ -188,15 +188,15 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
   const handleDateDisplay = (timestamp: number) => {
     const date = new Date(timestamp);
 
-    // Format date as YYYY-MM-DD hh:mm:ss AM/PM
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours() % 12 || 12).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    const ampm = date.getHours() >= 12 ? "PM" : "AM";
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${ampm}`;
+    // Format date as YYYY-MM-DD, time as hh:mm:ss AM/PM using locale options
+    const dateString = date.toLocaleDateString("en-CA"); // "YYYY-MM-DD"
+    const timeString = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+    return `${dateString} ${timeString}`;
   };
 
   return (
@@ -236,10 +236,10 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
               <Plus className="h-4 w-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent aria-describedby="This dialog allows you to create a new profile.">
+          <DialogContent aria-describedby="create-profile-description">
             <DialogHeader>
               <DialogTitle>Create New Profile</DialogTitle>
-              <DialogDescription>
+              <DialogDescription id="create-profile-description">
                 Create a new profile based on your current settings.
               </DialogDescription>
             </DialogHeader>
@@ -291,10 +291,10 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
                   <Edit2 className="h-4 w-4" />
                 </Button>
               </DialogTrigger>
-              <DialogContent aria-describedby="This dialog allows you to rename the selected profile.">
+              <DialogContent aria-describedby="rename-profile-description">
                 <DialogHeader>
                   <DialogTitle>Rename Profile</DialogTitle>
-                  <DialogDescription>
+                  <DialogDescription id="rename-profile-description">
                     Enter a new name for this profile.
                   </DialogDescription>
                 </DialogHeader>
