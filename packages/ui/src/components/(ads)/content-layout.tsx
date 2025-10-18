@@ -1,6 +1,7 @@
 import { cn } from "@repo/lib";
 import { AdBlocker } from "./ad-blocker";
 import { NitroScript } from "./nitro-script";
+import { getObfuscatedAdId, AD_TYPES } from "./obfuscated-ids";
 
 import {
   WideSkyscraper,
@@ -37,6 +38,16 @@ export function ContentLayout({
   more,
   sidebar,
 }: ContentLayoutProps) {
+  // Generate generic obfuscated IDs (shared across all subdomains for better dynamic flooring)
+  const wideSkyscraper1Id = getObfuscatedAdId(AD_TYPES.WIDE_SKYSCRAPER_1);
+  const wideSkyscraper2Id = getObfuscatedAdId(AD_TYPES.WIDE_SKYSCRAPER_2);
+  const largeMobileBannerId = getObfuscatedAdId(AD_TYPES.LARGE_MOBILE_BANNER);
+  const mobileBannerId = getObfuscatedAdId(AD_TYPES.MOBILE_BANNER);
+  const mobileVideoId = getObfuscatedAdId(AD_TYPES.MOBILE_VIDEO);
+
+  // Targeting for filtering in NitroPay reporting
+  // Use 'platform' as primary discriminator to avoid bleed over between web/app
+  const targeting = { platform: "web", game: id };
   return (
     <div className="flex grow p-2">
       {/* Left Ad */}
@@ -51,7 +62,8 @@ export function ContentLayout({
           }
         >
           <WideSkyscraper
-            id={`${id}-wide-skyscraper-1`}
+            id={wideSkyscraper1Id}
+            targeting={targeting}
             mediaQuery="(min-width: 1024px)"
           />
         </NitroScript>
@@ -72,7 +84,7 @@ export function ContentLayout({
           loading={<LargeMobileBannerLoading />}
           fallback={<LargeMobileBannerFallback />}
         >
-          <LargeMobileBanner id={`${id}-large-mobile-banner`} />
+          <LargeMobileBanner id={largeMobileBannerId} targeting={targeting} />
         </NitroScript>
 
         {content}
@@ -82,10 +94,11 @@ export function ContentLayout({
           loading={<MobileBannerLoading />}
           fallback={<MobileBannerFallback />}
         >
-          <MobileBanner id={`${id}-mobile-banner`} />
+          <MobileBanner id={mobileBannerId} targeting={targeting} />
           <FloatingMobileBanner
-            bannerId={`${id}:mobile-banner`}
-            videoId={`${id}:mobile-video`}
+            bannerId={mobileBannerId}
+            videoId={mobileVideoId}
+            targeting={targeting}
           />
         </NitroScript>
 
@@ -98,7 +111,7 @@ export function ContentLayout({
           loading={<WideSkyscraperLoading className="min-[860px]:block" />}
           fallback={<WideSkyscraperFallback className="min-[860px]:block" />}
         >
-          <WideSkyscraper id={`${id}-wide-skyscraper-2`} />
+          <WideSkyscraper id={wideSkyscraper2Id} targeting={targeting} />
         </NitroScript>
       </div>
     </div>

@@ -4,17 +4,19 @@ import { getNitroAds } from "./nitro-pay";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { AdFreeContainer } from "./ad-free-container";
 import { cn } from "@repo/lib";
-import { AdBlockMessage } from "./ad-block-message";
-import { AdLoadingMessage } from "./ad-loading-message";
+import { IS_DEMO_MODE } from "./constants";
+import { AdPlaceholder } from "./ad-placeholder";
 
 const smallMediaQuery = "(min-width: 768px)";
 const bigMediaQuery = "(min-width: 1250px)";
 export function FloatingBanner({
   id,
+  targeting,
   isLoading = false,
   isBlocked = false,
 }: {
   id: string;
+  targeting?: Record<string, string>;
   isLoading?: boolean;
   isBlocked?: boolean;
 }): JSX.Element {
@@ -25,22 +27,27 @@ export function FloatingBanner({
     if (!smallMatched || isLoading || isBlocked) {
       return;
     }
-    const sizes = bigMatched
-      ? [
-          ["300", "600"],
-          ["300", "250"],
-          ["160", "600"],
-        ]
-      : [["160", "600"]];
-    getNitroAds().createAd(id, {
-      refreshTime: 30,
-      renderVisibleOnly: false,
-      sizes: sizes,
-      mediaQuery: smallMediaQuery,
-      debug: "silent",
-      demo: location.href.includes("localhost"),
-    });
-  }, [smallMatched, bigMatched]);
+    try {
+      const sizes = bigMatched
+        ? [
+            ["300", "600"],
+            ["300", "250"],
+            ["160", "600"],
+          ]
+        : [["160", "600"]];
+      getNitroAds().createAd(id, {
+        targeting, // Custom targeting for reporting filters
+        refreshTime: 30,
+        renderVisibleOnly: false,
+        sizes: sizes,
+        mediaQuery: smallMediaQuery,
+        debug: "silent",
+        demo: IS_DEMO_MODE,
+      });
+    } catch (error) {
+      console.error(`[FloatingBanner] Failed to create ad ${id}:`, error);
+    }
+  }, [smallMatched, bigMatched, id, targeting, isLoading, isBlocked]);
 
   if (!smallMatched) {
     return <></>;
@@ -48,33 +55,23 @@ export function FloatingBanner({
 
   if (isLoading) {
     return (
-      <AdFreeContainer className="fixed bottom-2 right-2">
-        <div
-          id={id}
-          className={cn(
-            "h-[600px] flex items-center justify-center flex-col",
-            bigMatched ? "w-[300px]" : "w-[160px]",
-          )}
-        >
-          <AdLoadingMessage />
-        </div>
-      </AdFreeContainer>
+      <AdPlaceholder
+        type="loading"
+        width={bigMatched ? "w-[300px]" : "w-[160px]"}
+        height="h-[600px]"
+        className="fixed bottom-2 right-2"
+      />
     );
   }
 
   if (isBlocked) {
     return (
-      <AdFreeContainer className="fixed bottom-2 right-2">
-        <div
-          id={id}
-          className={cn(
-            "h-[600px] flex items-center justify-center flex-col",
-            bigMatched ? "w-[300px]" : "w-[160px]",
-          )}
-        >
-          <AdBlockMessage />
-        </div>
-      </AdFreeContainer>
+      <AdPlaceholder
+        type="blocked"
+        width={bigMatched ? "w-[300px]" : "w-[160px]"}
+        height="h-[600px]"
+        className="fixed bottom-2 right-2"
+      />
     );
   }
   return (

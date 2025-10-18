@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { getNitroAds } from "./nitro-pay";
 import { NitroScript } from "./nitro-script";
 import { AdFreeContainer } from "./ad-free-container";
+import { IS_DEMO_MODE } from "./constants";
 
 const id = "thgl-dashboard";
 export function THGLDashboardAds(): JSX.Element {
@@ -15,30 +16,35 @@ export function THGLDashboardAds(): JSX.Element {
 
 function NitroPayResponsive({ id }: { id: string }): JSX.Element {
   useEffect(() => {
-    getNitroAds().createAd(id, {
-      refreshTime: 30,
-      renderVisibleOnly: false,
-      sizes: [
-        ["300", "250"],
-        ["320", "50"],
-        ["320", "100"],
-        ["336", "280"],
-      ],
-      report: {
-        enabled: true,
-        icon: true,
-        wording: "Report Ad",
-        position: "bottom-right",
-      },
-      skipBidders: ["google"],
-      demo: location.href.includes("localhost"),
-      debug: "silent",
-    });
-  }, []);
+    try {
+      getNitroAds().createAd(id, {
+        targeting: { platform: "thgl-app", component: "dashboard" }, // Use 'platform' as primary discriminator
+        refreshTime: 30,
+        renderVisibleOnly: false,
+        sizes: [
+          ["300", "250"],
+          ["320", "50"],
+          ["320", "100"],
+          ["336", "280"],
+        ],
+        report: {
+          enabled: true,
+          icon: true,
+          wording: "Report Ad",
+          position: "bottom-right",
+        },
+        skipBidders: ["google"],
+        demo: IS_DEMO_MODE,
+        debug: "silent",
+      });
+    } catch (error) {
+      console.error(`[THGLDashboardAds] Failed to create ad ${id}:`, error);
+    }
+  }, [id]);
 
   return (
     <AdFreeContainer>
-      <div className="w-full shrink-0 min-h-[280]" id={id} />
+      <div className="w-full shrink-0 min-h-[280px]" id={id} />
     </AdFreeContainer>
   );
 }

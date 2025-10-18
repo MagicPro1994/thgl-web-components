@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { create } from "zustand";
 import { NitroAds } from "./nitro-pay";
+import { NITROPAY_SITE_ID } from "./constants";
 
 type NitroState = "loading" | "ready" | "error";
 
@@ -38,7 +39,7 @@ export function NitroScript({
     const intervalId = setInterval(() => {
       if (
         "nitroAds" in window &&
-        (window.nitroAds as NitroAds).siteId === 1487
+        (window.nitroAds as NitroAds).siteId === NITROPAY_SITE_ID
       ) {
         setState("ready");
         clearInterval(intervalId);
@@ -72,12 +73,12 @@ export function NitroScript({
         onReady={() => {
           if (
             "nitroAds" in window &&
-            (window.nitroAds as NitroAds).siteId === 1487
+            (window.nitroAds as NitroAds).siteId === NITROPAY_SITE_ID
           ) {
             setState("ready");
           }
         }}
-        src="https://s.nitropay.com/ads-1487.js"
+        src={`https://s.nitropay.com/ads-${NITROPAY_SITE_ID}.js`}
       />
       {state === "loading" && loading}
       {state === "ready" && children}
