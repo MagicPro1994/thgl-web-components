@@ -5,7 +5,7 @@ import Script from "next/script";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { create } from "zustand";
-import { NitroAds } from "./nitro-pay";
+import { getNitroAds, NitroAds } from "./nitro-pay";
 import { NITROPAY_SITE_ID } from "./constants";
 
 type NitroState = "loading" | "ready" | "error";
@@ -29,6 +29,7 @@ export function NitroScript({
 }): JSX.Element {
   const accountHasHydrated = useAccountStore((state) => state._hasHydrated);
   const adRemoval = useAccountStore((state) => state.perks.adRemoval);
+  const email = useAccountStore((state) => state.email);
   const { state, setState } = useNitroState();
 
   useEffect(() => {
@@ -55,6 +56,28 @@ export function NitroScript({
       clearInterval(intervalId);
     };
   }, [state]);
+
+  useEffect(() => {
+    if (adRemoval || state !== "ready") {
+      return;
+    }
+
+    if (email) {
+      // User logged in - send hashed email to NitroPay
+      getNitroAds()
+        .addUserToken(email, "PLAIN")
+        .then(() => {
+          console.log("[NitroPay] Hashed email tracking enabled");
+        })
+        .catch((error) => {
+          console.error("[NitroPay] Failed to add user token:", error);
+        });
+    } else {
+      // User logged out - clear tokens
+      getNitroAds().clearUserTokens();
+      console.log("[NitroPay] User tokens cleared");
+    }
+  }, [state, email]);
 
   if (!accountHasHydrated) {
     return <>{loading}</>;

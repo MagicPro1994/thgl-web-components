@@ -14,6 +14,7 @@ import { useSettingsStore } from "../settings";
 import { dispose, loadDiscordRPCPlugin } from "./discord";
 import { logVersion } from "./manifest";
 import { TH_GL_URL } from "../config";
+import { promisifyOverwolf } from "./promisify";
 
 export async function initBackground(
   gameClassId: number,
@@ -173,6 +174,19 @@ async function refreshSubscriberStatus(
             premiumFeatures: body.premiumFeatures,
           },
         });
+
+        // Send hashed email to Overwolf for better ad targeting
+        if (body.email && !body.adRemoval) {
+          promisifyOverwolf(
+            overwolf.extensions.current.generateUserEmailHashes,
+          )(body.email)
+            .then(() => {
+              console.log("[Overwolf] Hashed email tracking enabled");
+            })
+            .catch((error) => {
+              console.error("Failed to send email to Overwolf:", error);
+            });
+        }
       }
     } catch (err) {
       console.error(err);
