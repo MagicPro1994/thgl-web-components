@@ -101,12 +101,6 @@ export const API_FORGE_URL = "https://api-forge.th.gl";
 export const DATA_FORGE_URL = "https://data.th.gl";
 // export const DATA_FORGE_URL = "http://localhost:3000";
 
-export function fetchCached(url: string): Promise<any> {
-  return fetch(url, {
-    // @ts-ignore
-    next: { revalidate: 60 },
-  });
-}
 export function getAppUrl(appName: string, path: string): string {
   return `${DATA_FORGE_URL}/${appName}${path}`;
 }
@@ -124,19 +118,67 @@ export const fetchVersion = unstable_cache(
   },
 );
 
+// Cache for version lookup maps to avoid recreating them on each call
+const versionCacheMap = new WeakMap<
+  Version,
+  {
+    reverseDictMap: Map<string, string[]>;
+    tileKeys: Set<string>;
+    filterValueIds: Set<string>;
+    filterGroupIds: Set<string>;
+  }
+>();
+
+function getVersionLookupCache(version: Version) {
+  let cache = versionCacheMap.get(version);
+
+  if (!cache) {
+    // Build reverse dictionary map (value -> keys[])
+    const reverseDictMap = new Map<string, string[]>();
+    for (const [key, value] of Object.entries(version.data.enDict)) {
+      const existing = reverseDictMap.get(value) || [];
+      existing.push(key);
+      reverseDictMap.set(value, existing);
+    }
+
+    // Build set of valid tile keys
+    const tileKeys = new Set(Object.keys(version.data.tiles));
+
+    // Build set of valid filter value IDs
+    const filterValueIds = new Set<string>();
+    const filterGroupIds = new Set<string>();
+    for (const filter of version.data.filters) {
+      filterGroupIds.add(filter.group);
+      for (const value of filter.values) {
+        filterValueIds.add(value.id);
+      }
+    }
+
+    cache = { reverseDictMap, tileKeys, filterValueIds, filterGroupIds };
+    versionCacheMap.set(version, cache);
+  }
+
+  return cache;
+}
+
 export function getMapNameFromVersion(
   version: Version,
   map: string,
 ): string | null {
   const decodedMap = decodeURIComponent(map);
-  const mapNames = Object.entries(version.data.enDict).filter(
-    ([, v]) => v === decodedMap,
-  );
-  const mapName = mapNames.find(([k]) => version.data.tiles[k])?.[0];
-  if (!mapName) {
-    return null;
+  const { reverseDictMap, tileKeys } = getVersionLookupCache(version);
+
+  const possibleKeys = reverseDictMap.get(decodedMap);
+  if (!possibleKeys) return null;
+
+  // Find first key that exists in tiles
+  for (const key of possibleKeys) {
+    if (tileKeys.has(key)) {
+      return key;
+    }
   }
-  return mapName;
+
+  return null;
 }
 
 export function getTypeFromVersion(
@@ -144,17 +186,19 @@ export function getTypeFromVersion(
   type: string,
 ): string | null {
   const decodedType = decodeURIComponent(type);
-  const typeNames = Object.entries(version.data.enDict).filter(
-    ([, v]) => v === decodedType,
-  );
-  const typeName = typeNames.find(([k]) =>
-    version.data.filters.some((f) => f.values.find((v) => v.id === k)),
-  )?.[0];
+  const { reverseDictMap, filterValueIds } = getVersionLookupCache(version);
 
-  if (!typeName) {
-    return null;
+  const possibleKeys = reverseDictMap.get(decodedType);
+  if (!possibleKeys) return null;
+
+  // Find first key that exists in filter values
+  for (const key of possibleKeys) {
+    if (filterValueIds.has(key)) {
+      return key;
+    }
   }
-  return typeName;
+
+  return null;
 }
 
 export function getGroupFromVersion(
@@ -162,17 +206,19 @@ export function getGroupFromVersion(
   group: string,
 ): string | null {
   const decodedGroup = decodeURIComponent(group);
-  const groupNames = Object.entries(version.data.enDict).filter(
-    ([, v]) => v === decodedGroup,
-  );
-  const groupName = groupNames.find(([k]) =>
-    version.data.filters.some((f) => f.group === k),
-  )?.[0];
+  const { reverseDictMap, filterGroupIds } = getVersionLookupCache(version);
 
-  if (!groupName) {
-    return null;
+  const possibleKeys = reverseDictMap.get(decodedGroup);
+  if (!possibleKeys) return null;
+
+  // Find first key that exists in filter groups
+  for (const key of possibleKeys) {
+    if (filterGroupIds.has(key)) {
+      return key;
+    }
   }
-  return groupName;
+
+  return null;
 }
 
 export function getIconsUrl(
@@ -195,36 +241,69 @@ export function getIconsUrl(
   return getAppUrl(appName, `/icons/${icon}`);
 }
 
-export async function fetchDict(
-  appName: string,
-  locale: string = "en",
-): Promise<Record<string, string>> {
-  const res = await fetchCached(
-    `${DATA_FORGE_URL}/${appName}/dicts/${locale}.json`,
-  );
-  return res.json();
-}
+export const fetchDict = unstable_cache(
+  async (
+    appName: string,
+    locale: string = "en",
+  ): Promise<Record<string, string>> => {
+    const res = await fetch(
+      `${DATA_FORGE_URL}/${appName}/dicts/${locale}.json`,
+      {
+        cache: "no-store",
+      },
+    );
+    return res.json();
+  },
+  ["dict"],
+  {
+    revalidate: 60,
+  },
+);
 
-export async function fetchDatabase(appName: string): Promise<DatabaseConfig> {
-  const res = await fetchCached(
-    `${DATA_FORGE_URL}/${appName}/config/database.json`,
-  );
-  return res.json();
-}
+export const fetchDatabase = unstable_cache(
+  async (appName: string): Promise<DatabaseConfig> => {
+    const res = await fetch(
+      `${DATA_FORGE_URL}/${appName}/config/database.json`,
+      {
+        cache: "no-store",
+      },
+    );
+    return res.json();
+  },
+  ["database"],
+  {
+    revalidate: 60,
+  },
+);
 
-export async function fetchFilters(appName: string): Promise<FiltersConfig> {
-  const res = await fetchCached(
-    `${DATA_FORGE_URL}/${appName}/config/filters.json`,
-  );
-  return res.json();
-}
+export const fetchFilters = unstable_cache(
+  async (appName: string): Promise<FiltersConfig> => {
+    const res = await fetch(
+      `${DATA_FORGE_URL}/${appName}/config/filters.json`,
+      {
+        cache: "no-store",
+      },
+    );
+    return res.json();
+  },
+  ["filters"],
+  {
+    revalidate: 60,
+  },
+);
 
-export async function fetchTiles(appName: string): Promise<TilesConfig> {
-  const res = await fetchCached(
-    `${DATA_FORGE_URL}/${appName}/config/tiles.json`,
-  );
-  return res.json();
-}
+export const fetchTiles = unstable_cache(
+  async (appName: string): Promise<TilesConfig> => {
+    const res = await fetch(`${DATA_FORGE_URL}/${appName}/config/tiles.json`, {
+      cache: "no-store",
+    });
+    return res.json();
+  },
+  ["tiles"],
+  {
+    revalidate: 60,
+  },
+);
 
 export type GlobalFiltersConfig = Array<{
   group: string;
