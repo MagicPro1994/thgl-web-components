@@ -2,7 +2,15 @@ import type { MarkerOptions } from "./types";
 import type { Region } from "./coordinates";
 import type { Drawing, PrivateNode } from "./settings";
 import { Game } from "./games";
-import { unstable_cache } from "next/cache";
+
+// Conditional import of Next.js cache - only available in Next.js environments
+let unstable_cache: typeof import("next/cache").unstable_cache | undefined;
+try {
+  unstable_cache = require("next/cache").unstable_cache;
+} catch {
+  // Not in a Next.js environment (e.g., Vite), caching will be disabled
+  unstable_cache = undefined;
+}
 
 export type IconName =
   | "House"
@@ -105,7 +113,20 @@ export function getAppUrl(appName: string, path: string): string {
   return `${DATA_FORGE_URL}/${appName}${path}`;
 }
 
-export const fetchVersion = unstable_cache(
+// Helper to conditionally apply unstable_cache if available (Next.js), otherwise return the function as-is
+function conditionalCache<T extends (...args: any[]) => Promise<any>>(
+  fn: T,
+  keys: string[],
+  options: { revalidate: number },
+): T {
+  if (unstable_cache) {
+    return unstable_cache(fn, keys, options) as T;
+  }
+  // In non-Next.js environments (Vite), just return the function without caching
+  return fn;
+}
+
+export const fetchVersion = conditionalCache(
   async (appName: string): Promise<Version> => {
     const res = await fetch(getAppUrl(appName, "/version.json"), {
       cache: "no-store",
@@ -241,7 +262,7 @@ export function getIconsUrl(
   return getAppUrl(appName, `/icons/${icon}`);
 }
 
-export const fetchDict = unstable_cache(
+export const fetchDict = conditionalCache(
   async (
     appName: string,
     locale: string = "en",
@@ -260,7 +281,7 @@ export const fetchDict = unstable_cache(
   },
 );
 
-export const fetchDatabase = unstable_cache(
+export const fetchDatabase = conditionalCache(
   async (appName: string): Promise<DatabaseConfig> => {
     const res = await fetch(
       `${DATA_FORGE_URL}/${appName}/config/database.json`,
@@ -276,7 +297,7 @@ export const fetchDatabase = unstable_cache(
   },
 );
 
-export const fetchFilters = unstable_cache(
+export const fetchFilters = conditionalCache(
   async (appName: string): Promise<FiltersConfig> => {
     const res = await fetch(
       `${DATA_FORGE_URL}/${appName}/config/filters.json`,
@@ -292,7 +313,7 @@ export const fetchFilters = unstable_cache(
   },
 );
 
-export const fetchTiles = unstable_cache(
+export const fetchTiles = conditionalCache(
   async (appName: string): Promise<TilesConfig> => {
     const res = await fetch(`${DATA_FORGE_URL}/${appName}/config/tiles.json`, {
       cache: "no-store",
