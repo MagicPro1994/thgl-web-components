@@ -100,6 +100,7 @@ export async function POST(request: NextRequest) {
       ...perks,
       expiresIn: refreshTokenResult.expires_in,
       decryptedUserId: userId,
+      email: currentUser.data.attributes.email,
     };
     return Response.json(result, {
       headers: CORS_HEADERS,

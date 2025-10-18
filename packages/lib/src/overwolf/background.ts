@@ -141,21 +141,37 @@ async function refreshSubscriberStatus(
       const body = (await response.json()) as {
         expiresIn: number;
         decryptedUserId: string;
+        email: string;
       } & Perks;
       if (!response.ok) {
         console.warn(body, appId, userId);
         if (response.status === 403) {
-          accountStore.setAccount(userId, null, defaultPerks);
+          accountStore.setAccount({
+            userId,
+            decryptedUserId: null,
+            email: null,
+            perks: defaultPerks,
+          });
         } else if (response.status === 404) {
-          accountStore.setAccount(null, null, defaultPerks);
+          accountStore.setAccount({
+            userId: null,
+            decryptedUserId: null,
+            email: null,
+            perks: defaultPerks,
+          });
         }
       } else {
         console.log(`Patreon successfully activated`, body);
-        accountStore.setAccount(userId, body.decryptedUserId, {
-          adRemoval: body.adRemoval,
-          previewReleaseAccess: body.previewReleaseAccess,
-          comments: body.comments,
-          premiumFeatures: body.premiumFeatures,
+        accountStore.setAccount({
+          userId,
+          decryptedUserId: body.decryptedUserId,
+          email: body.email,
+          perks: {
+            adRemoval: body.adRemoval,
+            previewReleaseAccess: body.previewReleaseAccess,
+            comments: body.comments,
+            premiumFeatures: body.premiumFeatures,
+          },
         });
       }
     } catch (err) {

@@ -42,6 +42,7 @@ export interface PatreonUser {
   data: {
     attributes: {
       full_name: string;
+      email: string;
     };
     id: string;
     relationships: {
@@ -121,7 +122,7 @@ export function postRefreshToken(refreshToken: string) {
 
 export function getCurrentUser(token: PatreonToken) {
   return fetch(
-    `https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields%5Buser%5D=full_name`,
+    `https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields%5Buser%5D=full_name,email`,
     {
       headers: {
         Authorization: `Bearer ${token.access_token}`,
@@ -213,6 +214,7 @@ export async function getAccount() {
   const account: THGLAccount = {
     userId: null,
     decryptedUserId: null,
+    email: null,
     perks: {
       adRemoval: false,
       comments: false,
@@ -236,6 +238,7 @@ export async function getAccount() {
         ) {
           account.userId = userId.value;
           account.decryptedUserId = id;
+          account.email = currentUserResult.data.attributes.email;
           account.perks = getPerks(currentUserResult);
         }
       }

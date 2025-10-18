@@ -12,6 +12,7 @@ export type Perks = {
 export type THGLAccount = {
   userId: string | null;
   decryptedUserId: string | null;
+  email: string | null;
   perks: Perks;
 };
 
@@ -29,12 +30,9 @@ export const useAccountStore = create(
       setHasHydrated: (state: boolean) => void;
       userId: string | null;
       decryptedUserId: string | null;
+      email: string | null;
       perks: Perks;
-      setAccount: (
-        userId: string | null,
-        decryptedUserId: string | null,
-        perks: Perks,
-      ) => void;
+      setAccount: (account: THGLAccount) => void;
       showUserDialog: boolean;
       setShowUserDialog: (showUserDialog: boolean) => void;
     }>(
@@ -45,12 +43,14 @@ export const useAccountStore = create(
         },
         userId: null,
         decryptedUserId: null,
+        email: null,
         perks: defaultPerks,
-        setAccount: (userId, decryptedUserId, perks) => {
+        setAccount: (account) => {
           set({
-            userId,
-            decryptedUserId,
-            perks,
+            userId: account.userId,
+            decryptedUserId: account.decryptedUserId,
+            email: account.email,
+            perks: account.perks,
           });
         },
         showUserDialog: false,
@@ -65,7 +65,7 @@ export const useAccountStore = create(
             state?.setHasHydrated(true);
           }
         },
-        version: 1,
+        version: 2,
         migrate: (persistedState: any, version) => {
           if (version === 0) {
             persistedState.perks = {
@@ -77,6 +77,10 @@ export const useAccountStore = create(
             };
             delete persistedState.adRemoval;
             delete persistedState.previewReleaseAccess;
+          }
+          if (version <= 1) {
+            // Add email field for version 2
+            persistedState.email = null;
           }
           return persistedState;
         },
