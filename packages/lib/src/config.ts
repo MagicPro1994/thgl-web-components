@@ -128,9 +128,7 @@ function conditionalCache<T extends (...args: any[]) => Promise<any>>(
 
 export const fetchVersion = conditionalCache(
   async (appName: string): Promise<Version> => {
-    const res = await fetch(getAppUrl(appName, "/version.json"), {
-      cache: "no-store",
-    });
+    const res = await fetch(getAppUrl(appName, "/version.json"));
     return res.json();
   },
   ["version"],
