@@ -47,7 +47,11 @@ export default async function RummagePile() {
   const data = (await timedLootPilesResponse.json()) as TimedLootPiles;
 
   const url = `${DATA_FORGE_URL}/api/palia/search?q=stable`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    next: {
+      revalidate: 300, // Auto-revalidate every 5 minutes
+    },
+  });
   const buffer = await response.arrayBuffer();
   const stableNodes = decodeFromBuffer<Spawns>(new Uint8Array(buffer));
   const stableNodeIcon = filters

@@ -5,8 +5,10 @@ import { Game } from "./games";
 
 // Conditional import of Next.js cache - only available in Next.js environments
 let unstable_cache: typeof import("next/cache").unstable_cache | undefined;
+
 try {
-  unstable_cache = require("next/cache").unstable_cache;
+  const nextCache = await import("next/cache");
+  unstable_cache = nextCache.unstable_cache;
 } catch {
   // Not in a Next.js environment (e.g., Vite), caching will be disabled
   unstable_cache = undefined;
@@ -267,9 +269,6 @@ export const fetchDict = conditionalCache(
   ): Promise<Record<string, string>> => {
     const res = await fetch(
       `${DATA_FORGE_URL}/${appName}/dicts/${locale}.json`,
-      {
-        cache: "no-store",
-      },
     );
     return res.json();
   },
@@ -283,9 +282,6 @@ export const fetchDatabase = conditionalCache(
   async (appName: string): Promise<DatabaseConfig> => {
     const res = await fetch(
       `${DATA_FORGE_URL}/${appName}/config/database.json`,
-      {
-        cache: "no-store",
-      },
     );
     return res.json();
   },
@@ -297,12 +293,7 @@ export const fetchDatabase = conditionalCache(
 
 export const fetchFilters = conditionalCache(
   async (appName: string): Promise<FiltersConfig> => {
-    const res = await fetch(
-      `${DATA_FORGE_URL}/${appName}/config/filters.json`,
-      {
-        cache: "no-store",
-      },
-    );
+    const res = await fetch(`${DATA_FORGE_URL}/${appName}/config/filters.json`);
     return res.json();
   },
   ["filters"],
@@ -313,9 +304,7 @@ export const fetchFilters = conditionalCache(
 
 export const fetchTiles = conditionalCache(
   async (appName: string): Promise<TilesConfig> => {
-    const res = await fetch(`${DATA_FORGE_URL}/${appName}/config/tiles.json`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`${DATA_FORGE_URL}/${appName}/config/tiles.json`);
     return res.json();
   },
   ["tiles"],

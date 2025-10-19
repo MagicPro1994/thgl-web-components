@@ -8,7 +8,7 @@ export default defineConfig((options: Options) => ({
   ],
   dts: true,
   format: ["esm"],
-  target: "es2021",
+  target: "es2022", // ES2022 for top-level await support
   external: ["next"],
   ...options,
 }));
