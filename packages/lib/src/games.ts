@@ -30,7 +30,7 @@ export const games: Array<Game> = [
       games: [
         {
           title: "Blue Protocol: Star Resonance",
-          processNames: ["Star.exe", "BPSR_STEAM.exe"],
+          processNames: ["Star.exe", "BPSR_STEAM.exe", "BPSR.exe"],
         },
       ],
       defaultHotkeys: {
