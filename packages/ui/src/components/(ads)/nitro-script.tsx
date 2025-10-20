@@ -10,6 +10,49 @@ import { NITROPAY_SITE_ID } from "./constants";
 
 type NitroState = "loading" | "ready" | "error";
 
+/**
+ * Validates that NitroPay is fully loaded and not blocked/modified by ad blockers
+ * AdGuard and other blockers often leave the nitroAds object but strip out functional methods
+ */
+function isNitroAdsValid(): boolean {
+  if (!("nitroAds" in window)) {
+    return false;
+  }
+
+  const nitroAds = window.nitroAds as NitroAds;
+
+  // Check basic properties
+  if (!nitroAds || nitroAds.siteId !== NITROPAY_SITE_ID) {
+    return false;
+  }
+
+  // Verify critical methods exist and are actual functions
+  // AdGuard strips these while leaving siteId intact
+  if (
+    typeof nitroAds.createAd !== "function" ||
+    typeof nitroAds.addUserToken !== "function" ||
+    typeof nitroAds.clearUserTokens !== "function"
+  ) {
+    return false;
+  }
+
+  // Check that the queue exists (NitroPay uses this for ad management)
+  if (!Array.isArray(nitroAds.queue)) {
+    return false;
+  }
+
+  // Verify loaded state and version
+  if (typeof nitroAds.loaded !== "boolean" || !nitroAds.loaded) {
+    return false;
+  }
+
+  if (typeof nitroAds.version !== "string" || nitroAds.version.length === 0) {
+    return false;
+  }
+
+  return true;
+}
+
 const useNitroState = create<{
   state: NitroState;
   setState: (state: NitroState) => void;
@@ -38,10 +81,7 @@ export function NitroScript({
     }
     const now = Date.now();
     const intervalId = setInterval(() => {
-      if (
-        "nitroAds" in window &&
-        (window.nitroAds as NitroAds).siteId === NITROPAY_SITE_ID
-      ) {
+      if (isNitroAdsValid()) {
         setState("ready");
         clearInterval(intervalId);
         return;
@@ -61,21 +101,25 @@ export function NitroScript({
     if (adRemoval || state !== "ready") {
       return;
     }
-
-    if (email) {
-      // User logged in - send hashed email to NitroPay
-      getNitroAds()
-        .addUserToken(email, "PLAIN")
-        .then(() => {
-          console.log("[NitroPay] Hashed email tracking enabled");
-        })
-        .catch((error) => {
-          console.error("[NitroPay] Failed to add user token:", error);
-        });
-    } else {
-      // User logged out - clear tokens
-      getNitroAds().clearUserTokens();
-      console.log("[NitroPay] User tokens cleared");
+    try {
+      if (email) {
+        // User logged in - send hashed email to NitroPay
+        getNitroAds()
+          .addUserToken(email, "PLAIN")
+          .then(() => {
+            console.log("[NitroPay] Hashed email tracking enabled");
+          })
+          .catch((error) => {
+            console.error("[NitroPay] Failed to add user token:", error);
+          });
+      } else {
+        // User logged out - clear tokens
+        getNitroAds().clearUserTokens();
+        console.log("[NitroPay] User tokens cleared");
+      }
+    } catch (error) {
+      console.error("[NitroPay] Error managing user tokens:", error);
+      setState("error");
     }
   }, [state, email]);
 
@@ -94,10 +138,7 @@ export function NitroScript({
         }}
         strategy="lazyOnload"
         onReady={() => {
-          if (
-            "nitroAds" in window &&
-            (window.nitroAds as NitroAds).siteId === NITROPAY_SITE_ID
-          ) {
+          if (isNitroAdsValid()) {
             setState("ready");
           }
         }}
