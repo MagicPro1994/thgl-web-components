@@ -1,3 +1,7 @@
+# 2.15.1
+
+- Fix: **Blue Protocol: Star Resonance** Fix game detection for official launcher version (BPSR.exe)
+
 # 2.15.0
 
 - Feat: **Blue Protocol: Star Resonance** Add live tracking support for Chests (more coming soon)
