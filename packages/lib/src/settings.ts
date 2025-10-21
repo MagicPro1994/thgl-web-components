@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { withStorageDOMEvents } from "./dom";
 import { putSharedFilters } from "./shared-nodes";
 
+//#region Types
 export type PrivateNode = {
   id: string;
   name?: string;
@@ -71,179 +72,112 @@ export type ColorBlindMode =
   | "deuteranopia"
   | "tritanopia";
 
-export type ProfileData = {
-  // Discovered nodes
-  discoveredNodes: string[];
-  hideDiscoveredNodes: boolean;
-  // My Filters
-  myFilters: DrawingsAndNodes[];
-  // UI Settings
-  colorBlindMode: ColorBlindMode;
-  colorBlindSeverity: number;
-  fitBoundsOnChange: boolean;
-  transforms: Record<string, string>;
-  mapTransform: {
-    borderRadius: string;
-    transform: string;
-    width: string;
-    height: string;
-  } | null;
-  mapFilter: string;
-  // Icon sizes
-  baseIconSize: number;
-  playerIconSize: number;
-  iconSizeByGroup: Record<string, number>;
-  iconSizeByFilter: Record<string, number>;
-  // Trace line
-  showTraceLine: boolean;
-  traceLineLength: number;
-  traceLineRate: number;
-  traceLineColor: string;
-  // Grid and filters
-  showGrid: boolean;
-  showFilters: boolean;
-  expandedFilters: boolean;
-  // Drawing
-  drawingColor: string;
-  drawingSize: number;
-  textColor: string;
-  textSize: number;
-  // Presets
-  presets: Record<string, string[]>;
+export type MapTransform = {
+  borderRadius: string;
+  transform: string;
+  width: string;
+  height: string;
+};
+//#endregion
+
+//#region Profile Settings Store
+export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = {
+  hotkeys: {},
+  groupName: "",
+  liveMode: true,
+  overlayMode: null,
+  overlayFullscreen: false,
+  lockedWindow: false,
+  colorBlindMode: "none",
+  colorBlindSeverity: 1,
+  transforms: {},
+  mapTransform: null,
+  mapFilter: "none",
+  windowOpacity: 1,
+  discoveredNodes: [],
+  hideDiscoveredNodes: false,
+  actorsPollingRate: 100,
+  showTraceLine: true,
+  traceLineLength: 100,
+  traceLineRate: 5,
+  traceLineColor: "#1ccdd1B3",
+  displayDiscordActivityStatus: true,
+  presets: {},
+  tempPrivateNode: null,
+  tempPrivateDrawing: null,
+  drawingColor: "#FFFFFFAA",
+  drawingSize: 4,
+  textColor: "#1ccdd1",
+  textSize: 20,
+  baseIconSize: 1,
+  playerIconSize: 1,
+  iconSizeByGroup: {},
+  iconSizeByFilter: {},
+  fitBoundsOnChange: false,
+  myFilters: [],
+  showGrid: false,
+  showFilters: true,
+  expandedFilters: false,
+  // Peer Link / Mesh settings
+  peerCode: "",
+  lastMeSenderId: "",
+  playerName: "",
+  autoJoinPeer: false,
+  autoLiveModeWithMe: true,
+  testSetting: "defaultValue",
 };
 
-export type Profile = {
-  id: string;
-  name: string;
-  data: ProfileData;
-  createdAt: number;
-  updatedAt: number;
+const DEFAULT_PROFILE = {
+  id: "default",
+  name: "Default",
+  settings: DEFAULT_PROFILE_SETTINGS,
 };
 
-type SettingsStore = {
-  _hasHydrated: boolean;
-  setHasHydrated: (state: boolean) => void;
+export type ProfileSettings = {
   hotkeys: Record<string, string>;
-  setHotkey: (key: string, value: string) => void;
-  setHotkeys: (hotkeys: Record<string, string>) => void;
   groupName: string;
-  setGroupName: (groupName: string) => void;
   liveMode: boolean;
-  setLiveMode: (liveMode: boolean) => void;
-  toggleLiveMode: () => void;
   overlayMode: boolean | null;
-  setOverlayMode: (overlayMode: boolean) => void;
   overlayFullscreen: boolean;
-  toggleOverlayFullscreen: () => void;
   lockedWindow: boolean;
-  toggleLockedWindow: () => void;
   colorBlindMode: ColorBlindMode;
-  setColorBlindMode: (mode: ColorBlindMode) => void;
   colorBlindSeverity: number;
-  setColorBlindSeverity: (severity: number) => void;
   transforms: Record<string, string>;
-  setTransform: (id: string, transform: string) => void;
-  mapTransform: {
-    borderRadius: string;
-    transform: string;
-    width: string;
-    height: string;
-  } | null;
-  setMapTransform: (mapTransform: {
-    borderRadius: string;
-    transform: string;
-    width: string;
-    height: string;
-  }) => void;
+  mapTransform: MapTransform | null;
   mapFilter: string;
-  setMapFilter: (mapFilter: string) => void;
   windowOpacity: number;
-  setWindowOpacity: (windowOpacity: number) => void;
-  resetTransform: () => void;
   discoveredNodes: string[];
-  isDiscoveredNode: (nodeId: string) => boolean;
-  toggleDiscoveredNode: (nodeId: string) => void;
-  setDiscoverNode: (nodeId: string, discovered: boolean) => void;
   hideDiscoveredNodes: boolean;
-  toggleHideDiscoveredNodes: () => void;
-  setDiscoveredNodes: (discoveredNodes: string[]) => void;
   actorsPollingRate: number;
-  setActorsPollingRate: (actorsPollingRate: number) => void;
   showTraceLine: boolean;
-  toggleShowTraceLine: () => void;
   traceLineLength: number;
-  setTraceLineLength: (traceLineLength: number) => void;
   traceLineRate: number;
-  setTraceLineRate: (traceLineRate: number) => void;
   traceLineColor: string;
-  setTraceLineColor: (traceLineColor: string) => void;
   displayDiscordActivityStatus: boolean;
-  setDisplayDiscordActivityStatus: (
-    displayDiscordActivityStatus: boolean,
-  ) => void;
   presets: Record<string, string[]>;
-  addPreset: (presetName: string, filters: string[]) => void;
-  removePreset: (presetName: string) => void;
   tempPrivateNode: (Partial<PrivateNode> & { filter?: string }) | null;
-  setTempPrivateNode: (
-    tempPrivateNode: (Partial<PrivateNode> & { filter?: string }) | null,
-  ) => void;
   tempPrivateDrawing: (Partial<Drawing> & { name?: string }) | null;
-  setTempPrivateDrawing: (
-    tempPrivateDrawing: (Partial<Drawing> & { name?: string }) | null,
-  ) => void;
   drawingColor: string;
-  setDrawingColor: (drawingColor: string) => void;
   drawingSize: number;
-  setDrawingSize: (drawingSize: number) => void;
   textColor: string;
-  setTextColor: (textColor: string) => void;
   textSize: number;
-  setTextSize: (textSize: number) => void;
   baseIconSize: number;
-  setBaseIconSize: (baseIconSize: number) => void;
   playerIconSize: number;
-  setPlayerIconSize: (playerIconSize: number) => void;
   iconSizeByGroup: Record<string, number>;
-  setIconSizeByGroup: (group: string, size: number) => void;
   iconSizeByFilter: Record<string, number>;
-  setIconSizeByFilter: (id: string, size: number) => void;
   fitBoundsOnChange: boolean;
-  toggleFitBoundsOnChange: () => void;
   myFilters: DrawingsAndNodes[];
-  setMyFilters: (myFilters: DrawingsAndNodes[]) => void;
-  setMyFilter: (name: string, myFilter: Partial<DrawingsAndNodes>) => void;
-  addMyFilter: (myFilter: DrawingsAndNodes) => void;
-  removeMyFilter: (myFilterName: string) => void;
-  removeMyNode: (nodeId: string) => void;
   showGrid: boolean;
-  toggleShowGrid: () => void;
   showFilters: boolean;
-  toggleShowFilters: () => void;
   expandedFilters: boolean;
-  toggleExpandedFilters: () => void;
   // Peer Link / Mesh settings
   peerCode: string;
-  setPeerCode: (code: string) => void;
   lastMeSenderId: string;
-  setLastMeSenderId: (id: string) => void;
   playerName: string;
-  setPlayerName: (name: string) => void;
   autoJoinPeer: boolean;
-  setAutoJoinPeer: (autoJoin: boolean) => void;
   autoLiveModeWithMe: boolean;
-  setAutoLiveModeWithMe: (autoLiveMode: boolean) => void;
-  // Profile Management
-  currentProfileId: string;
-  profiles: Profile[];
-  createProfile: (name: string) => void;
-  switchProfile: (profileId: string) => void;
-  updateCurrentProfile: () => void;
-  renameProfile: (profileId: string, newName: string) => void;
-  deleteProfile: (profileId: string) => void;
-  exportProfile: (profileId: string) => Profile | null;
-  importProfile: (profile: Profile) => void;
-  duplicateProfile: (profileId: string) => void;
+
+  testSetting: string;
   // Deprecated
   privateNodes?: PrivateNode[];
   privateDrawings?: Drawing[];
@@ -252,6 +186,144 @@ type SettingsStore = {
     filter: string;
   }[];
 };
+
+export interface ProfileActions {
+  setHotkey: (key: string, value: string) => void;
+  setHotkeys: (hotkeys: Record<string, string>) => void;
+  setGroupName: (groupName: string) => void;
+  setLiveMode: (liveMode: boolean) => void;
+  toggleLiveMode: () => void;
+  setOverlayMode: (overlayMode: boolean) => void;
+  toggleOverlayFullscreen: () => void;
+  toggleLockedWindow: () => void;
+  setColorBlindMode: (mode: ColorBlindMode) => void;
+  setColorBlindSeverity: (severity: number) => void;
+  setTransform: (id: string, transform: string) => void;
+  setMapTransform: (mapTransform: MapTransform | null) => void;
+  setMapFilter: (mapFilter: string) => void;
+  setWindowOpacity: (windowOpacity: number) => void;
+  resetTransform: () => void;
+  isDiscoveredNode: (nodeId: string) => boolean;
+  toggleDiscoveredNode: (nodeId: string) => void;
+  setDiscoverNode: (nodeId: string, discovered: boolean) => void;
+  toggleHideDiscoveredNodes: () => void;
+  setDiscoveredNodes: (discoveredNodes: string[]) => void;
+  setActorsPollingRate: (actorsPollingRate: number) => void;
+  toggleShowTraceLine: () => void;
+  setTraceLineLength: (traceLineLength: number) => void;
+  setTraceLineRate: (traceLineRate: number) => void;
+  setTraceLineColor: (traceLineColor: string) => void;
+  setDisplayDiscordActivityStatus: (
+    displayDiscordActivityStatus: boolean,
+  ) => void;
+  addPreset: (presetName: string, filters: string[]) => void;
+  removePreset: (presetName: string) => void;
+  setTempPrivateNode: (
+    tempPrivateNode: (Partial<PrivateNode> & { filter?: string }) | null,
+  ) => void;
+  setTempPrivateDrawing: (
+    tempPrivateDrawing: (Partial<Drawing> & { name?: string }) | null,
+  ) => void;
+  setDrawingColor: (drawingColor: string) => void;
+  setDrawingSize: (drawingSize: number) => void;
+  setTextColor: (textColor: string) => void;
+  setTextSize: (textSize: number) => void;
+  setBaseIconSize: (baseIconSize: number) => void;
+  setPlayerIconSize: (playerIconSize: number) => void;
+  setIconSizeByGroup: (group: string, size: number) => void;
+  setIconSizeByFilter: (id: string, size: number) => void;
+  toggleFitBoundsOnChange: () => void;
+  setMyFilters: (myFilters: DrawingsAndNodes[]) => void;
+  setMyFilter: (name: string, myFilter: Partial<DrawingsAndNodes>) => void;
+  addMyFilter: (myFilter: DrawingsAndNodes) => void;
+  removeMyFilter: (myFilterName: string) => void;
+  removeMyNode: (nodeId: string) => void;
+  toggleShowGrid: () => void;
+  toggleShowFilters: () => void;
+  toggleExpandedFilters: () => void;
+  // Peer Link / Mesh settings
+  setPeerCode: (code: string) => void;
+  setLastMeSenderId: (id: string) => void;
+  setPlayerName: (name: string) => void;
+  setAutoJoinPeer: (autoJoin: boolean) => void;
+  setAutoLiveModeWithMe: (autoLiveMode: boolean) => void;
+}
+
+export type Profile = {
+  id: string;
+  name: string;
+  settings: ProfileSettings;
+  createdAt: number;
+  updatedAt: number;
+};
+
+class ProfileManager {
+  static createProfileId() {
+    return `profile-${Date.now()}`;
+  }
+
+  static getDefaultProfile() {
+    const defaultProfile = {
+      ...DEFAULT_PROFILE,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    return defaultProfile;
+  }
+
+  static createProfile(name: string): Profile {
+    const newProfile = {
+      id: this.createProfileId(),
+      name,
+      settings: { ...DEFAULT_PROFILE_SETTINGS },
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    return newProfile;
+  }
+
+  static updateProfileSettings(
+    profile: Profile,
+    settings: Partial<ProfileSettings>,
+  ) {
+    // Clone the profile to avoid mutating the original
+    const updatedProfile: Profile = JSON.parse(JSON.stringify(profile));
+    updatedProfile.settings = {
+      ...updatedProfile.settings,
+      ...settings,
+    };
+    updatedProfile.updatedAt = Date.now();
+    return updatedProfile;
+  }
+
+  static duplicateProfile(profile: Profile): Profile {
+    // Deep clone the profile object
+    const newProfile: Profile = JSON.parse(JSON.stringify(profile));
+    newProfile.name = `${profile.name} Copy`;
+    newProfile.id = this.createProfileId();
+    return newProfile;
+  }
+}
+
+export interface SettingsStore extends ProfileActions {
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+
+  // Profile Management
+  profiles: Profile[];
+  currentProfileId: string;
+  setProfileSettings: (settings: Partial<ProfileSettings>) => void;
+  createProfile: (name: string) => void;
+  getCurrentProfile: () => Profile | undefined;
+  getCurrentProfileSettings: () => ProfileSettings;
+  switchProfile: (profileId: string) => void;
+  updateCurrentProfile: () => void;
+  renameProfile: (profileId: string, newName: string) => void;
+  deleteProfile: (profileId: string) => void;
+  exportProfile: (profileId: string) => Profile | null;
+  importProfile: (profile: Profile) => void;
+  duplicateProfile: (profileId: string) => void;
+}
 
 const getStorageName = () => {
   if (typeof window !== "undefined") {
@@ -262,9 +334,51 @@ const getStorageName = () => {
   }
   return "settings-storage";
 };
+
 export const useSettingsStore = create(
   persist<SettingsStore>(
     (set, get) => {
+      const getProfile = () => {
+        const state = get();
+        return state.profiles.find((p) => p.id === state.currentProfileId);
+      };
+
+      const getSettings = () => {
+        const currentProfile = getProfile();
+        return currentProfile ? currentProfile.settings : null;
+      };
+
+      const updateSettings = (settings: Partial<ProfileSettings>) => {
+        const currentProfile = getProfile();
+        if (!currentProfile) return;
+
+        const state = get();
+        const updatedProfile = ProfileManager.updateProfileSettings(
+          currentProfile,
+          settings,
+        );
+
+        set({
+          profiles: state.profiles.map((p) =>
+            p.id === currentProfile.id ? updatedProfile : p,
+          ),
+        });
+      };
+
+      const _isDiscoveredNode = (nodeId: string) => {
+        const currentProfile = getProfile();
+        if (!currentProfile) return false;
+
+        const discoveredNodes = currentProfile.settings.discoveredNodes;
+        if (nodeId.includes("@")) {
+          return (
+            discoveredNodes.includes(nodeId) ||
+            discoveredNodes.some((id) => id === nodeId.split("@")[0])
+          );
+        }
+        return discoveredNodes.includes(nodeId);
+      };
+
       return {
         _hasHydrated: false,
         setHasHydrated: (state) => {
@@ -272,52 +386,90 @@ export const useSettingsStore = create(
             _hasHydrated: state,
           });
         },
-        hotkeys: {},
-        setHotkey: (key, value) =>
-          set((state) => ({
-            hotkeys: {
-              ...state.hotkeys,
-              [key]: value,
-            },
-          })),
-        setHotkeys: (hotkeys) => set({ hotkeys }),
-        groupName: "",
-        setGroupName: (groupName) => set({ groupName }),
-        liveMode: true,
-        setLiveMode: (liveMode) => set({ liveMode }),
-        toggleLiveMode: () => set((state) => ({ liveMode: !state.liveMode })),
-        overlayMode: null,
-        setOverlayMode: (overlayMode) =>
-          set({
-            overlayMode,
-          }),
-        overlayFullscreen: false,
-        toggleOverlayFullscreen: () =>
-          set((state) => ({ overlayFullscreen: !state.overlayFullscreen })),
-        lockedWindow: false,
-        toggleLockedWindow: () =>
-          set((state) => ({ lockedWindow: !state.lockedWindow })),
-        colorBlindMode: "none",
-        setColorBlindMode: (mode) => set({ colorBlindMode: mode }),
-        colorBlindSeverity: 1,
-        setColorBlindSeverity: (severity) =>
-          set({ colorBlindSeverity: Math.max(0, Math.min(1, severity)) }),
-        transforms: {},
-        setTransform: (id, transform) =>
-          set((state) => ({
+
+        // Actions for updating settings
+        setHotkey: (key, value) => {
+          const profileSettings = getSettings();
+          if (!profileSettings) return;
+
+          updateSettings({
+            hotkeys: { ...profileSettings.hotkeys, [key]: value },
+          });
+        },
+
+        setHotkeys: (hotkeys) => {
+          updateSettings({ hotkeys });
+        },
+
+        setGroupName: (groupName) => {
+          updateSettings({ groupName });
+        },
+
+        setLiveMode: (liveMode) => {
+          updateSettings({ liveMode });
+        },
+
+        toggleLiveMode: () => {
+          updateSettings({
+            liveMode: !getSettings()?.liveMode,
+          });
+        },
+
+        setOverlayMode: (overlayMode) => {
+          updateSettings({ overlayMode });
+        },
+
+        toggleOverlayFullscreen: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            overlayFullscreen: !currentProfile.settings.overlayFullscreen,
+          });
+        },
+
+        toggleLockedWindow: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            lockedWindow: !currentProfile.settings.lockedWindow,
+          });
+        },
+
+        setColorBlindMode: (mode) => {
+          updateSettings({ colorBlindMode: mode });
+        },
+
+        setColorBlindSeverity: (severity: number) => {
+          updateSettings({
+            colorBlindSeverity: Math.max(0, Math.min(1, severity)),
+          });
+        },
+
+        setTransform: (id: string, transform: string) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
             transforms: {
-              ...state.transforms,
+              ...currentProfile.settings.transforms,
               [id]: transform,
             },
-          })),
-        mapTransform: null,
-        setMapTransform: (mapTransform) => set({ mapTransform }),
-        mapFilter: "none",
-        setMapFilter: (mapFilter) => set({ mapFilter }),
-        windowOpacity: 1,
-        setWindowOpacity: (windowOpacity) => set({ windowOpacity }),
+          });
+        },
+
+        setMapTransform: (mapTransform) => {
+          updateSettings({ mapTransform });
+        },
+
+        setMapFilter: (mapFilter) => {
+          updateSettings({ mapFilter });
+        },
+
+        setWindowOpacity: (windowOpacity) => {
+          updateSettings({ windowOpacity });
+        },
+
         resetTransform: () => {
-          set({
+          updateSettings({
             transforms: {},
             mapTransform: null,
             playerIconSize: 1,
@@ -326,37 +478,42 @@ export const useSettingsStore = create(
             iconSizeByGroup: {},
           });
         },
-        discoveredNodes: [],
-        isDiscoveredNode: (nodeId) => {
-          const { discoveredNodes } = get();
-          if (nodeId.includes("@")) {
-            return (
-              discoveredNodes.includes(nodeId) ||
-              discoveredNodes.some((id) => id === nodeId.split("@")[0])
-            );
-          }
-          return discoveredNodes.includes(nodeId);
+
+        isDiscoveredNode: (nodeId) => _isDiscoveredNode(nodeId),
+
+        toggleDiscoveredNode: (nodeId: string) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+
+          const discoveredNodes = currentProfile.settings.discoveredNodes;
+          const updatedNodes = _isDiscoveredNode(nodeId)
+            ? discoveredNodes.filter((id) => {
+                if (id === nodeId) {
+                  return false;
+                }
+                if (nodeId.includes("@") && nodeId.split("@")[0] === id) {
+                  return false;
+                }
+                return true;
+              })
+            : [...new Set([...discoveredNodes, nodeId])];
+
+          updateSettings({ discoveredNodes: updatedNodes });
         },
-        toggleDiscoveredNode: (nodeId) => {
-          set((state) => ({
-            discoveredNodes: state.isDiscoveredNode(nodeId)
-              ? state.discoveredNodes.filter((id) => {
-                  if (id === nodeId) {
-                    return false;
-                  }
-                  if (nodeId.includes("@") && nodeId.split("@")[0] === id) {
-                    return false;
-                  }
-                  return true;
-                })
-              : [...new Set([...state.discoveredNodes, nodeId])],
-          }));
-        },
-        setDiscoverNode: (nodeId, discovered) =>
-          set((state) => ({
+
+        setDiscoverNode: (nodeId, discovered) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+
+          updateSettings({
             discoveredNodes: discovered
-              ? [...new Set([...state.discoveredNodes, nodeId])]
-              : state.discoveredNodes.filter((id) => {
+              ? [
+                  ...new Set([
+                    ...currentProfile.settings.discoveredNodes,
+                    nodeId,
+                  ]),
+                ]
+              : currentProfile.settings.discoveredNodes.filter((id) => {
                   if (id === nodeId) {
                     return false;
                   }
@@ -365,273 +522,298 @@ export const useSettingsStore = create(
                   }
                   return true;
                 }),
-          })),
-        hideDiscoveredNodes: false,
-        toggleHideDiscoveredNodes: () =>
-          set((state) => ({
-            hideDiscoveredNodes: !state.hideDiscoveredNodes,
-          })),
-        setDiscoveredNodes: (discoveredNodes) => set({ discoveredNodes }),
-        actorsPollingRate: 100,
-        setActorsPollingRate: (actorsPollingRate) => set({ actorsPollingRate }),
-        showTraceLine: true,
-        toggleShowTraceLine: () =>
-          set((state) => ({ showTraceLine: !state.showTraceLine })),
-        traceLineLength: 100,
-        setTraceLineLength: (traceLineLength) => set({ traceLineLength }),
-        traceLineRate: 5,
-        setTraceLineRate: (traceLineRate) => set({ traceLineRate }),
-        traceLineColor: "#1ccdd1B3",
-        setTraceLineColor: (traceLineColor) => set({ traceLineColor }),
-        displayDiscordActivityStatus: true,
-        setDisplayDiscordActivityStatus: (displayDiscordActivityStatus) =>
-          set({ displayDiscordActivityStatus }),
-        presets: {},
-        addPreset: (presetName, filters) =>
-          set((state) => ({
+          });
+        },
+
+        toggleHideDiscoveredNodes: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            hideDiscoveredNodes: !currentProfile.settings.hideDiscoveredNodes,
+          });
+        },
+
+        setDiscoveredNodes: (discoveredNodes: string[]) => {
+          updateSettings({ discoveredNodes });
+        },
+
+        setActorsPollingRate: (actorsPollingRate: number) => {
+          updateSettings({ actorsPollingRate });
+        },
+
+        toggleShowTraceLine: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            showTraceLine: !currentProfile.settings.showTraceLine,
+          });
+        },
+
+        setTraceLineLength: (traceLineLength: number) => {
+          updateSettings({ traceLineLength });
+        },
+
+        setTraceLineRate: (traceLineRate: number) => {
+          updateSettings({ traceLineRate });
+        },
+
+        setTraceLineColor: (traceLineColor: string) => {
+          updateSettings({ traceLineColor });
+        },
+
+        setDisplayDiscordActivityStatus: (
+          displayDiscordActivityStatus: boolean,
+        ) => {
+          updateSettings({ displayDiscordActivityStatus });
+        },
+
+        addPreset: (presetName: string, filters: string[]) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
             presets: {
-              ...state.presets,
+              ...currentProfile.settings.presets,
               [presetName]: filters,
             },
-          })),
-        removePreset: (presetName) =>
-          set((state) => {
-            const presets = { ...state.presets };
-            delete presets[presetName];
-            return { presets };
-          }),
-        tempPrivateNode: null,
-        setTempPrivateNode: (tempPrivateNode) =>
-          set((state) => ({
+          });
+        },
+
+        removePreset: (presetName: string) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          const newPresets = { ...currentProfile.settings.presets };
+          delete newPresets[presetName];
+          updateSettings({ presets: newPresets });
+        },
+
+        setTempPrivateNode: (tempPrivateNode) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+
+          updateSettings({
             tempPrivateNode: tempPrivateNode
-              ? { ...(state.tempPrivateNode || {}), ...tempPrivateNode }
+              ? {
+                  ...(currentProfile.settings.tempPrivateNode ?? {}),
+                  ...tempPrivateNode,
+                }
               : null,
-          })),
-        tempPrivateDrawing: null,
-        setTempPrivateDrawing: (tempPrivateDrawing) =>
-          set((state) => ({
+          });
+        },
+
+        setTempPrivateDrawing: (tempPrivateDrawing) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+
+          updateSettings({
             tempPrivateDrawing: tempPrivateDrawing
-              ? { ...(state.tempPrivateDrawing || {}), ...tempPrivateDrawing }
+              ? {
+                  ...(currentProfile.settings.tempPrivateDrawing ?? {}),
+                  ...tempPrivateDrawing,
+                }
               : null,
-          })),
-        drawingColor: "#FFFFFFAA",
-        setDrawingColor: (drawingColor) => set({ drawingColor }),
-        drawingSize: 4,
-        setDrawingSize: (drawingSize) => set({ drawingSize }),
-        textColor: "#1ccdd1",
-        setTextColor: (textColor) => set({ textColor }),
-        textSize: 20,
-        setTextSize: (textSize) => set({ textSize }),
-        baseIconSize: 1,
-        setBaseIconSize: (baseIconSize) => set({ baseIconSize }),
-        playerIconSize: 1,
-        setPlayerIconSize: (playerIconSize) => set({ playerIconSize }),
-        iconSizeByGroup: {},
-        setIconSizeByGroup: (group, size) =>
-          set((state) => ({
+          });
+        },
+
+        setDrawingColor: (drawingColor) => {
+          updateSettings({ drawingColor });
+        },
+
+        setDrawingSize: (drawingSize) => {
+          updateSettings({ drawingSize });
+        },
+
+        setTextColor: (textColor) => {
+          updateSettings({ textColor });
+        },
+
+        setTextSize: (textSize) => {
+          updateSettings({ textSize });
+        },
+
+        setBaseIconSize: (baseIconSize) => {
+          updateSettings({ baseIconSize });
+        },
+
+        setPlayerIconSize: (playerIconSize) => {
+          updateSettings({ playerIconSize });
+        },
+
+        setIconSizeByGroup: (group, size) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
             iconSizeByGroup: {
-              ...state.iconSizeByGroup,
+              ...currentProfile.settings.iconSizeByGroup,
               [group]: size,
             },
-          })),
-        iconSizeByFilter: {},
-        setIconSizeByFilter: (id, size) =>
-          set((state) => ({
+          });
+        },
+
+        setIconSizeByFilter: (id, size) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
             iconSizeByFilter: {
-              ...state.iconSizeByFilter,
+              ...currentProfile.settings.iconSizeByFilter,
               [id]: size,
             },
-          })),
-        fitBoundsOnChange: false,
-        toggleFitBoundsOnChange: () =>
-          set((state) => ({ fitBoundsOnChange: !state.fitBoundsOnChange })),
-        myFilters: [],
-        setMyFilters: (myFilters) => set({ myFilters }),
-        setMyFilter: (name, myFilter) =>
-          set((state) => ({
-            myFilters: state.myFilters.map((filter) =>
+          });
+        },
+
+        toggleFitBoundsOnChange: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            fitBoundsOnChange: !currentProfile.settings.fitBoundsOnChange,
+          });
+        },
+
+        setMyFilters: (myFilters) => {
+          updateSettings({ myFilters });
+        },
+
+        setMyFilter: (name, myFilter) => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          const updatedFilters = currentProfile.settings.myFilters.map(
+            (filter) =>
               filter.name === name ? { ...filter, ...myFilter } : filter,
-            ),
-          })),
+          );
+          updateSettings({ myFilters: updatedFilters });
+          // Update shared filters if this filter has a URL
+          const updatedFilter = updatedFilters.find((f) => f.name === name);
+          if (updatedFilter?.url) {
+            putSharedFilters(updatedFilter.name, updatedFilter);
+          }
+        },
+
         addMyFilter: async (myFilter) => {
           if (myFilter.isShared && !myFilter.url) {
             const blob = await putSharedFilters(myFilter.name, myFilter);
             myFilter.url = blob.url;
           }
-          set((state) => {
-            if (
-              myFilter.isShared &&
-              myFilter.url &&
-              state.myFilters.some(
-                (filter) => filter.isShared && filter.url === myFilter.url,
-              )
-            ) {
-              return state;
-            }
-            return {
-              myFilters: [...state.myFilters, myFilter],
-            };
+
+          const profileSettings = getSettings();
+          if (!profileSettings) return;
+
+          if (
+            myFilter.isShared &&
+            myFilter.url &&
+            profileSettings.myFilters.some(
+              (filter) => filter.isShared && filter.url === myFilter.url,
+            )
+          ) {
+            return;
+          }
+
+          updateSettings({
+            myFilters: [...profileSettings.myFilters, myFilter],
           });
         },
-        removeMyFilter: (myFilterName) =>
-          set((state) => ({
-            myFilters: state.myFilters.filter(
-              (filter) => filter.name !== myFilterName,
+
+        removeMyFilter: (myFilterName: string) => {
+          const profileSettings = getSettings();
+          if (!profileSettings) return;
+
+          const updatedFilters = profileSettings.myFilters.filter(
+            (filter) => filter.name !== myFilterName,
+          );
+          updateSettings({ myFilters: updatedFilters });
+        },
+
+        removeMyNode: async (nodeId: string) => {
+          const profileSettings = getSettings();
+          if (!profileSettings) return;
+
+          const myFilter = profileSettings.myFilters.find((filter) =>
+            filter.nodes?.some((node) => node.id === nodeId),
+          );
+          if (!myFilter) {
+            return;
+          }
+          myFilter.nodes = myFilter.nodes?.filter((node) => node.id !== nodeId);
+          if (myFilter.url) {
+            await putSharedFilters(myFilter.url, myFilter);
+          }
+          return {
+            myFilters: profileSettings.myFilters.map((filter) =>
+              filter.name === myFilter.name ? myFilter : filter,
             ),
-          })),
-        removeMyNode: (nodeId) =>
-          set((state) => {
-            const myFilter = state.myFilters.find((filter) =>
-              filter.nodes?.some((node) => node.id === nodeId),
-            );
-            if (!myFilter) {
-              return state;
-            }
-            myFilter.nodes = myFilter.nodes?.filter(
-              (node) => node.id !== nodeId,
-            );
-            if (myFilter.url) {
-              putSharedFilters(myFilter.url, myFilter);
-            }
-            return {
-              myFilters: state.myFilters.map((filter) =>
-                filter.name === myFilter.name ? myFilter : filter,
-              ),
-            };
-          }),
-        showGrid: false,
-        toggleShowGrid: () => set((state) => ({ showGrid: !state.showGrid })),
-        showFilters: true,
-        toggleShowFilters: () =>
-          set((state) => ({ showFilters: !state.showFilters })),
-        expandedFilters: false,
-        toggleExpandedFilters: () =>
-          set((state) => ({ expandedFilters: !state.expandedFilters })),
-        // Peer Link / Mesh settings
-        peerCode: "",
-        setPeerCode: (code: string) => set({ peerCode: code }),
-        lastMeSenderId: "",
-        setLastMeSenderId: (id: string) => set({ lastMeSenderId: id }),
-        playerName: "",
-        setPlayerName: (name: string) => set({ playerName: name }),
-        autoJoinPeer: false,
-        setAutoJoinPeer: (autoJoin: boolean) => set({ autoJoinPeer: autoJoin }),
-        autoLiveModeWithMe: true,
-        setAutoLiveModeWithMe: (autoLiveMode: boolean) => set({ autoLiveModeWithMe: autoLiveMode }),
-        // Profile Management
-        currentProfileId: "default",
-        profiles: [
-          {
-            id: "default",
-            name: "Default",
-            data: {
-              discoveredNodes: [],
-              hideDiscoveredNodes: false,
-              myFilters: [],
-              colorBlindMode: "none",
-              colorBlindSeverity: 1,
-              fitBoundsOnChange: false,
-              transforms: {},
-              mapTransform: null,
-              mapFilter: "none",
-              baseIconSize: 1,
-              playerIconSize: 1,
-              iconSizeByGroup: {},
-              iconSizeByFilter: {},
-              showTraceLine: true,
-              traceLineLength: 100,
-              traceLineRate: 5,
-              traceLineColor: "#1ccdd1B3",
-              showGrid: false,
-              showFilters: true,
-              expandedFilters: false,
-              drawingColor: "#FFFFFFAA",
-              drawingSize: 4,
-              textColor: "#1ccdd1",
-              textSize: 20,
-              presets: {},
-            },
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          },
-        ],
-        createProfile: (name: string) => {
-          const state = get();
-          const newProfile: Profile = {
-            id: `profile-${Date.now()}`,
-            name,
-            data: {
-              discoveredNodes: state.discoveredNodes,
-              hideDiscoveredNodes: state.hideDiscoveredNodes,
-              myFilters: state.myFilters,
-              colorBlindMode: state.colorBlindMode,
-              colorBlindSeverity: state.colorBlindSeverity,
-              fitBoundsOnChange: state.fitBoundsOnChange,
-              transforms: state.transforms,
-              mapTransform: state.mapTransform,
-              mapFilter: state.mapFilter,
-              baseIconSize: state.baseIconSize,
-              playerIconSize: state.playerIconSize,
-              iconSizeByGroup: state.iconSizeByGroup,
-              iconSizeByFilter: state.iconSizeByFilter,
-              showTraceLine: state.showTraceLine,
-              traceLineLength: state.traceLineLength,
-              traceLineRate: state.traceLineRate,
-              traceLineColor: state.traceLineColor,
-              showGrid: state.showGrid,
-              showFilters: state.showFilters,
-              expandedFilters: state.expandedFilters,
-              drawingColor: state.drawingColor,
-              drawingSize: state.drawingSize,
-              textColor: state.textColor,
-              textSize: state.textSize,
-              presets: state.presets,
-            },
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
           };
+        },
+
+        toggleShowGrid: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            showGrid: !currentProfile.settings.showGrid,
+          });
+        },
+
+        toggleShowFilters: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            showFilters: !currentProfile.settings.showFilters,
+          });
+        },
+
+        toggleExpandedFilters: () => {
+          const currentProfile = getProfile();
+          if (!currentProfile) return;
+          updateSettings({
+            expandedFilters: !currentProfile.settings.expandedFilters,
+          });
+        },
+
+        // Peer Link / Mesh settings
+        setPeerCode: (code: string) => {
+          updateSettings({ peerCode: code });
+        },
+
+        setLastMeSenderId: (id: string) => {
+          updateSettings({ lastMeSenderId: id });
+        },
+
+        setPlayerName: (name: string) => {
+          updateSettings({ playerName: name });
+        },
+
+        setAutoJoinPeer: (autoJoin: boolean) => {
+          updateSettings({ autoJoinPeer: autoJoin });
+        },
+
+        setAutoLiveModeWithMe: (autoLiveMode: boolean) => {
+          updateSettings({ autoLiveModeWithMe: autoLiveMode });
+        },
+        // Profile Management
+        currentProfileId: DEFAULT_PROFILE.id,
+        profiles: [ProfileManager.getDefaultProfile()],
+
+        setProfileSettings: (settings: Partial<ProfileSettings>) => {
+          updateSettings(settings);
+        },
+
+        createProfile: (name: string) => {
+          const newProfile = ProfileManager.createProfile(name);
           set((state) => ({
             profiles: [...state.profiles, newProfile],
             currentProfileId: newProfile.id,
           }));
+        },
+        getCurrentProfile: () => getProfile(),
+        getCurrentProfileSettings: () => {
+          const currentProfile = getProfile();
+          return currentProfile
+            ? currentProfile.settings
+            : DEFAULT_PROFILE_SETTINGS;
         },
         switchProfile: (profileId: string) => {
           const state = get();
           const profile = state.profiles.find((p) => p.id === profileId);
           if (!profile) return;
 
-          // Update current profile before switching
-          state.updateCurrentProfile();
-
-          // Apply the new profile data
-          set({
-            currentProfileId: profileId,
-            discoveredNodes: profile.data.discoveredNodes,
-            hideDiscoveredNodes: profile.data.hideDiscoveredNodes,
-            myFilters: profile.data.myFilters,
-            colorBlindMode: profile.data.colorBlindMode,
-            colorBlindSeverity: profile.data.colorBlindSeverity,
-            fitBoundsOnChange: profile.data.fitBoundsOnChange,
-            transforms: profile.data.transforms,
-            mapTransform: profile.data.mapTransform,
-            mapFilter: profile.data.mapFilter,
-            baseIconSize: profile.data.baseIconSize,
-            playerIconSize: profile.data.playerIconSize,
-            iconSizeByGroup: profile.data.iconSizeByGroup,
-            iconSizeByFilter: profile.data.iconSizeByFilter,
-            showTraceLine: profile.data.showTraceLine,
-            traceLineLength: profile.data.traceLineLength,
-            traceLineRate: profile.data.traceLineRate,
-            traceLineColor: profile.data.traceLineColor,
-            showGrid: profile.data.showGrid,
-            showFilters: profile.data.showFilters,
-            expandedFilters: profile.data.expandedFilters,
-            drawingColor: profile.data.drawingColor,
-            drawingSize: profile.data.drawingSize,
-            textColor: profile.data.textColor,
-            textSize: profile.data.textSize,
-            presets: profile.data.presets,
-          });
+          set({ currentProfileId: profileId });
         },
         updateCurrentProfile: () => {
           const state = get();
@@ -639,34 +821,6 @@ export const useSettingsStore = create(
             (p) => p.id === state.currentProfileId,
           );
           if (!currentProfile) return;
-
-          currentProfile.data = {
-            discoveredNodes: state.discoveredNodes,
-            hideDiscoveredNodes: state.hideDiscoveredNodes,
-            myFilters: state.myFilters,
-            colorBlindMode: state.colorBlindMode,
-            colorBlindSeverity: state.colorBlindSeverity,
-            fitBoundsOnChange: state.fitBoundsOnChange,
-            transforms: state.transforms,
-            mapTransform: state.mapTransform,
-            mapFilter: state.mapFilter,
-            baseIconSize: state.baseIconSize,
-            playerIconSize: state.playerIconSize,
-            iconSizeByGroup: state.iconSizeByGroup,
-            iconSizeByFilter: state.iconSizeByFilter,
-            showTraceLine: state.showTraceLine,
-            traceLineLength: state.traceLineLength,
-            traceLineRate: state.traceLineRate,
-            traceLineColor: state.traceLineColor,
-            showGrid: state.showGrid,
-            showFilters: state.showFilters,
-            expandedFilters: state.expandedFilters,
-            drawingColor: state.drawingColor,
-            drawingSize: state.drawingSize,
-            textColor: state.textColor,
-            textSize: state.textSize,
-            presets: state.presets,
-          };
           currentProfile.updatedAt = Date.now();
 
           set((state) => ({
@@ -690,7 +844,9 @@ export const useSettingsStore = create(
           if (profileId === "default") return; // Don't delete default profile
 
           set((state) => {
-            const newProfiles = state.profiles.filter((p) => p.id !== profileId);
+            const newProfiles = state.profiles.filter(
+              (p) => p.id !== profileId,
+            );
             const newCurrentProfileId =
               state.currentProfileId === profileId
                 ? newProfiles[0].id
@@ -698,12 +854,14 @@ export const useSettingsStore = create(
 
             // If we're switching to a different profile, load its data
             if (newCurrentProfileId !== state.currentProfileId) {
-              const newProfile = newProfiles.find((p) => p.id === newCurrentProfileId);
+              const newProfile = newProfiles.find(
+                (p) => p.id === newCurrentProfileId,
+              );
               if (newProfile) {
                 return {
                   profiles: newProfiles,
                   currentProfileId: newCurrentProfileId,
-                  ...newProfile.data,
+                  ...newProfile.settings,
                 };
               }
             }
@@ -737,13 +895,7 @@ export const useSettingsStore = create(
           const profile = state.profiles.find((p) => p.id === profileId);
           if (!profile) return;
 
-          const newProfile: Profile = {
-            ...profile,
-            id: `profile-${Date.now()}`,
-            name: `${profile.name} (Copy)`,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          };
+          const newProfile = ProfileManager.duplicateProfile(profile);
 
           set((state) => ({
             profiles: [...state.profiles, newProfile],
@@ -755,45 +907,18 @@ export const useSettingsStore = create(
       name: getStorageName(),
       onRehydrateStorage: () => (state) => {
         if (!state?._hasHydrated) {
+          console.log("✅ Setting _hasHydrated to true");
           state?.setHasHydrated(true);
+        } else {
+          console.log("⚠️ _hasHydrated already true, skipping");
         }
+
         // Initialize profiles if they don't exist
         if (state && !state.profiles?.length) {
-          const defaultProfile: Profile = {
-            id: "default",
-            name: "Default",
-            data: {
-              discoveredNodes: state.discoveredNodes || [],
-              hideDiscoveredNodes: state.hideDiscoveredNodes || false,
-              myFilters: state.myFilters || [],
-              colorBlindMode: state.colorBlindMode || "none",
-              colorBlindSeverity: state.colorBlindSeverity || 1,
-              fitBoundsOnChange: state.fitBoundsOnChange || false,
-              transforms: state.transforms || {},
-              mapTransform: state.mapTransform || null,
-              mapFilter: state.mapFilter || "none",
-              baseIconSize: state.baseIconSize || 1,
-              playerIconSize: state.playerIconSize || 1,
-              iconSizeByGroup: state.iconSizeByGroup || {},
-              iconSizeByFilter: state.iconSizeByFilter || {},
-              showTraceLine: state.showTraceLine ?? true,
-              traceLineLength: state.traceLineLength || 100,
-              traceLineRate: state.traceLineRate || 5,
-              traceLineColor: state.traceLineColor || "#1ccdd1B3",
-              showGrid: state.showGrid || false,
-              showFilters: state.showFilters ?? true,
-              expandedFilters: state.expandedFilters || false,
-              drawingColor: state.drawingColor || "#FFFFFFAA",
-              drawingSize: state.drawingSize || 4,
-              textColor: state.textColor || "#1ccdd1",
-              textSize: state.textSize || 20,
-              presets: state.presets || {},
-            },
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          };
+          console.log("🆕 Initializing default profile");
+          const defaultProfile = ProfileManager.getDefaultProfile();
           state.profiles = [defaultProfile];
-          state.currentProfileId = "default";
+          state.currentProfileId = defaultProfile.id;
         }
       },
       version: 4,
@@ -813,41 +938,9 @@ export const useSettingsStore = create(
           // Initialize profiles from existing settings
           const state = persistedState as any;
           if (!state.profiles?.length) {
-            const defaultProfile: Profile = {
-              id: "default",
-              name: "Default",
-              data: {
-                discoveredNodes: state.discoveredNodes || [],
-                hideDiscoveredNodes: state.hideDiscoveredNodes || false,
-                myFilters: state.myFilters || [],
-                colorBlindMode: state.colorBlindMode || "none",
-                colorBlindSeverity: state.colorBlindSeverity || 1,
-                fitBoundsOnChange: state.fitBoundsOnChange || false,
-                transforms: state.transforms || {},
-                mapTransform: state.mapTransform || null,
-                mapFilter: state.mapFilter || "none",
-                baseIconSize: state.baseIconSize || 1,
-                playerIconSize: state.playerIconSize || 1,
-                iconSizeByGroup: state.iconSizeByGroup || {},
-                iconSizeByFilter: state.iconSizeByFilter || {},
-                showTraceLine: state.showTraceLine ?? true,
-                traceLineLength: state.traceLineLength || 100,
-                traceLineRate: state.traceLineRate || 5,
-                traceLineColor: state.traceLineColor || "#1ccdd1B3",
-                showGrid: state.showGrid || false,
-                showFilters: state.showFilters ?? true,
-                expandedFilters: state.expandedFilters || false,
-                drawingColor: state.drawingColor || "#FFFFFFAA",
-                drawingSize: state.drawingSize || 4,
-                textColor: state.textColor || "#1ccdd1",
-                textSize: state.textSize || 20,
-                presets: state.presets || {},
-              },
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
-            };
+            const defaultProfile = ProfileManager.getDefaultProfile();
             state.profiles = [defaultProfile];
-            state.currentProfileId = "default";
+            state.currentProfileId = defaultProfile.id;
           }
         }
         return persistedState;
