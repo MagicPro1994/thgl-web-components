@@ -187,16 +187,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
 
   const handleDateDisplay = (timestamp: number) => {
     const date = new Date(timestamp);
-
-    // Format date as YYYY-MM-DD, time as hh:mm:ss AM/PM using locale options
-    const dateString = date.toLocaleDateString("en-CA"); // "YYYY-MM-DD"
-    const timeString = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
-    return `${dateString} ${timeString}`;
+    return date.toLocaleString();
   };
 
   return (
