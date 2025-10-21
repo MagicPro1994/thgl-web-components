@@ -1,3 +1,7 @@
+# 2.16.0
+
+- Feat: **Blue Protocol: Star Resonance** Add live tracking support for Resources
+
 # 2.15.2
 
 - Fix: **Blue Protocol: Star Resonance** Fix game detection for official launcher version (BPSR.exe). The position detection might break on future updates again.
