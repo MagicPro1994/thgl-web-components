@@ -124,7 +124,6 @@ export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = {
   playerName: "",
   autoJoinPeer: false,
   autoLiveModeWithMe: true,
-  testSetting: "defaultValue",
 };
 
 const DEFAULT_PROFILE = {
@@ -177,7 +176,6 @@ export type ProfileSettings = {
   autoJoinPeer: boolean;
   autoLiveModeWithMe: boolean;
 
-  testSetting: string;
   // Deprecated
   privateNodes?: PrivateNode[];
   privateDrawings?: Drawing[];
