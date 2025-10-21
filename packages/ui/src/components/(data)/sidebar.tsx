@@ -11,6 +11,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useEffect, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
+import Link from "next/link";
 
 export { CollapsibleTrigger };
 export function Sidebar({
@@ -30,7 +31,8 @@ export function Sidebar({
     items: {
       key: string;
       text: string;
-      value: JSX.Element;
+      href: string;
+      subtitle?: string;
     }[];
   }[];
 }): JSX.Element {
@@ -96,7 +98,10 @@ export function Sidebar({
                 )}
                 asChild
               >
-                {item.value}
+                <Link href={item.href} title={item.text}>
+                  {item.text}
+                  {item.subtitle && <p className="text-xs">{item.subtitle}</p>}
+                </Link>
               </Button>
             ))}
           </CollapsibleContent>

@@ -1,6 +1,5 @@
 import { HeaderOffset } from "@repo/ui/header";
 import { ContentLayout } from "@repo/ui/ads";
-import Link from "next/link";
 import { fetchDatabase, fetchDict } from "@repo/lib";
 import { DatabaseSidebar } from "@/components/database-sidebar";
 import { APP_CONFIG } from "@/config";
@@ -30,15 +29,8 @@ export default async function Layout({
       items: item.items.map((subitem) => ({
         key: subitem.id,
         text: subitem.props.title,
-        value: (
-          <Link
-            href={`/regional-records/${subitem.id}`}
-            title={subitem.props.title}
-          >
-            {subitem.props.title}
-            <p className="text-xs ">{subitem.props.subtitle}</p>
-          </Link>
-        ),
+        href: `/regional-records/${subitem.id}`,
+        subtitle: subitem.props.subtitle,
       })),
     };
   });

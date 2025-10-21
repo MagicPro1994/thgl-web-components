@@ -1,5 +1,4 @@
 import { HeaderOffset } from "@repo/ui/header";
-import Link from "next/link";
 import { ContentLayout } from "@repo/ui/ads";
 import { fetchDatabase, fetchDict } from "@repo/lib";
 import { APP_CONFIG } from "@/config";
@@ -34,11 +33,7 @@ export default async function Layout({
     items: item.items.map((subitem) => ({
       key: subitem.id,
       text: subitem.props.title,
-      value: (
-        <Link href={`/db/story/${subitem.id}`} title={subitem.props.title}>
-          {subitem.props.title}
-        </Link>
-      ),
+      href: `/db/story/${subitem.id}`,
     })),
   }));
 
@@ -50,10 +45,9 @@ export default async function Layout({
           <>
             <h2 className="text-2xl">Story Episodes</h2>
             <p className="text-sm my-2">
-              Follow the epic journey through Blue Protocol: Star Resonance
-              with detailed episode summaries and quest phases. Experience the
-              story of your adventure from the very beginning to the climactic
-              finale.
+              Follow the epic journey through Blue Protocol: Star Resonance with
+              detailed episode summaries and quest phases. Experience the story
+              of your adventure from the very beginning to the climactic finale.
             </p>
           </>
         }

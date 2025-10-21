@@ -13,7 +13,8 @@ export function DatabaseSidebar({
     items: {
       key: string;
       text: string;
-      value: JSX.Element;
+      href: string;
+      subtitle?: string;
     }[];
   }[];
 }): JSX.Element {
