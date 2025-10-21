@@ -126,7 +126,7 @@ export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = {
   autoLiveModeWithMe: true,
 };
 
-const DEFAULT_PROFILE = {
+export const DEFAULT_PROFILE = {
   id: "default",
   name: "Default",
   settings: DEFAULT_PROFILE_SETTINGS,

@@ -7,6 +7,7 @@ import {
   openFileOrFiles,
   writeFileOverwolf,
   Profile,
+  DEFAULT_PROFILE,
 } from "@repo/lib";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
@@ -40,13 +41,13 @@ import {
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
 import {
-  Download,
-  Upload,
-  Plus,
   Trash2,
-  Edit2,
   Copy,
-  SquareCheck,
+  FileOutput,
+  Import,
+  Edit,
+  UserPlus,
+  ShieldCheck,
 } from "lucide-react";
 
 export function ProfileManager({ activeApp }: { activeApp: string }) {
@@ -204,8 +205,8 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
             {settingsStore.profiles.map((profile) => (
               <SelectItem key={profile.id} value={profile.id}>
                 <span className="flex items-center gap-2 truncate">
-                  {profile.id === settingsStore.currentProfileId && (
-                    <SquareCheck className="h-4 w-4 flex-shrink-0" />
+                  {profile.id === DEFAULT_PROFILE.id && (
+                    <ShieldCheck className="h-4 w-4 flex-shrink-0" />
                   )}
                   <span className="truncate" title={profile.name}>
                     {profile.name}
@@ -224,7 +225,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
               className="h-8 px-2 text-green-600 dark:text-green-400"
               title="Create new profile"
             >
-              <Plus className="h-4 w-4" />
+              <UserPlus className="h-4 w-4" />
             </Button>
           </DialogTrigger>
           <DialogContent aria-describedby="create-profile-description">
@@ -279,7 +280,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
                     setEditingProfileName(currentProfile.name);
                   }}
                 >
-                  <Edit2 className="h-4 w-4" />
+                  <Edit className="h-4 w-4" />
                 </Button>
               </DialogTrigger>
               <DialogContent aria-describedby="rename-profile-description">
@@ -340,7 +341,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
               title="Export profile"
               onClick={() => handleExportProfile(currentProfile.id)}
             >
-              <Download className="h-4 w-4" />
+              <FileOutput className="h-4 w-4" />
             </Button>
           </>
         )}
@@ -352,7 +353,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
           title="Import profile"
           onClick={handleImportProfile}
         >
-          <Upload className="h-4 w-4" />
+          <Import className="h-4 w-4" />
         </Button>
 
         {currentProfile &&
