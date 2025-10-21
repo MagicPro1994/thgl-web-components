@@ -81,11 +81,11 @@ export function StreamingSender({
     _hasHydrated,
   } = useSettingsStore(
     useShallow((state) => ({
-      peerCode: state.peerCode,
+      peerCode: state.getCurrentProfileSettings().peerCode,
       setPeerCode: state.setPeerCode,
-      playerName: state.playerName,
+      playerName: state.getCurrentProfileSettings().playerName,
       setPlayerName: state.setPlayerName,
-      autoJoinPeer: state.autoJoinPeer,
+      autoJoinPeer: state.getCurrentProfileSettings().autoJoinPeer,
       setAutoJoinPeer: state.setAutoJoinPeer,
       _hasHydrated: state._hasHydrated,
     })),

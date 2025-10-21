@@ -12,7 +12,7 @@ export function Regions(): JSX.Element {
   const { regions } = useCoordinates();
   const mapName = useUserStore((state) => state.mapName);
   const filters = useUserStore((state) => state.filters);
-  const baseIconSize = useSettingsStore((state) => state.baseIconSize);
+  const baseIconSize = useSettingsStore((state) => state.getCurrentProfileSettings().baseIconSize);
 
   const showRegionBorders = filters.includes(REGION_FILTERS[0].id);
   const showRegionNames = filters.includes(REGION_FILTERS[1].id);

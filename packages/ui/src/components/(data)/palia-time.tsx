@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 
 export function PaliaTime() {
   const [timeFormated, setTimeFormated] = useState("");
-  const lockedWindow = useSettingsStore((state) => state.lockedWindow);
-  const overlayMode = useSettingsStore((state) => state.overlayMode);
+  const lockedWindow = useSettingsStore(
+    (state) => state.getCurrentProfileSettings().lockedWindow,
+  );
+  const overlayMode = useSettingsStore(
+    (state) => state.getCurrentProfileSettings().overlayMode,
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {

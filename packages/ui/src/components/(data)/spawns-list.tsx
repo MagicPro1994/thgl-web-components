@@ -13,7 +13,7 @@ export function SpawnsList({
   onShowClick: (spawnIDs: string[]) => void;
   highlightedIds: string[];
 }) {
-  useSettingsStore((state) => state.discoveredNodes);
+  useSettingsStore((state) => state.getCurrentProfileSettings().discoveredNodes);
   const t = useT();
   const isDiscoveredNode = useSettingsStore((state) => state.isDiscoveredNode);
   const setDiscoverNode = useSettingsStore((state) => state.setDiscoverNode);

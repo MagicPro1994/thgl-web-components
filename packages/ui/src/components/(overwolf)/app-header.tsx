@@ -37,13 +37,14 @@ export function AppHeader({
   const windowInfo = useOverwolfState((state) => state.windowInfo);
   const isOverlay = useOverwolfState((state) => state.isOverlay);
   const settingsStore = useSettingsStore();
+  const profileSettings = useSettingsStore((state) => state.getCurrentProfileSettings());
   const { typesIdMap } = useCoordinates();
 
   useEffect(() => {
     if (isOverlay) {
-      setInputPassThrough(settingsStore.lockedWindow);
+      setInputPassThrough(profileSettings.lockedWindow);
     }
-  }, [isOverlay, settingsStore.lockedWindow]);
+  }, [isOverlay, profileSettings.lockedWindow]);
 
   useEffect(() => {
     if (isOverlay && windowInfo?.stateEx === "normal") {
@@ -116,7 +117,7 @@ export function AppHeader({
           />
         </symbol>
       </svg>
-      {settingsStore.lockedWindow ? (
+      {profileSettings.lockedWindow ? (
         <UnlockButton
           gameClassId={gameClassId}
           onClick={settingsStore.toggleLockedWindow}
@@ -153,7 +154,7 @@ export function AppHeader({
             <Tooltip delayDuration={200} disableHoverableContent>
               <TooltipTrigger>
                 <HeaderSwitch
-                  checked={!settingsStore.overlayMode}
+                  checked={!profileSettings.overlayMode}
                   label="2nd Screen Mode"
                   onChange={(checked) => {
                     settingsStore.setOverlayMode(!checked);
@@ -174,7 +175,7 @@ export function AppHeader({
               <Tooltip delayDuration={200} disableHoverableContent>
                 <TooltipTrigger>
                   <HeaderSwitch
-                    checked={settingsStore.liveMode}
+                    checked={profileSettings.liveMode}
                     label="Live Mode"
                     onChange={settingsStore.toggleLiveMode}
                   />

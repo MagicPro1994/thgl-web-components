@@ -35,12 +35,18 @@ export function Whiteboard({
   hidden?: boolean;
 }) {
   const connectionStore = useConnectionStore();
+  const profileSettings = useSettingsStore((state) =>
+    state.getCurrentProfileSettings(),
+  );
   const [isConnected, setIsConnected] = useState(false);
   const { groupName, setGroupName } = useSettingsStore(
-    useShallow((state) => ({
-      groupName: state.groupName,
-      setGroupName: state.setGroupName,
-    })),
+    useShallow((state) => {
+      const shallowProfileSettings = state.getCurrentProfileSettings();
+      return {
+        groupName: shallowProfileSettings.groupName,
+        setGroupName: state.setGroupName,
+      };
+    }),
   );
   const [errorMessage, setErrorMessage] = useState("");
   const peerRef = useRef<Peer | null>(null);
@@ -180,9 +186,7 @@ export function Whiteboard({
     },
     [connectionStore.connections],
   );
-  const tempPrivateDrawing = useSettingsStore(
-    (state) => state.tempPrivateDrawing,
-  );
+  const tempPrivateDrawing = profileSettings.tempPrivateDrawing;
   useEffect(() => {
     if (!isOwner || !isConnected) {
       return;
@@ -190,7 +194,7 @@ export function Whiteboard({
     sendToConnections({ tempPrivateDrawing });
   }, [isOwner, isConnected, sendToConnections, tempPrivateDrawing]);
   const filters = useUserStore((state) => state.filters);
-  const myFilters = useSettingsStore((state) => state.myFilters);
+  const myFilters = profileSettings.myFilters;
   const selectedMyFilters = useMemo(
     () => myFilters.filter((myFilter) => filters.includes(myFilter.name)),
     [filters, myFilters],
@@ -202,7 +206,7 @@ export function Whiteboard({
     sendToConnections({ selectedMyFilters });
   }, [isOwner, isConnected, sendToConnections, selectedMyFilters]);
 
-  const tempPrivateNode = useSettingsStore((state) => state.tempPrivateNode);
+  const tempPrivateNode = profileSettings.tempPrivateNode;
   useEffect(() => {
     if (!isOwner || !isConnected) {
       return;
@@ -247,9 +251,10 @@ export function Whiteboard({
               </TooltipTrigger>
               <TooltipContent side="bottom" className="max-w-[360px]">
                 Share your nodes, drawings with your group in real-time! After
-                opening a group, share the group name with your friends to connect
-                to each other. Your selected filter (My Filters) will be shared, and
-                they will see current changes in real-time (Add Node/Add Drawing).
+                opening a group, share the group name with your friends to
+                connect to each other. Your selected filter (My Filters) will be
+                shared, and they will see current changes in real-time (Add
+                Node/Add Drawing).
               </TooltipContent>
             </Tooltip>
           </div>

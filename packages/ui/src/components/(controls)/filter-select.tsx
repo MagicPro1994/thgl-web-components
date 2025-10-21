@@ -28,7 +28,9 @@ export function FilterSelect({
   const [value, setValue] = useState(filter ?? "");
 
   const [open, setOpen] = useState(false);
-  const myFilters = useSettingsStore((state) => state.myFilters);
+  const myFilters = useSettingsStore(
+    (state) => state.getCurrentProfileSettings().myFilters,
+  );
   const addMyFilter = useSettingsStore((state) => state.addMyFilter);
   const filterNames = myFilters.map((filter) => filter.name);
   const isExistingFilter = filterNames.includes(value);

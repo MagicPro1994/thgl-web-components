@@ -16,7 +16,9 @@ export function Presets(): JSX.Element {
   const coordinates = useCoordinates();
   const { setFilters, filters, globalFilters, setGlobalFilters } =
     useUserStore();
-  const presets = useSettingsStore((state) => state.presets);
+  const presets = useSettingsStore(
+    (state) => state.getCurrentProfileSettings().presets,
+  );
   const addPreset = useSettingsStore((state) => state.addPreset);
   const removePreset = useSettingsStore((state) => state.removePreset);
   const [presetName, setPresetName] = useState("");

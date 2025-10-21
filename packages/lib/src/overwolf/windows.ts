@@ -27,7 +27,10 @@ export function getMonitors() {
 }
 
 export async function getPreferedWindowName(): Promise<string> {
-  const { overlayMode, setOverlayMode } = useSettingsStore.getState();
+  const overlayMode = useSettingsStore
+    .getState()
+    .getCurrentProfileSettings().overlayMode;
+  const setOverlayMode = useSettingsStore.getState().setOverlayMode;
   if (overlayMode !== null) {
     return overlayMode ? WINDOWS.OVERLAY : WINDOWS.DESKTOP;
   }

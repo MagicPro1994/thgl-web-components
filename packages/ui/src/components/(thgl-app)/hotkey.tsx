@@ -17,7 +17,9 @@ export function Hotkey({
   onStop?: () => void;
   onClear?: () => void;
 }) {
-  const hotkeys = useSettingsStore((state) => state.hotkeys);
+  const hotkeys = useSettingsStore(
+    (state) => state.getCurrentProfileSettings().hotkeys,
+  );
   const setHotkey = useSettingsStore((state) => state.setHotkey);
 
   const [recording, setRecording] = useState(false);

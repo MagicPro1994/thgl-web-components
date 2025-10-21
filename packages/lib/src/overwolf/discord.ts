@@ -24,8 +24,11 @@ export async function initDiscordRPC(
   try {
     let discordRPCPlugin = await loadDiscordRPCPlugin(applicationID);
     let refreshPresenceTimeout: NodeJS.Timeout | null = null;
+    const profileSettings = useSettingsStore
+      .getState()
+      .getCurrentProfileSettings();
     let displayDiscordActivityStatus =
-      useSettingsStore.getState().displayDiscordActivityStatus;
+      profileSettings.displayDiscordActivityStatus;
     const refreshPresence = async () => {
       if (!displayDiscordActivityStatus) {
         return;
@@ -57,10 +60,12 @@ export async function initDiscordRPC(
       refreshPresenceTimeout = setTimeout(refreshPresence, 30000);
     };
     useSettingsStore.subscribe((state) => {
-      if (state.displayDiscordActivityStatus === displayDiscordActivityStatus) {
+      const currentActivityStatus =
+        state.getCurrentProfileSettings().displayDiscordActivityStatus;
+      if (currentActivityStatus === displayDiscordActivityStatus) {
         return;
       }
-      displayDiscordActivityStatus = state.displayDiscordActivityStatus;
+      displayDiscordActivityStatus = currentActivityStatus;
       if (displayDiscordActivityStatus) {
         console.log("Displaying Discord Activity Status");
         refreshPresence();

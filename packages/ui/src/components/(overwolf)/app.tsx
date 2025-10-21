@@ -77,8 +77,8 @@ export function App({
   additionalTooltip?: AdditionalTooltipType;
 }): JSX.Element {
   const isOverlay = useOverwolfState((state) => state.isOverlay);
-  const overlayMode = useSettingsStore((state) => state.overlayMode);
-  const lockedWindow = useSettingsStore((state) => state.lockedWindow);
+  const overlayMode = useSettingsStore((state) => state.getCurrentProfileSettings().overlayMode);
+  const lockedWindow = useSettingsStore((state) => state.getCurrentProfileSettings().lockedWindow);
 
   return (
     <div

@@ -76,7 +76,7 @@ const virtualKeyMap: Record<number, string> = {
 };
 
 export function OverlayInputEvents() {
-  const lockedWindow = useSettingsStore((state) => state.lockedWindow);
+  const lockedWindow = useSettingsStore((state) => state.getCurrentProfileSettings().lockedWindow);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

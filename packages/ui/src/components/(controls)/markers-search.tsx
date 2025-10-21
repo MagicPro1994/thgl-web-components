@@ -47,12 +47,15 @@ export function MarkersSearch({
   const { _hasHydrated, search, setSearch, searchIsLoading, selectedNodeId } =
     useUserStore();
   const [internalSearch, setInternalSearch] = useState(search);
-  const showFilters = useSettingsStore((state) => state.showFilters);
+  const profileSettings = useSettingsStore((state) =>
+    state.getCurrentProfileSettings(),
+  );
+  const showFilters = profileSettings.showFilters;
   const toggleShowFilters = useSettingsStore(
     (state) => state.toggleShowFilters,
   );
 
-  const expandedFilters = useSettingsStore((state) => state.expandedFilters);
+  const expandedFilters = profileSettings.expandedFilters;
   const toggleExpandedFilters = useSettingsStore(
     (state) => state.toggleExpandedFilters,
   );

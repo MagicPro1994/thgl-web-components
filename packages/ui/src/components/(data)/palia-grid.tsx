@@ -29,7 +29,7 @@ const elderwoodGrid = [
 
 export function PaliaGrid({ force }: { force?: boolean }) {
   const { map, leaflet } = useMapStore();
-  const showGrid = force || useSettingsStore((state) => state.showGrid);
+  const showGrid = force || useSettingsStore((state) => state.getCurrentProfileSettings().showGrid);
 
   useEffect(() => {
     if (!map || !leaflet || !showGrid) {

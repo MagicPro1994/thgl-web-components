@@ -6,7 +6,9 @@ import { isOverwolf, useSettingsStore } from "@repo/lib";
 export function FilterTooltip({ id }: { id: string }) {
   const t = useT();
   const { nodes, typesIdMap } = useCoordinates();
-  const discoveredNodes = useSettingsStore((state) => state.discoveredNodes);
+  const discoveredNodes = useSettingsStore(
+    (state) => state.getCurrentProfileSettings().discoveredNodes,
+  );
   const isDiscoveredNode = useSettingsStore((state) => state.isDiscoveredNode);
 
   const filterNode = useMemo(

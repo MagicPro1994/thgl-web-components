@@ -39,7 +39,10 @@ import { DeleteFilter } from "./delete-filter";
 
 export function MyFilters() {
   const { filters, setFilters, toggleFilter } = useUserStore();
-  const myFilters = useSettingsStore((state) => state.myFilters);
+  const profileSettings = useSettingsStore((state) =>
+    state.getCurrentProfileSettings(),
+  );
+  const myFilters = profileSettings.myFilters;
   const addMyFilter = useSettingsStore((state) => state.addMyFilter);
   const [deleteMyFilter, setDeleteMyFilter] = useState<DrawingsAndNodes | null>(
     null,
@@ -48,9 +51,7 @@ export function MyFilters() {
     null,
   );
 
-  const isDrawingEditing = useSettingsStore(
-    (state) => state.tempPrivateDrawing !== null,
-  );
+  const isDrawingEditing = profileSettings.tempPrivateDrawing !== null;
   const setTempPrivateDrawing = useSettingsStore(
     (state) => state.setTempPrivateDrawing,
   );

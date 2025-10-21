@@ -28,13 +28,12 @@ export function InteractiveMap({
 }): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const { map, setMap, setLeaflet } = useMapStore();
+  const profileSettings = useSettingsStore((state) => state.getCurrentProfileSettings());
   const isHydrated = useUserStore((state) => state._hasHydrated);
-  const mapFilter = useSettingsStore((state) => state.mapFilter);
+  const mapFilter = profileSettings.mapFilter;
   const mapName = useUserStore((state) => state.mapName);
-  const colorBlindMode = useSettingsStore((state) => state.colorBlindMode);
-  const colorBlindSeverity = useSettingsStore(
-    (state) => state.colorBlindSeverity,
-  );
+  const colorBlindMode = profileSettings.colorBlindMode;
+  const colorBlindSeverity = profileSettings.colorBlindSeverity;
   const t = useT();
 
   const mapTileOptions = tileOptions[mapName];

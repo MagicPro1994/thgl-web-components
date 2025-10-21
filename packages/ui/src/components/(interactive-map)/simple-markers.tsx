@@ -36,7 +36,10 @@ export function SimpleMarkers({
   additionalTooltip?: AdditionalTooltipType;
 }) {
   const map = useMap();
-  const baseIconSize = useSettingsStore((state) => state.baseIconSize);
+  const profileSettings = useSettingsStore((state) =>
+    state.getCurrentProfileSettings(),
+  );
+  const baseIconSize = profileSettings.baseIconSize;
   const handleMapMouseMoveRef = useRef<((e: LeafletMouseEvent) => void) | null>(
     null,
   );
@@ -51,15 +54,11 @@ export function SimpleMarkers({
   const [isLoadingSprite, setIsLoadingSprite] = useState(
     imageSprite && !canvasMarkerImgs["icons.webp"],
   );
-  const hideDiscoveredNodes = useSettingsStore(
-    (state) => state.hideDiscoveredNodes,
-  );
-  const colorBlindMode = useSettingsStore((state) => state.colorBlindMode);
-  const colorBlindSeverity = useSettingsStore(
-    (state) => state.colorBlindSeverity,
-  );
+  const hideDiscoveredNodes = profileSettings.hideDiscoveredNodes;
+  const colorBlindMode = profileSettings.colorBlindMode;
+  const colorBlindSeverity = profileSettings.colorBlindSeverity;
   const setDiscoverNode = useSettingsStore((state) => state.setDiscoverNode);
-  const discoveredNodes = useSettingsStore((state) => state.discoveredNodes);
+  const discoveredNodes = profileSettings.discoveredNodes;
   const discoveredSet = useMemo(
     () => new Set(discoveredNodes),
     [discoveredNodes],

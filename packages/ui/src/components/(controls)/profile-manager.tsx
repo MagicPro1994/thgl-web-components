@@ -163,7 +163,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
         if (
           !profile.id ||
           !profile.name ||
-          !profile.data ||
+          !profile.settings ||
           typeof profile.createdAt !== "number" ||
           typeof profile.updatedAt !== "number"
         ) {

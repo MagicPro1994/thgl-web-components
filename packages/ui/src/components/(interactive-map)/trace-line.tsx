@@ -22,10 +22,11 @@ export function TraceLine() {
     });
   }
 
-  const showTraceLine = useSettingsStore((state) => state.showTraceLine);
-  const traceLineLength = useSettingsStore((state) => state.traceLineLength);
-  const traceLineRate = useSettingsStore((state) => state.traceLineRate);
-  const traceLineColor = useSettingsStore((state) => state.traceLineColor);
+  const profileSettings = useSettingsStore(state => state.getCurrentProfileSettings());
+  const showTraceLine = profileSettings.showTraceLine;
+  const traceLineLength = profileSettings.traceLineLength;
+  const traceLineRate = profileSettings.traceLineRate;
+  const traceLineColor = profileSettings.traceLineColor;
 
   useEffect(() => {
     if (!showTraceLine || !map?.mapName) {

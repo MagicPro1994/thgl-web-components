@@ -21,7 +21,7 @@ export function Discovery({
   isLive?: boolean;
   onClose?: () => void;
 }) {
-  useSettingsStore((state) => state.discoveredNodes);
+  useSettingsStore((state) => state.getCurrentProfileSettings().discoveredNodes);
   const isDiscoveredNode = useSettingsStore((state) => state.isDiscoveredNode);
   const toggleDiscoveredNode = useSettingsStore(
     (state) => state.toggleDiscoveredNode,
@@ -66,6 +66,7 @@ export function Discovery({
             onClick={() => {
               const myFilter = useSettingsStore
                 .getState()
+                .getCurrentProfileSettings()
                 .myFilters.find((filter) =>
                   filter.nodes?.some(
                     (node) =>
