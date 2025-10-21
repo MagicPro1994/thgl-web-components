@@ -1,6 +1,6 @@
 # 2.15.2
 
-- Fix: **Blue Protocol: Star Resonance** Fix game detection for official launcher version (BPSR.exe)
+- Fix: **Blue Protocol: Star Resonance** Fix game detection for official launcher version (BPSR.exe). The position detection might break on future updates again.
 
 # 2.15.0
 
