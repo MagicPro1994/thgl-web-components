@@ -365,6 +365,7 @@ export type FiltersConfig = {
           height: number;
         };
     size?: number;
+    sort?: number;
     live_only?: boolean;
     autoDiscover?: boolean;
     defaultOn?: boolean;
