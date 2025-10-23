@@ -23,8 +23,8 @@ export const games: Array<Game> = [
         // playerIcon: "player.webp",
         imageSprite: true,
         zPos: {
-          xyMaxDistance: 10000,
-          zDistance: 400,
+          xyMaxDistance: 100,
+          zDistance: 5,
         },
       },
       games: [
