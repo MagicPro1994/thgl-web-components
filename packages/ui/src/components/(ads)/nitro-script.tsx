@@ -98,12 +98,12 @@ export function NitroScript({
     }
     const now = Date.now();
     const intervalId = setInterval(() => {
-      if (isNitroAdsValid()) {
-        setState("ready");
+      if (isNitroAdsManipulated()) {
+        setState("error");
         clearInterval(intervalId);
         return;
-      } else if (isNitroAdsManipulated()) {
-        setState("error");
+      } else if (isNitroAdsValid()) {
+        setState("ready");
         clearInterval(intervalId);
         return;
       }
@@ -158,10 +158,10 @@ export function NitroScript({
         }}
         strategy="lazyOnload"
         onReady={() => {
-          if (isNitroAdsValid()) {
-            setState("ready");
-          } else if (isNitroAdsManipulated()) {
+          if (isNitroAdsManipulated()) {
             setState("error");
+          } else if (isNitroAdsValid()) {
+            setState("ready");
           } else {
             setState("validation");
           }
