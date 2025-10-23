@@ -21,7 +21,6 @@
     "dev:palia": "turbo run dev --filter='palia-*'",
     "dev:palworld": "turbo run dev --filter='palworld-*'",
     "dev:pax-dei": "turbo run dev --filter='pax-dei-*'",
-    "dev:pillars-of-eternity": "turbo run dev --filter='pillars-of-eternity-*'",
     "dev:rsdragonwilds": "turbo run dev --filter='rsdragonwilds-*'",
     "dev:satisfactory": "turbo run dev --filter='satisfactory-*'",
     "dev:soulframe": "turbo run dev --filter='soulframe-*'",

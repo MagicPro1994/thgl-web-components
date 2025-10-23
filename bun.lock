@@ -525,31 +525,6 @@
         "typescript": "catalog:",
       },
     },
-    "apps/pillars-of-eternity-web": {
-      "name": "pillars-of-eternity-web",
-      "version": "0.0.0",
-      "dependencies": {
-        "@repo/lib": "workspace:*",
-        "@repo/ui": "workspace:*",
-        "fuse.js": "catalog:",
-        "next": "catalog:",
-        "react": "catalog:",
-        "react-dom": "catalog:",
-      },
-      "devDependencies": {
-        "@next/eslint-plugin-next": "catalog:",
-        "@repo/eslint-config": "workspace:*",
-        "@repo/tailwind-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
-        "@types/node": "catalog:",
-        "@types/react": "catalog:",
-        "@types/react-dom": "catalog:",
-        "autoprefixer": "catalog:",
-        "postcss": "catalog:",
-        "tailwindcss": "catalog:",
-        "typescript": "catalog:",
-      },
-    },
     "apps/rsdragonwilds-web": {
       "name": "rsdragonwilds-web",
       "version": "0.0.0",
@@ -2713,8 +2688,6 @@
     "pidtree": ["pidtree@0.3.1", "", { "bin": { "pidtree": "bin/pidtree.js" } }, "sha512-qQbW94hLHEqCg7nhby4yRC7G2+jYHY4Rguc2bjw7Uug4GIJuu1tvf2uHaZv5Q8zdt+WKJ6qK1FOI6amaWUo5FA=="],
 
     "pify": ["pify@2.3.0", "", {}, "sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog=="],
-
-    "pillars-of-eternity-web": ["pillars-of-eternity-web@workspace:apps/pillars-of-eternity-web"],
 
     "pirates": ["pirates@4.0.7", "", {}, "sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA=="],
 
