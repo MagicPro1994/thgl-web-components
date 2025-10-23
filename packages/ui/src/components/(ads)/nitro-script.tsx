@@ -10,10 +10,6 @@ import { NITROPAY_SITE_ID } from "./constants";
 
 type NitroState = "loading" | "validation" | "ready" | "error";
 
-/**
- * Validates that NitroPay is fully loaded and not blocked/modified by ad blockers
- * AdGuard and other blockers often leave the nitroAds object but strip out functional methods
- */
 function isNitroAdsValid(): boolean {
   if (!("nitroAds" in window)) {
     return false;
@@ -53,6 +49,27 @@ function isNitroAdsValid(): boolean {
   return true;
 }
 
+function isNoop(fn: Function): boolean {
+  const src = fn.toString().replace(/\s+/g, "");
+  return (
+    src === "function(){}" ||
+    src === "()=>{}" ||
+    src === "functionnoop(){}" ||
+    (src.startsWith("functionnoop") && src.endsWith("{}"))
+  );
+}
+
+function isNitroAdsManipulated(): boolean {
+  if (!("nitroAds" in window)) {
+    return false;
+  }
+  const nitroAds = window.nitroAds as NitroAds;
+  if (isNoop(nitroAds.createAd) || Object.keys(nitroAds).length === 0) {
+    return true;
+  }
+  return false;
+}
+
 const useNitroState = create<{
   state: NitroState;
   setState: (state: NitroState) => void;
@@ -85,6 +102,10 @@ export function NitroScript({
         setState("ready");
         clearInterval(intervalId);
         return;
+      } else if (isNitroAdsManipulated()) {
+        setState("error");
+        clearInterval(intervalId);
+        return;
       }
       if (Date.now() - now > 2500) {
         setState("error");
@@ -107,15 +128,14 @@ export function NitroScript({
         getNitroAds()
           .addUserToken(email, "PLAIN")
           .then(() => {
-            console.log("[NitroPay] Hashed email tracking enabled");
+            // console.log("[NitroPay] Hashed email tracking enabled");
           })
-          .catch((error) => {
-            console.error("[NitroPay] Failed to add user token:", error);
+          .catch(() => {
+            // console.error("[NitroPay] Failed to add user token:", error);
           });
       } else {
         // User logged out - clear tokens
         getNitroAds().clearUserTokens();
-        console.log("[NitroPay] User tokens cleared");
       }
     } catch (error) {
       console.error("[NitroPay] Error managing user tokens:", error);
@@ -140,6 +160,8 @@ export function NitroScript({
         onReady={() => {
           if (isNitroAdsValid()) {
             setState("ready");
+          } else if (isNitroAdsManipulated()) {
+            setState("error");
           } else {
             setState("validation");
           }
