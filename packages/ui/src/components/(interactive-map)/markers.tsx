@@ -315,43 +315,6 @@ function MarkersContent({
         colorBlindSeverity,
         pane: "tooltipPane",
       });
-      const getItems = () => {
-        const filter = filters.find((filter) =>
-          filter.values.some((filter) => filter.id === spawn.type),
-        );
-        const items = [
-          {
-            id: nodeId,
-            termId: (spawn.name ?? spawn.id ?? spawn.type).replace(
-              /my_\d+_/,
-              "",
-            ),
-            description: spawn.description,
-            type: spawn.type,
-            group: filter?.group,
-            isPrivate: spawn.isPrivate,
-            isLive: Boolean(spawn.address),
-          },
-        ];
-        if (isCluster) {
-          items.push(
-            ...spawn.cluster!.map((spawn) => ({
-              id: spawn.id,
-              termId: (spawn.name ?? spawn.id ?? spawn.type).replace(
-                /my_\d+_/,
-                "",
-              ),
-              description: spawn.description,
-              type: spawn.type,
-              group: filter?.group,
-              isPrivate: spawn.isPrivate,
-              isLive: Boolean(spawn.address),
-            })),
-          );
-        }
-        return items;
-      };
-
       marker.on({
         mousedown: () => {
           clearTimeout(tooltipDelayTimeout);
@@ -364,11 +327,46 @@ function MarkersContent({
 
           clearTimeout(tooltipDelayTimeout);
           tooltipDelayTimeout = setTimeout(() => {
+            // Lazy evaluate items only when actually hovered (not created for every marker)
+            const filter = filters.find((filter) =>
+              filter.values.some((filter) => filter.id === spawn.type),
+            );
+            const items = [
+              {
+                id: nodeId,
+                termId: (spawn.name ?? spawn.id ?? spawn.type).replace(
+                  /my_\d+_/,
+                  "",
+                ),
+                description: spawn.description,
+                type: spawn.type,
+                group: filter?.group,
+                isPrivate: spawn.isPrivate,
+                isLive: Boolean(spawn.address),
+              },
+            ];
+            if (isCluster) {
+              items.push(
+                ...spawn.cluster!.map((spawn) => ({
+                  id: spawn.id,
+                  termId: (spawn.name ?? spawn.id ?? spawn.type).replace(
+                    /my_\d+_/,
+                    "",
+                  ),
+                  description: spawn.description,
+                  type: spawn.type,
+                  group: filter?.group,
+                  isPrivate: spawn.isPrivate,
+                  isLive: Boolean(spawn.address),
+                })),
+              );
+            }
+
             onTooltipData({
               x: event.sourceTarget._point.x,
               y: event.sourceTarget._point.y,
               radius: marker.getRadius(),
-              items: getItems(),
+              items: items,
               latLng: spawn.p,
             });
             onTooltipOpen(true);
@@ -478,28 +476,36 @@ function MarkersContent({
       return;
     }
 
+    // Cache constant values outside the loop for better performance
+    const maxDistSq =
+      markerOptions.zPos.xyMaxDistance * markerOptions.zPos.xyMaxDistance;
+    const zDistance = markerOptions.zPos.zDistance;
+    const playerX = throttledPlayer.x;
+    const playerY = throttledPlayer.y;
+    const playerZ = throttledPlayer.z;
+
     for (const marker of existingSpawnIds.current.values()) {
       if (!marker.options || !marker.options.id) continue;
       const spawnP = marker._latLngTuple as [number, number, number];
       if (spawnP.length !== 3) continue;
 
-      const dx = throttledPlayer.x - spawnP[0];
-      const dy = throttledPlayer.y - spawnP[1];
+      // Calculate XY distance squared
+      const dx = playerX - spawnP[0];
+      const dy = playerY - spawnP[1];
       const xyDistSq = dx * dx + dy * dy;
 
+      // Early exit if too far away
       let newZPos: CanvasMarkerOptions["zPos"] = null;
-      const maxDistSq =
-        markerOptions.zPos.xyMaxDistance * markerOptions.zPos.xyMaxDistance;
       if (xyDistSq <= maxDistSq) {
-        const dz = throttledPlayer.z - spawnP[2];
-        if (dz > markerOptions.zPos.zDistance) {
+        const dz = playerZ - spawnP[2];
+        if (dz > zDistance) {
           newZPos = "bottom";
-        }
-        if (dz < -markerOptions.zPos.zDistance) {
+        } else if (dz < -zDistance) {
           newZPos = "top";
         }
       }
 
+      // Only update if changed
       if (marker.options.zPos !== newZPos) {
         marker.setZPos(newZPos);
       }
