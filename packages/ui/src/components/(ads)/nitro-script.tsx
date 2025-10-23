@@ -8,7 +8,7 @@ import { create } from "zustand";
 import { getNitroAds, NitroAds } from "./nitro-pay";
 import { NITROPAY_SITE_ID } from "./constants";
 
-type NitroState = "loading" | "ready" | "error";
+type NitroState = "loading" | "validation" | "ready" | "error";
 
 /**
  * Validates that NitroPay is fully loaded and not blocked/modified by ad blockers
@@ -76,7 +76,7 @@ export function NitroScript({
   const { state, setState } = useNitroState();
 
   useEffect(() => {
-    if (state !== "loading" || adRemoval || isOverwolf) {
+    if (state !== "validation" || adRemoval || isOverwolf) {
       return;
     }
     const now = Date.now();
@@ -95,7 +95,7 @@ export function NitroScript({
     return () => {
       clearInterval(intervalId);
     };
-  }, [state]);
+  }, [state, adRemoval]);
 
   useEffect(() => {
     if (adRemoval || state !== "ready") {
@@ -121,7 +121,7 @@ export function NitroScript({
       console.error("[NitroPay] Error managing user tokens:", error);
       setState("error");
     }
-  }, [state, email]);
+  }, [state, email, adRemoval]);
 
   if (!accountHasHydrated) {
     return <>{loading}</>;
@@ -140,6 +140,8 @@ export function NitroScript({
         onReady={() => {
           if (isNitroAdsValid()) {
             setState("ready");
+          } else {
+            setState("validation");
           }
         }}
         src={`https://s.nitropay.com/ads-${NITROPAY_SITE_ID}.js`}
