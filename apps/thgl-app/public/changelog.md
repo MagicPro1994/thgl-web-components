@@ -1,3 +1,8 @@
+# 2.17.0
+
+- Feat: **Blue Protocol: Star Resonance** Add live tracking support for Documents (Books, Letters, etc.)
+- Fix: **Blue Protocol: Star Resonance** Live tracking didn't show all locations
+
 # 2.16.0
 
 - Feat: **Blue Protocol: Star Resonance** Add live tracking support for Resources
