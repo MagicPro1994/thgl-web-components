@@ -839,18 +839,7 @@ export const useSettingsStore = create(
         if (!state) return;
 
         if (!state._hasHydrated) {
-          console.log("✅ Setting _hasHydrated to true");
           state.setHasHydrated(true);
-        } else {
-          console.log("⚠️ _hasHydrated already true, skipping");
-        }
-
-        // Initialize profiles if they don't exist
-        if (!state.profiles?.length) {
-          console.log("🆕 Initializing default profile");
-          const defaultProfile = ProfileManager.getDefaultProfile();
-          state.profiles = [defaultProfile];
-          state.currentProfileId = defaultProfile.id;
         }
 
         // Flatten current profile settings to root level
@@ -858,7 +847,6 @@ export const useSettingsStore = create(
           (p) => p.id === state.currentProfileId,
         );
         if (currentProfile) {
-          console.log("📋 Hydrating flattened settings from current profile");
           Object.assign(state, currentProfile.settings);
         }
       },
@@ -875,15 +863,45 @@ export const useSettingsStore = create(
             }
           }
         }
+
         if (version < 4) {
           // Initialize profiles from existing settings
           const state = persistedState as any;
+
+          // Create or update the default profile with existing settings
+          let defaultProfile: Profile;
+          let isNewProfile = false;
+
           if (!state.profiles?.length) {
-            const defaultProfile = ProfileManager.getDefaultProfile();
+            // No profiles exist - create new one
+            defaultProfile = ProfileManager.getDefaultProfile();
+            isNewProfile = true;
+          } else {
+            // Profiles exist - use the current one or first one
+            const currentProfileId = state.currentProfileId || state.profiles[0]?.id;
+            defaultProfile = state.profiles.find((p: Profile) => p.id === currentProfileId) || state.profiles[0];
+          }
+
+          // Preserve existing settings from version 3 root level
+          Object.keys(DEFAULT_PROFILE_SETTINGS).forEach((key) => {
+            if (key in state && state[key] !== undefined) {
+              // @ts-ignore
+              defaultProfile.settings[key] = state[key];
+            }
+          });
+
+          if (isNewProfile) {
             state.profiles = [defaultProfile];
+            state.currentProfileId = defaultProfile.id;
+          } else {
+            // Update the existing profile in the array
+            state.profiles = state.profiles.map((p: Profile) =>
+              p.id === defaultProfile.id ? defaultProfile : p
+            );
             state.currentProfileId = defaultProfile.id;
           }
         }
+
         return persistedState;
       },
     },
