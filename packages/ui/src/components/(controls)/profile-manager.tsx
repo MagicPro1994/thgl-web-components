@@ -55,8 +55,13 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
   const [newProfileName, setNewProfileName] = useState("");
   const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
   const [editingProfileName, setEditingProfileName] = useState("");
+  const [duplicateProfileId, setDuplicateProfileId] = useState<string | null>(
+    null,
+  );
+  const [duplicateProfileName, setDuplicateProfileName] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
 
   const currentProfile = settingsStore.profiles.find(
     (p) => p.id === settingsStore.currentProfileId,
@@ -181,9 +186,32 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
     reader.readAsText(file);
   };
 
-  const handleDuplicateProfile = (profileId: string, profileName: string) => {
-    settingsStore.duplicateProfile(profileId);
-    toast.success(`Profile "${profileName}" duplicated`);
+  const handleDuplicateProfile = () => {
+    if (!duplicateProfileName.trim()) {
+      toast.error("Profile name cannot be empty");
+      return;
+    }
+    if (
+      settingsStore.profiles.some((p) => p.name === duplicateProfileName.trim())
+    ) {
+      toast.error("A profile with this name already exists");
+      return;
+    }
+    if (duplicateProfileId) {
+      const sourceProfile = settingsStore.profiles.find(
+        (p) => p.id === duplicateProfileId,
+      );
+      settingsStore.duplicateProfile(
+        duplicateProfileId,
+        duplicateProfileName.trim(),
+      );
+      setDuplicateProfileId(null);
+      setDuplicateProfileName("");
+      setDuplicateDialogOpen(false);
+      toast.success(
+        `Profile "${sourceProfile?.name}" duplicated as "${duplicateProfileName}"`,
+      );
+    }
   };
 
   const handleDateDisplay = (timestamp: number) => {
@@ -322,17 +350,63 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
               </DialogContent>
             </Dialog>
 
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-8 px-2 text-purple-600 dark:text-purple-400"
-              title="Duplicate profile"
-              onClick={() =>
-                handleDuplicateProfile(currentProfile.id, currentProfile.name)
-              }
+            <Dialog
+              open={duplicateDialogOpen}
+              onOpenChange={setDuplicateDialogOpen}
             >
-              <Copy className="h-4 w-4" />
-            </Button>
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 px-2 text-purple-600 dark:text-purple-400"
+                  title="Duplicate profile"
+                  onClick={() => {
+                    setDuplicateProfileId(currentProfile.id);
+                    setDuplicateProfileName(`${currentProfile.name} Copy`);
+                  }}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent aria-describedby="duplicate-profile-description">
+                <DialogHeader>
+                  <DialogTitle>Duplicate Profile</DialogTitle>
+                  <DialogDescription id="duplicate-profile-description">
+                    Create a copy of "{currentProfile.name}" with all its
+                    settings.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="duplicate-profile-name">Profile Name</Label>
+                    <Input
+                      id="duplicate-profile-name"
+                      value={duplicateProfileName}
+                      onChange={(e) => setDuplicateProfileName(e.target.value)}
+                      placeholder="Enter profile name"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleDuplicateProfile();
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setDuplicateDialogOpen(false);
+                      setDuplicateProfileId(null);
+                      setDuplicateProfileName("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={handleDuplicateProfile}>Duplicate</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
             <Button
               size="sm"

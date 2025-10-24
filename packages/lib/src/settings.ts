@@ -277,10 +277,10 @@ class ProfileManager {
     return newProfile;
   }
 
-  static duplicateProfile(profile: Profile): Profile {
+  static duplicateProfile(profile: Profile, name: string): Profile {
     // Deep clone the profile object
     const newProfile: Profile = JSON.parse(JSON.stringify(profile));
-    newProfile.name = `${profile.name} Copy`;
+    newProfile.name = name;
     newProfile.id = this.createProfileId();
     newProfile.createdAt = Date.now();
     newProfile.updatedAt = Date.now();
@@ -302,7 +302,7 @@ export interface SettingsStore extends ProfileSettings, ProfileActions {
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => Profile | null;
   importProfile: (profile: Profile) => void;
-  duplicateProfile: (profileId: string) => void;
+  duplicateProfile: (profileId: string, name: string) => void;
 }
 
 const getStorageName = () => {
@@ -432,15 +432,17 @@ export const useSettingsStore = create(
           });
         },
 
-        duplicateProfile: (profileId: string) => {
+        duplicateProfile: (profileId: string, name: string) => {
           const state = get();
           const profile = state.profiles.find((p) => p.id === profileId);
           if (!profile) return;
 
-          const newProfile = ProfileManager.duplicateProfile(profile);
+          const newProfile = ProfileManager.duplicateProfile(profile, name);
 
           set({
             profiles: [...state.profiles, newProfile],
+            currentProfileId: newProfile.id,
+            ...newProfile.settings, // Flatten new profile settings to root
           });
         },
 
