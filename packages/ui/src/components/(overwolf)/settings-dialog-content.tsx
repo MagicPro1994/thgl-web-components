@@ -21,7 +21,6 @@ export function OverwolfSettingsDialogContent({
   filters: FiltersConfig;
 }) {
   const settingsStore = useSettingsStore();
-  const profileSettings = useSettingsStore((state) => state.getCurrentProfileSettings());
 
   return (
     <SettingsDialogContent activeApp={activeApp} more={more} filters={filters}>
@@ -69,7 +68,7 @@ export function OverwolfSettingsDialogContent({
         <Input
           type="number"
           id="actors-polling-rate"
-          value={profileSettings.actorsPollingRate}
+          value={settingsStore.actorsPollingRate}
           className="w-fit"
           onChange={(event) =>
             settingsStore.setActorsPollingRate(+event.target.value)
@@ -86,7 +85,7 @@ export function OverwolfSettingsDialogContent({
         </Label>
         <Switch
           id="display-discord-game-status"
-          checked={profileSettings.displayDiscordActivityStatus}
+          checked={settingsStore.displayDiscordActivityStatus}
           onCheckedChange={(checked) =>
             settingsStore.setDisplayDiscordActivityStatus(checked)
           }

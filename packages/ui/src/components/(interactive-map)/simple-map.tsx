@@ -23,9 +23,7 @@ export function SimpleMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapTileOptions = tileOptions?.[mapName];
   const { map, setMap, setLeaflet } = useMapStore();
-  const colorBlindMode = useSettingsStore(
-    (state) => state.getCurrentProfileSettings().colorBlindMode,
-  );
+  const colorBlindMode = useSettingsStore((state) => state.colorBlindMode);
 
   useLayoutEffect(() => {
     if (!containerRef.current) {

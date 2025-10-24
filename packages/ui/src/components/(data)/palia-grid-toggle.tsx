@@ -3,7 +3,7 @@ import { useSettingsStore } from "@repo/lib";
 import { Label, Switch } from "../(controls)";
 
 export function PaliaGridToggle() {
-  const showGrid = useSettingsStore((state) => state.getCurrentProfileSettings().showGrid);
+  const showGrid = useSettingsStore((state) => state.showGrid);
   const toggleShowGrid = useSettingsStore((state) => state.toggleShowGrid);
 
   return (

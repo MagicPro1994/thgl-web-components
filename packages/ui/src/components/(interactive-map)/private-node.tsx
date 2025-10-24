@@ -48,23 +48,22 @@ export function PrivateNode({
   const map = useMap();
   const canvasMarker = useRef<CanvasMarker | null>(null);
   const mapName = useUserStore((state) => state.mapName);
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
-  );
-  const myFilters = profileSettings.myFilters;
+  const myFilters = useSettingsStore((state) => state.myFilters);
   const setMyFilters = useSettingsStore((state) => state.setMyFilters);
-  const tempPrivateNode = profileSettings.tempPrivateNode;
+  const tempPrivateNode = useSettingsStore((state) => state.tempPrivateNode);
   const setTempPrivateNode = useSettingsStore(
     (state) => state.setTempPrivateNode,
   );
-  const baseIconSize = profileSettings.baseIconSize;
+  const baseIconSize = useSettingsStore((state) => state.baseIconSize);
   const filters = useUserStore((state) => state.filters);
   const setFilters = useUserStore((state) => state.setFilters);
   const isEditing = tempPrivateNode !== null;
   const radius = tempPrivateNode?.radius ?? 10;
   const color = tempPrivateNode?.color ?? "#FFFFFFCC";
-  const colorBlindMode = profileSettings.colorBlindMode;
-  const colorBlindSeverity = profileSettings.colorBlindSeverity;
+  const colorBlindMode = useSettingsStore((state) => state.colorBlindMode);
+  const colorBlindSeverity = useSettingsStore(
+    (state) => state.colorBlindSeverity,
+  );
 
   useEffect(() => {
     if (!isEditing || !map) {

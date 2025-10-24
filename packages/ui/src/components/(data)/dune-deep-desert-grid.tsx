@@ -13,7 +13,7 @@ const deepDesertGrid = [
 export function DuneDeepDesertGrid() {
   const t = useT();
   const { map, leaflet } = useMapStore();
-  const lockedWindow = useSettingsStore((state) => state.getCurrentProfileSettings().lockedWindow);
+  const lockedWindow = useSettingsStore((state) => state.lockedWindow);
 
   useEffect(() => {
     if (!map || !leaflet) {

@@ -30,18 +30,16 @@ export function MapContainer({
   const map = useMap();
   const {
     _hasHydrated,
-    setMapTransform,
-    setMapFilter,
-    setWindowOpacity,
-    toggleOverlayFullscreen,
-  } = useSettingsStore();
-  const {
     lockedWindow,
     mapTransform,
+    setMapTransform,
     mapFilter,
+    setMapFilter,
     windowOpacity,
+    setWindowOpacity,
     overlayFullscreen,
-  } = useSettingsStore((state) => state.getCurrentProfileSettings());
+    toggleOverlayFullscreen,
+  } = useSettingsStore();
   const [isEditMode, setIsEditMode] = useState(false);
   const moveableRef = useRef<Moveable>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);

@@ -43,22 +43,19 @@ export function StreamingReceiver({
     setAutoLiveModeWithMe,
     _hasHydrated,
   } = useSettingsStore(
-    useShallow((state) => {
-      const profileSettings = state.getCurrentProfileSettings();
-      return {
-        setLiveMode: state.setLiveMode,
-        liveMode: profileSettings.liveMode,
-        peerCode: profileSettings.peerCode,
-        setPeerCode: state.setPeerCode,
-        lastMeSenderId: profileSettings.lastMeSenderId,
-        setLastMeSenderId: state.setLastMeSenderId,
-        autoJoinPeer: profileSettings.autoJoinPeer,
-        setAutoJoinPeer: state.setAutoJoinPeer,
-        autoLiveModeWithMe: profileSettings.autoLiveModeWithMe,
-        setAutoLiveModeWithMe: state.setAutoLiveModeWithMe,
-        _hasHydrated: state._hasHydrated,
-      };
-    }),
+    useShallow((state) => ({
+      setLiveMode: state.setLiveMode,
+      liveMode: state.liveMode,
+      peerCode: state.peerCode,
+      setPeerCode: state.setPeerCode,
+      lastMeSenderId: state.lastMeSenderId,
+      setLastMeSenderId: state.setLastMeSenderId,
+      autoJoinPeer: state.autoJoinPeer,
+      setAutoJoinPeer: state.setAutoJoinPeer,
+      autoLiveModeWithMe: state.autoLiveModeWithMe,
+      setAutoLiveModeWithMe: state.setAutoLiveModeWithMe,
+      _hasHydrated: state._hasHydrated,
+    })),
   );
   const [isConnected, setIsConnected] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");

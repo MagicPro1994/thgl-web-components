@@ -268,8 +268,8 @@ export function CoordinatesProvider({
     }
   }, [publicSearchIsLoading]);
 
-  const liveMode = useSettingsStore((state) => state.getCurrentProfileSettings().liveMode);
-  const myFilters = useSettingsStore((state) => state.getCurrentProfileSettings().myFilters);
+  const liveMode = useSettingsStore((state) => state.liveMode);
+  const myFilters = useSettingsStore((state) => state.myFilters);
   const actors = useGameState((state) => state.actors);
 
   const privateGroups = useMemo<NodesCoordinates>(() => {

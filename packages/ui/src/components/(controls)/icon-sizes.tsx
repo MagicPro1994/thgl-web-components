@@ -13,20 +13,17 @@ const MIN_ICON_SIZE = 0.1;
 const MAX_ICON_SIZE = 2.5;
 export function IconSizes({ filters }: { filters: FiltersConfig }) {
   const t = useT();
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
-  );
-  const baseIconSize = profileSettings.baseIconSize;
+  const baseIconSize = useSettingsStore((state) => state.baseIconSize);
   const setBaseIconSize = useSettingsStore((state) => state.setBaseIconSize);
-  const playerIconSize = profileSettings.playerIconSize;
+  const playerIconSize = useSettingsStore((state) => state.playerIconSize);
   const setPlayerIconSize = useSettingsStore(
     (state) => state.setPlayerIconSize,
   );
-  const iconSizeByFilter = profileSettings.iconSizeByFilter;
+  const iconSizeByFilter = useSettingsStore((state) => state.iconSizeByFilter);
   const setIconSizeByFilter = useSettingsStore(
     (state) => state.setIconSizeByFilter,
   );
-  const iconSizeByGroup = profileSettings.iconSizeByGroup;
+  const iconSizeByGroup = useSettingsStore((state) => state.iconSizeByGroup);
   const setIconSizeByGroup = useSettingsStore(
     (state) => state.setIconSizeByGroup,
   );

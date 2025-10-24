@@ -50,23 +50,22 @@ import { UploadFilter } from "./upload-filter";
 
 export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
   const map = useMap();
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
-  );
-  const drawingColor = profileSettings.drawingColor;
+  const drawingColor = useSettingsStore((state) => state.drawingColor);
   const setDrawingColor = useSettingsStore((state) => state.setDrawingColor);
-  const drawingSize = profileSettings.drawingSize;
+  const drawingSize = useSettingsStore((state) => state.drawingSize);
   const setDrawingSize = useSettingsStore((state) => state.setDrawingSize);
-  const textColor = profileSettings.textColor;
+  const textColor = useSettingsStore((state) => state.textColor);
   const setTextColor = useSettingsStore((state) => state.setTextColor);
-  const textSize = profileSettings.textSize;
+  const textSize = useSettingsStore((state) => state.textSize);
   const setTextSize = useSettingsStore((state) => state.setTextSize);
   const [globalMode, setGlobalMode] = useState("none");
-  const myFilters = profileSettings.myFilters;
+  const myFilters = useSettingsStore((state) => state.myFilters);
   const { staticDrawings } = useCoordinates();
   const mapName = useUserStore((state) => state.mapName);
   const setMyFilters = useSettingsStore((state) => state.setMyFilters);
-  const tempPrivateDrawing = profileSettings.tempPrivateDrawing;
+  const tempPrivateDrawing = useSettingsStore(
+    (state) => state.tempPrivateDrawing,
+  );
   const setTempPrivateDrawing = useSettingsStore(
     (state) => state.setTempPrivateDrawing,
   );
@@ -76,9 +75,7 @@ export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
   const isEditing = tempPrivateDrawing !== null;
   const setPolylines = useCallback(
     (polylineLayers: Polyline[], mapName: string) => {
-      const tempPrivateDrawing = useSettingsStore
-        .getState()
-        .getCurrentProfileSettings().tempPrivateDrawing;
+      const tempPrivateDrawing = useSettingsStore.getState().tempPrivateDrawing;
       if (!tempPrivateDrawing) {
         return;
       }
@@ -155,9 +152,7 @@ export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
 
   const setRectangles = useCallback(
     (rectangleLayers: Rectangle[], mapName: string) => {
-      const tempPrivateDrawing = useSettingsStore
-        .getState()
-        .getCurrentProfileSettings().tempPrivateDrawing;
+      const tempPrivateDrawing = useSettingsStore.getState().tempPrivateDrawing;
       if (!tempPrivateDrawing) {
         return;
       }
@@ -191,9 +186,7 @@ export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
 
   const setPolygons = useCallback(
     (polygonLayers: Polygon[], mapName: string) => {
-      const tempPrivateDrawing = useSettingsStore
-        .getState()
-        .getCurrentProfileSettings().tempPrivateDrawing;
+      const tempPrivateDrawing = useSettingsStore.getState().tempPrivateDrawing;
       if (!tempPrivateDrawing) {
         return;
       }
@@ -226,9 +219,7 @@ export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
   );
 
   const setCircles = useCallback((circleLayers: Circle[], mapName: string) => {
-    const tempPrivateDrawing = useSettingsStore
-      .getState()
-      .getCurrentProfileSettings().tempPrivateDrawing;
+    const tempPrivateDrawing = useSettingsStore.getState().tempPrivateDrawing;
     if (!tempPrivateDrawing) {
       return;
     }
@@ -256,9 +247,7 @@ export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
   }, []);
 
   const setTexts = useCallback((textLayers: Marker[], mapName: string) => {
-    const tempPrivateDrawing = useSettingsStore
-      .getState()
-      .getCurrentProfileSettings()?.tempPrivateDrawing;
+    const tempPrivateDrawing = useSettingsStore.getState().tempPrivateDrawing;
     if (!tempPrivateDrawing) {
       return;
     }
@@ -701,11 +690,7 @@ export function PrivateDrawing({ hidden }: { hidden?: boolean }) {
 
         textLayer.pm.enable({});
         const element = textLayer.pm.getElement() as HTMLTextAreaElement;
-        const profileSettings = useSettingsStore
-          .getState()
-          .getCurrentProfileSettings();
-        const textColor = profileSettings.textColor;
-        const textSize = profileSettings.textSize;
+        const { textColor, textSize } = useSettingsStore.getState();
 
         element.focus();
         element.style.setProperty("color", textColor, "important");

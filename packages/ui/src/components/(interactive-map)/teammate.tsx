@@ -26,13 +26,12 @@ export function Teammate({
 }): JSX.Element {
   const map = useMap();
   const marker = useRef<PlayerMarker | null>(null);
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
+  const baseIconSize = useSettingsStore((state) => state.baseIconSize);
+  const playerIconSize = useSettingsStore((state) => state.playerIconSize);
+  const colorBlindMode = useSettingsStore((state) => state.colorBlindMode);
+  const colorBlindSeverity = useSettingsStore(
+    (state) => state.colorBlindSeverity,
   );
-  const baseIconSize = profileSettings.baseIconSize;
-  const playerIconSize = profileSettings.playerIconSize;
-  const colorBlindMode = profileSettings.colorBlindMode;
-  const colorBlindSeverity = profileSettings.colorBlindSeverity;
 
   const iconCache = useRef<Map<string, string>>(new Map());
 

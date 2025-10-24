@@ -54,9 +54,7 @@ export function Markers({
     latLng: [number, number] | [number, number, number];
     items: TooltipItems;
   } | null>(null);
-  const isDrawing = useSettingsStore(
-    (state) => !!state.getCurrentProfileSettings().tempPrivateDrawing,
-  );
+  const isDrawing = useSettingsStore((state) => !!state.tempPrivateDrawing);
   const setSelectedNodeId = useUserStore((state) => state.setSelectedNodeId);
 
   const mapContainer = map?.getPane("mapPane");
@@ -180,21 +178,20 @@ function MarkersContent({
 }) {
   const map = useMap();
   const { spawns, icons, filters } = useCoordinates();
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
+  const hideDiscoveredNodes = useSettingsStore(
+    (state) => state.hideDiscoveredNodes,
   );
-  const hideDiscoveredNodes = profileSettings.hideDiscoveredNodes;
-  const discoveredNodes = profileSettings.discoveredNodes;
+  const discoveredNodes = useSettingsStore((state) => state.discoveredNodes);
   const discoveredSet = useMemo(
     () => new Set(discoveredNodes),
     [discoveredNodes],
   );
   const setDiscoverNode = useSettingsStore((state) => state.setDiscoverNode);
-  const baseIconSize = profileSettings.baseIconSize;
-  const iconSizeByGroup = profileSettings.iconSizeByGroup;
-  const iconSizeByFilter = profileSettings.iconSizeByFilter;
+  const baseIconSize = useSettingsStore((state) => state.baseIconSize);
+  const iconSizeByGroup = useSettingsStore((state) => state.iconSizeByGroup);
+  const iconSizeByFilter = useSettingsStore((state) => state.iconSizeByFilter);
   const sharedMyFilters = useConnectionStore((state) => state.myFilters);
-  const liveMode = profileSettings.liveMode;
+  const liveMode = useSettingsStore((state) => state.liveMode);
   const selectedNodeId = useUserStore((state) => state.selectedNodeId);
   const typeToGroup = useMemo(() => {
     const mapTypeToGroup = new Map<string, string>();
@@ -204,10 +201,16 @@ function MarkersContent({
     return mapTypeToGroup;
   }, [filters]);
 
-  const fitBoundsOnChange = profileSettings.fitBoundsOnChange;
-  const colorBlindMode = profileSettings.colorBlindMode;
-  const colorBlindSeverity = profileSettings.colorBlindSeverity;
-  const tempPrivateNodeId = profileSettings.tempPrivateNode?.id;
+  const fitBoundsOnChange = useSettingsStore(
+    (state) => state.fitBoundsOnChange,
+  );
+  const colorBlindMode = useSettingsStore((state) => state.colorBlindMode);
+  const colorBlindSeverity = useSettingsStore(
+    (state) => state.colorBlindSeverity,
+  );
+  const tempPrivateNodeId = useSettingsStore(
+    (state) => state.tempPrivateNode?.id,
+  );
   const highlightSpawnIDs = useGameState((state) => state.highlightSpawnIDs);
   const existingSpawnIds = useRef<Map<string | number, CanvasMarker>>();
   const player = useGameState((state) => state.player);

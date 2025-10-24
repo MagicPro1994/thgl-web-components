@@ -15,9 +15,6 @@ export function MovableAdsContainer({
   className?: string;
 }): JSX.Element {
   const settingsStore = useSettingsStore();
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
-  );
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const targetRef = useRef<HTMLDivElement>(null);
@@ -65,7 +62,7 @@ export function MovableAdsContainer({
         style={
           transformId
             ? {
-                transform: profileSettings.transforms[transformId] ?? "none",
+                transform: settingsStore.transforms[transformId] ?? "none",
               }
             : {}
         }
@@ -74,7 +71,7 @@ export function MovableAdsContainer({
           className={cn(
             "flex w-fit rounded-t-lg bg-background/50 ml-auto text-neutral-300",
             {
-              hidden: profileSettings.lockedWindow,
+              hidden: settingsStore.lockedWindow,
             },
           )}
         >

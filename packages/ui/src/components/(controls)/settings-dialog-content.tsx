@@ -48,9 +48,7 @@ export function SettingsDialogContent({
   filters: FiltersConfig;
 }) {
   const settingsStore = useSettingsStore();
-  const profileSettings = useSettingsStore((state) =>
-    state.getCurrentProfileSettings(),
-  );
+  const profileSettings = useSettingsStore((state) => state);
 
   return (
     <DialogContent
@@ -80,7 +78,7 @@ export function SettingsDialogContent({
           <Separator />
           <h4 className="text-md font-semibold">Discovered Nodes</h4>
           <p className="text-muted-foreground text-xs">
-            You discovered {profileSettings.discoveredNodes.length} nodes.
+            You discovered {settingsStore.discoveredNodes.length} nodes.
           </p>
           <div className="flex items-center space-x-2">
             <Button
@@ -89,7 +87,7 @@ export function SettingsDialogContent({
                 const fileName = `${activeApp}_discovered_nodes_${Date.now()}.json`;
                 if (typeof overwolf === "undefined") {
                   const blob = new Blob(
-                    [JSON.stringify(profileSettings.discoveredNodes)],
+                    [JSON.stringify(settingsStore.discoveredNodes)],
                     {
                       type: "text/json",
                     },
@@ -97,7 +95,7 @@ export function SettingsDialogContent({
                   saveFile(blob, fileName);
                 } else {
                   writeFileOverwolf(
-                    JSON.stringify(profileSettings.discoveredNodes),
+                    JSON.stringify(settingsStore.discoveredNodes),
                     overwolf.io.paths.documents + "\\the-hidden-gaming-lair",
                     fileName,
                   );
@@ -157,14 +155,14 @@ export function SettingsDialogContent({
             <Label htmlFor="hide-discovered-nodes">Hide Discovered Nodes</Label>
             <Switch
               id="hide-discovered-nodes"
-              checked={profileSettings.hideDiscoveredNodes}
+              checked={settingsStore.hideDiscoveredNodes}
               onCheckedChange={settingsStore.toggleHideDiscoveredNodes}
             />
           </div>
           <Separator />
           <h4 className="text-md font-semibold">My Filters</h4>
           <p className="text-muted-foreground text-xs">
-            You have {profileSettings.myFilters.length} filters.
+            You have {settingsStore.myFilters.length} filters.
           </p>
           <div className="flex items-center space-x-2">
             <Button
@@ -173,7 +171,7 @@ export function SettingsDialogContent({
                 const fileName = `${activeApp}_My_Filters_${Date.now()}.json`;
                 if (typeof overwolf === "undefined") {
                   const blob = new Blob(
-                    [JSON.stringify(profileSettings.myFilters)],
+                    [JSON.stringify(settingsStore.myFilters)],
                     {
                       type: "text/json",
                     },
@@ -181,7 +179,7 @@ export function SettingsDialogContent({
                   saveFile(blob, fileName);
                 } else {
                   writeFileOverwolf(
-                    JSON.stringify(profileSettings.myFilters),
+                    JSON.stringify(settingsStore.myFilters),
                     overwolf.io.paths.documents + "\\the-hidden-gaming-lair",
                     fileName,
                   );

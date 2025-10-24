@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 import { withStorageDOMEvents } from "./dom";
 import { putSharedFilters } from "./shared-nodes";
 
-//#region Types
 export type PrivateNode = {
   id: string;
   name?: string;
@@ -78,9 +77,7 @@ export type MapTransform = {
   width: string;
   height: string;
 };
-//#endregion
 
-//#region Profile Settings Store
 export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = {
   hotkeys: {},
   groupName: "",
@@ -257,10 +254,10 @@ export type Profile = {
 
 class ProfileManager {
   static createProfileId() {
-    return `profile-${Date.now()}`;
+    return `profile-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  static getDefaultProfile() {
+  static getDefaultProfile(): Profile {
     const defaultProfile = {
       ...DEFAULT_PROFILE,
       createdAt: Date.now(),
@@ -280,42 +277,27 @@ class ProfileManager {
     return newProfile;
   }
 
-  static updateProfileSettings(
-    profile: Profile,
-    settings: Partial<ProfileSettings>,
-  ) {
-    // Clone the profile to avoid mutating the original
-    const updatedProfile: Profile = JSON.parse(JSON.stringify(profile));
-    updatedProfile.settings = {
-      ...updatedProfile.settings,
-      ...settings,
-    };
-    updatedProfile.updatedAt = Date.now();
-    return updatedProfile;
-  }
-
   static duplicateProfile(profile: Profile): Profile {
     // Deep clone the profile object
     const newProfile: Profile = JSON.parse(JSON.stringify(profile));
     newProfile.name = `${profile.name} Copy`;
     newProfile.id = this.createProfileId();
+    newProfile.createdAt = Date.now();
+    newProfile.updatedAt = Date.now();
     return newProfile;
   }
 }
 
-export interface SettingsStore extends ProfileActions {
+// SettingsStore now has flattened ProfileSettings at root level
+export interface SettingsStore extends ProfileSettings, ProfileActions {
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
 
-  // Profile Management
+  // Profile Management (only profiles array and currentProfileId are persisted)
   profiles: Profile[];
   currentProfileId: string;
-  setProfileSettings: (settings: Partial<ProfileSettings>) => void;
   createProfile: (name: string) => void;
-  getCurrentProfile: () => Profile | undefined;
-  getCurrentProfileSettings: () => ProfileSettings;
   switchProfile: (profileId: string) => void;
-  updateCurrentProfile: () => void;
   renameProfile: (profileId: string, newName: string) => void;
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => Profile | null;
@@ -336,45 +318,23 @@ const getStorageName = () => {
 export const useSettingsStore = create(
   persist<SettingsStore>(
     (set, get) => {
-      const getProfile = () => {
-        const state = get();
-        return state.profiles.find((p) => p.id === state.currentProfileId);
-      };
-
-      const getSettings = () => {
-        const currentProfile = getProfile();
-        return currentProfile ? currentProfile.settings : null;
-      };
-
+      // Helper to update both flat state and profiles array
       const updateSettings = (settings: Partial<ProfileSettings>) => {
-        const currentProfile = getProfile();
-        if (!currentProfile) return;
-
         const state = get();
-        const updatedProfile = ProfileManager.updateProfileSettings(
-          currentProfile,
-          settings,
+        const updatedProfiles = state.profiles.map((p) =>
+          p.id === state.currentProfileId
+            ? {
+                ...p,
+                settings: { ...p.settings, ...settings },
+                updatedAt: Date.now(),
+              }
+            : p,
         );
 
         set({
-          profiles: state.profiles.map((p) =>
-            p.id === currentProfile.id ? updatedProfile : p,
-          ),
+          ...settings,
+          profiles: updatedProfiles,
         });
-      };
-
-      const _isDiscoveredNode = (nodeId: string) => {
-        const currentProfile = getProfile();
-        if (!currentProfile) return false;
-
-        const discoveredNodes = currentProfile.settings.discoveredNodes;
-        if (nodeId.includes("@")) {
-          return (
-            discoveredNodes.includes(nodeId) ||
-            discoveredNodes.some((id) => id === nodeId.split("@")[0])
-          );
-        }
-        return discoveredNodes.includes(nodeId);
       };
 
       return {
@@ -385,13 +345,113 @@ export const useSettingsStore = create(
           });
         },
 
-        // Actions for updating settings
-        setHotkey: (key, value) => {
-          const profileSettings = getSettings();
-          if (!profileSettings) return;
+        // Profile Management
+        currentProfileId: DEFAULT_PROFILE.id,
+        profiles: [ProfileManager.getDefaultProfile()],
 
+        createProfile: (name: string) => {
+          const state = get();
+          const newProfile = ProfileManager.createProfile(name);
+          set({
+            profiles: [...state.profiles, newProfile],
+            currentProfileId: newProfile.id,
+            ...newProfile.settings, // Flatten new profile settings to root
+          });
+        },
+
+        switchProfile: (profileId: string) => {
+          const state = get();
+          const profile = state.profiles.find((p) => p.id === profileId);
+          if (!profile) return;
+
+          set({
+            currentProfileId: profileId,
+            ...profile.settings, // Flatten switched profile settings to root
+          });
+        },
+
+        renameProfile: (profileId: string, newName: string) => {
+          set((state) => ({
+            profiles: state.profiles.map((p) =>
+              p.id === profileId
+                ? { ...p, name: newName, updatedAt: Date.now() }
+                : p,
+            ),
+          }));
+        },
+
+        deleteProfile: (profileId: string) => {
+          const state = get();
+          if (state.profiles.length <= 1) return; // Don't delete the last profile
+          if (profileId === "default") return; // Don't delete default profile
+
+          const newProfiles = state.profiles.filter((p) => p.id !== profileId);
+          const newCurrentProfileId =
+            state.currentProfileId === profileId
+              ? newProfiles[0].id
+              : state.currentProfileId;
+
+          // If we're switching to a different profile, load its settings
+          if (newCurrentProfileId !== state.currentProfileId) {
+            const newProfile = newProfiles.find(
+              (p) => p.id === newCurrentProfileId,
+            );
+            if (newProfile) {
+              set({
+                profiles: newProfiles,
+                currentProfileId: newCurrentProfileId,
+                ...newProfile.settings, // Flatten settings to root
+              });
+              return;
+            }
+          }
+
+          set({
+            profiles: newProfiles,
+            currentProfileId: newCurrentProfileId,
+          });
+        },
+
+        exportProfile: (profileId: string) => {
+          const state = get();
+          const profile = state.profiles.find((p) => p.id === profileId);
+          return profile || null;
+        },
+
+        importProfile: (profile: Profile) => {
+          set((state) => {
+            // Check if profile with same ID already exists
+            const exists = state.profiles.some((p) => p.id === profile.id);
+            if (exists) {
+              // Generate new ID
+              profile.id = ProfileManager.createProfileId();
+            }
+            return {
+              profiles: [...state.profiles, profile],
+            };
+          });
+        },
+
+        duplicateProfile: (profileId: string) => {
+          const state = get();
+          const profile = state.profiles.find((p) => p.id === profileId);
+          if (!profile) return;
+
+          const newProfile = ProfileManager.duplicateProfile(profile);
+
+          set({
+            profiles: [...state.profiles, newProfile],
+          });
+        },
+
+        // Flattened ProfileSettings (initial values from DEFAULT_PROFILE_SETTINGS)
+        ...DEFAULT_PROFILE_SETTINGS,
+
+        // Actions for updating settings (update both flat state and profiles array)
+        setHotkey: (key, value) => {
+          const state = get();
           updateSettings({
-            hotkeys: { ...profileSettings.hotkeys, [key]: value },
+            hotkeys: { ...state.hotkeys, [key]: value },
           });
         },
 
@@ -408,8 +468,9 @@ export const useSettingsStore = create(
         },
 
         toggleLiveMode: () => {
+          const state = get();
           updateSettings({
-            liveMode: !getSettings()?.liveMode,
+            liveMode: !state.liveMode,
           });
         },
 
@@ -418,18 +479,16 @@ export const useSettingsStore = create(
         },
 
         toggleOverlayFullscreen: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            overlayFullscreen: !currentProfile.settings.overlayFullscreen,
+            overlayFullscreen: !state.overlayFullscreen,
           });
         },
 
         toggleLockedWindow: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            lockedWindow: !currentProfile.settings.lockedWindow,
+            lockedWindow: !state.lockedWindow,
           });
         },
 
@@ -444,11 +503,10 @@ export const useSettingsStore = create(
         },
 
         setTransform: (id: string, transform: string) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
             transforms: {
-              ...currentProfile.settings.transforms,
+              ...state.transforms,
               [id]: transform,
             },
           });
@@ -477,14 +535,24 @@ export const useSettingsStore = create(
           });
         },
 
-        isDiscoveredNode: (nodeId) => _isDiscoveredNode(nodeId),
+        isDiscoveredNode: (nodeId) => {
+          const state = get();
+          const discoveredNodes = state.discoveredNodes;
+          if (nodeId.includes("@")) {
+            return (
+              discoveredNodes.includes(nodeId) ||
+              discoveredNodes.some((id) => id === nodeId.split("@")[0])
+            );
+          }
+          return discoveredNodes.includes(nodeId);
+        },
 
         toggleDiscoveredNode: (nodeId: string) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
+          const discoveredNodes = state.discoveredNodes;
+          const isDiscovered = state.isDiscoveredNode(nodeId);
 
-          const discoveredNodes = currentProfile.settings.discoveredNodes;
-          const updatedNodes = _isDiscoveredNode(nodeId)
+          const updatedNodes = isDiscovered
             ? discoveredNodes.filter((id) => {
                 if (id === nodeId) {
                   return false;
@@ -500,18 +568,11 @@ export const useSettingsStore = create(
         },
 
         setDiscoverNode: (nodeId, discovered) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
-
+          const state = get();
           updateSettings({
             discoveredNodes: discovered
-              ? [
-                  ...new Set([
-                    ...currentProfile.settings.discoveredNodes,
-                    nodeId,
-                  ]),
-                ]
-              : currentProfile.settings.discoveredNodes.filter((id) => {
+              ? [...new Set([...state.discoveredNodes, nodeId])]
+              : state.discoveredNodes.filter((id) => {
                   if (id === nodeId) {
                     return false;
                   }
@@ -524,10 +585,9 @@ export const useSettingsStore = create(
         },
 
         toggleHideDiscoveredNodes: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            hideDiscoveredNodes: !currentProfile.settings.hideDiscoveredNodes,
+            hideDiscoveredNodes: !state.hideDiscoveredNodes,
           });
         },
 
@@ -540,10 +600,9 @@ export const useSettingsStore = create(
         },
 
         toggleShowTraceLine: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            showTraceLine: !currentProfile.settings.showTraceLine,
+            showTraceLine: !state.showTraceLine,
           });
         },
 
@@ -566,32 +625,28 @@ export const useSettingsStore = create(
         },
 
         addPreset: (presetName: string, filters: string[]) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
             presets: {
-              ...currentProfile.settings.presets,
+              ...state.presets,
               [presetName]: filters,
             },
           });
         },
 
         removePreset: (presetName: string) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
-          const newPresets = { ...currentProfile.settings.presets };
+          const state = get();
+          const newPresets = { ...state.presets };
           delete newPresets[presetName];
           updateSettings({ presets: newPresets });
         },
 
         setTempPrivateNode: (tempPrivateNode) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
-
+          const state = get();
           updateSettings({
             tempPrivateNode: tempPrivateNode
               ? {
-                  ...(currentProfile.settings.tempPrivateNode ?? {}),
+                  ...(state.tempPrivateNode ?? {}),
                   ...tempPrivateNode,
                 }
               : null,
@@ -599,13 +654,11 @@ export const useSettingsStore = create(
         },
 
         setTempPrivateDrawing: (tempPrivateDrawing) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
-
+          const state = get();
           updateSettings({
             tempPrivateDrawing: tempPrivateDrawing
               ? {
-                  ...(currentProfile.settings.tempPrivateDrawing ?? {}),
+                  ...(state.tempPrivateDrawing ?? {}),
                   ...tempPrivateDrawing,
                 }
               : null,
@@ -637,32 +690,29 @@ export const useSettingsStore = create(
         },
 
         setIconSizeByGroup: (group, size) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
             iconSizeByGroup: {
-              ...currentProfile.settings.iconSizeByGroup,
+              ...state.iconSizeByGroup,
               [group]: size,
             },
           });
         },
 
         setIconSizeByFilter: (id, size) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
             iconSizeByFilter: {
-              ...currentProfile.settings.iconSizeByFilter,
+              ...state.iconSizeByFilter,
               [id]: size,
             },
           });
         },
 
         toggleFitBoundsOnChange: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            fitBoundsOnChange: !currentProfile.settings.fitBoundsOnChange,
+            fitBoundsOnChange: !state.fitBoundsOnChange,
           });
         },
 
@@ -671,11 +721,9 @@ export const useSettingsStore = create(
         },
 
         setMyFilter: (name, myFilter) => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
-          const updatedFilters = currentProfile.settings.myFilters.map(
-            (filter) =>
-              filter.name === name ? { ...filter, ...myFilter } : filter,
+          const state = get();
+          const updatedFilters = state.myFilters.map((filter) =>
+            filter.name === name ? { ...filter, ...myFilter } : filter,
           );
           updateSettings({ myFilters: updatedFilters });
           // Update shared filters if this filter has a URL
@@ -691,13 +739,12 @@ export const useSettingsStore = create(
             myFilter.url = blob.url;
           }
 
-          const profileSettings = getSettings();
-          if (!profileSettings) return;
+          const state = get();
 
           if (
             myFilter.isShared &&
             myFilter.url &&
-            profileSettings.myFilters.some(
+            state.myFilters.some(
               (filter) => filter.isShared && filter.url === myFilter.url,
             )
           ) {
@@ -705,25 +752,21 @@ export const useSettingsStore = create(
           }
 
           updateSettings({
-            myFilters: [...profileSettings.myFilters, myFilter],
+            myFilters: [...state.myFilters, myFilter],
           });
         },
 
         removeMyFilter: (myFilterName: string) => {
-          const profileSettings = getSettings();
-          if (!profileSettings) return;
-
-          const updatedFilters = profileSettings.myFilters.filter(
+          const state = get();
+          const updatedFilters = state.myFilters.filter(
             (filter) => filter.name !== myFilterName,
           );
           updateSettings({ myFilters: updatedFilters });
         },
 
         removeMyNode: async (nodeId: string) => {
-          const profileSettings = getSettings();
-          if (!profileSettings) return;
-
-          const myFilter = profileSettings.myFilters.find((filter) =>
+          const state = get();
+          const myFilter = state.myFilters.find((filter) =>
             filter.nodes?.some((node) => node.id === nodeId),
           );
           if (!myFilter) {
@@ -733,34 +776,31 @@ export const useSettingsStore = create(
           if (myFilter.url) {
             await putSharedFilters(myFilter.url, myFilter);
           }
-          return {
-            myFilters: profileSettings.myFilters.map((filter) =>
+          updateSettings({
+            myFilters: state.myFilters.map((filter) =>
               filter.name === myFilter.name ? myFilter : filter,
             ),
-          };
+          });
         },
 
         toggleShowGrid: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            showGrid: !currentProfile.settings.showGrid,
+            showGrid: !state.showGrid,
           });
         },
 
         toggleShowFilters: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            showFilters: !currentProfile.settings.showFilters,
+            showFilters: !state.showFilters,
           });
         },
 
         toggleExpandedFilters: () => {
-          const currentProfile = getProfile();
-          if (!currentProfile) return;
+          const state = get();
           updateSettings({
-            expandedFilters: !currentProfile.settings.expandedFilters,
+            expandedFilters: !state.expandedFilters,
           });
         },
 
@@ -784,139 +824,41 @@ export const useSettingsStore = create(
         setAutoLiveModeWithMe: (autoLiveMode: boolean) => {
           updateSettings({ autoLiveModeWithMe: autoLiveMode });
         },
-        // Profile Management
-        currentProfileId: DEFAULT_PROFILE.id,
-        profiles: [ProfileManager.getDefaultProfile()],
-
-        setProfileSettings: (settings: Partial<ProfileSettings>) => {
-          updateSettings(settings);
-        },
-
-        createProfile: (name: string) => {
-          const newProfile = ProfileManager.createProfile(name);
-          set((state) => ({
-            profiles: [...state.profiles, newProfile],
-            currentProfileId: newProfile.id,
-          }));
-        },
-        getCurrentProfile: () => getProfile(),
-        getCurrentProfileSettings: () => {
-          const currentProfile = getProfile();
-          return currentProfile
-            ? currentProfile.settings
-            : DEFAULT_PROFILE_SETTINGS;
-        },
-        switchProfile: (profileId: string) => {
-          const state = get();
-          const profile = state.profiles.find((p) => p.id === profileId);
-          if (!profile) return;
-
-          set({ currentProfileId: profileId });
-        },
-        updateCurrentProfile: () => {
-          const state = get();
-          const currentProfile = state.profiles.find(
-            (p) => p.id === state.currentProfileId,
-          );
-          if (!currentProfile) return;
-          currentProfile.updatedAt = Date.now();
-
-          set((state) => ({
-            profiles: state.profiles.map((p) =>
-              p.id === currentProfile.id ? currentProfile : p,
-            ),
-          }));
-        },
-        renameProfile: (profileId: string, newName: string) => {
-          set((state) => ({
-            profiles: state.profiles.map((p) =>
-              p.id === profileId
-                ? { ...p, name: newName, updatedAt: Date.now() }
-                : p,
-            ),
-          }));
-        },
-        deleteProfile: (profileId: string) => {
-          const state = get();
-          if (state.profiles.length <= 1) return; // Don't delete the last profile
-          if (profileId === "default") return; // Don't delete default profile
-
-          set((state) => {
-            const newProfiles = state.profiles.filter(
-              (p) => p.id !== profileId,
-            );
-            const newCurrentProfileId =
-              state.currentProfileId === profileId
-                ? newProfiles[0].id
-                : state.currentProfileId;
-
-            // If we're switching to a different profile, load its data
-            if (newCurrentProfileId !== state.currentProfileId) {
-              const newProfile = newProfiles.find(
-                (p) => p.id === newCurrentProfileId,
-              );
-              if (newProfile) {
-                return {
-                  profiles: newProfiles,
-                  currentProfileId: newCurrentProfileId,
-                  ...newProfile.settings,
-                };
-              }
-            }
-
-            return {
-              profiles: newProfiles,
-              currentProfileId: newCurrentProfileId,
-            };
-          });
-        },
-        exportProfile: (profileId: string) => {
-          const state = get();
-          const profile = state.profiles.find((p) => p.id === profileId);
-          return profile || null;
-        },
-        importProfile: (profile: Profile) => {
-          set((state) => {
-            // Check if profile with same ID already exists
-            const exists = state.profiles.some((p) => p.id === profile.id);
-            if (exists) {
-              // Generate new ID
-              profile.id = `profile-${Date.now()}`;
-            }
-            return {
-              profiles: [...state.profiles, profile],
-            };
-          });
-        },
-        duplicateProfile: (profileId: string) => {
-          const state = get();
-          const profile = state.profiles.find((p) => p.id === profileId);
-          if (!profile) return;
-
-          const newProfile = ProfileManager.duplicateProfile(profile);
-
-          set((state) => ({
-            profiles: [...state.profiles, newProfile],
-          }));
-        },
       };
     },
     {
       name: getStorageName(),
+      // Only persist profiles array and currentProfileId (not flattened settings)
+      partialize: (state) =>
+        ({
+          profiles: state.profiles,
+          currentProfileId: state.currentProfileId,
+        }) as SettingsStore,
       onRehydrateStorage: () => (state) => {
-        if (!state?._hasHydrated) {
+        if (!state) return;
+
+        if (!state._hasHydrated) {
           console.log("✅ Setting _hasHydrated to true");
-          state?.setHasHydrated(true);
+          state.setHasHydrated(true);
         } else {
           console.log("⚠️ _hasHydrated already true, skipping");
         }
 
         // Initialize profiles if they don't exist
-        if (state && !state.profiles?.length) {
+        if (!state.profiles?.length) {
           console.log("🆕 Initializing default profile");
           const defaultProfile = ProfileManager.getDefaultProfile();
           state.profiles = [defaultProfile];
           state.currentProfileId = defaultProfile.id;
+        }
+
+        // Flatten current profile settings to root level
+        const currentProfile = state.profiles.find(
+          (p) => p.id === state.currentProfileId,
+        );
+        if (currentProfile) {
+          console.log("📋 Hydrating flattened settings from current profile");
+          Object.assign(state, currentProfile.settings);
         }
       },
       version: 4,

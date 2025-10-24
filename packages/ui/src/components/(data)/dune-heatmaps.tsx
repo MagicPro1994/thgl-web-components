@@ -44,7 +44,7 @@ export function DuneHeatmaps() {
     () => resourceFilterNames.find((filter) => filters.includes(filter)),
     [filters, resourceFilterNames],
   );
-  const lockedWindow = useSettingsStore((state) => state.getCurrentProfileSettings().lockedWindow);
+  const lockedWindow = useSettingsStore((state) => state.lockedWindow);
 
   useEffect(() => {
     if (!map || !leaflet) {

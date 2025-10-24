@@ -29,11 +29,10 @@ export function Controller({
   defaultHotkeys: THGLAppConfig["defaultHotkeys"];
 }) {
   const runningGames = useLiveState((state) => state.runningGames);
-  const settingsStore = useSettingsStore();
-  const profileSettings = settingsStore.getCurrentProfileSettings();
-  const hasHydrated = settingsStore._hasHydrated;
-  const overlayMode = profileSettings.overlayMode;
-  const hotkeys = profileSettings.hotkeys;
+
+  const hasHydrated = useSettingsStore((state) => state._hasHydrated);
+  const overlayMode = useSettingsStore((state) => state.overlayMode);
+  const hotkeys = useSettingsStore((state) => state.hotkeys);
   const previouslyRunning = useRef(false);
   const initializedRef = useRef(false);
 
@@ -138,7 +137,7 @@ export function Controller({
     handleRun();
 
     const handleHotkey = (key: string) => {
-      const hotkeys = useSettingsStore.getState().getCurrentProfileSettings().hotkeys;
+      const hotkeys = useSettingsStore.getState().hotkeys;
       if (key === hotkeys[HOTKEYS.TOGGLE_APP]) {
         if (initializedRef.current) {
           closeWebViews([fullOverlayUrl, fullDesktopUrl]);

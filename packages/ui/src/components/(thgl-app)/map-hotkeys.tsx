@@ -9,9 +9,7 @@ export function MapHotkeys() {
   const map = useMap();
   const { nodes } = useCoordinates();
   const t = useT();
-  const hotkeys = useSettingsStore(
-    (state) => state.getCurrentProfileSettings().hotkeys,
-  );
+  const hotkeys = useSettingsStore((state) => state.hotkeys);
 
   useEffect(() => {
     if (!map) {

@@ -17,7 +17,6 @@ export function AdsContainer({
   className?: string;
 }): JSX.Element {
   const settingsStore = useSettingsStore();
-  const profileSettings = useSettingsStore((state) => state.getCurrentProfileSettings());
   const isOverlay = useOverwolfState((state) => state.isOverlay);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -62,7 +61,7 @@ export function AdsContainer({
         style={
           transformId
             ? {
-                transform: profileSettings.transforms[transformId] ?? "none",
+                transform: settingsStore.transforms[transformId] ?? "none",
               }
             : {}
         }
@@ -71,7 +70,7 @@ export function AdsContainer({
           className={cn(
             "flex w-fit rounded-t-lg bg-background/50 ml-auto text-neutral-300",
             {
-              hidden: profileSettings.lockedWindow,
+              hidden: settingsStore.lockedWindow,
             },
           )}
         >

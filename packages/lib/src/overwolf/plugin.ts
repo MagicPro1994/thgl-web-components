@@ -259,13 +259,9 @@ export async function initGameEventsPlugin<T extends GameEventsPlugin>(
     }
     refreshPlayerState();
 
-    const profileSettings = useSettingsStore
-      .getState()
-      .getCurrentProfileSettings();
-    let liveMode = !withoutLiveMode && profileSettings.liveMode;
-    let actorsPollingRate = profileSettings.actorsPollingRate;
-    useSettingsStore.subscribe((state) => {
-      const settings = state.getCurrentProfileSettings();
+    let liveMode = !withoutLiveMode && useSettingsStore.getState().liveMode;
+    let actorsPollingRate = useSettingsStore.getState().actorsPollingRate;
+    useSettingsStore.subscribe((settings) => {
       if (!liveMode && settings.liveMode) {
         refreshActorsState();
       }

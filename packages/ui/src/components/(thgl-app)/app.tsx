@@ -70,10 +70,10 @@ export function App({
   isOverlay?: boolean;
   additionalTooltip?: AdditionalTooltipType;
 }) {
-  const liveMode = useSettingsStore((state) => state.getCurrentProfileSettings().liveMode);
+  const liveMode = useSettingsStore((state) => state.liveMode);
   const toggleLiveMode = useSettingsStore((state) => state.toggleLiveMode);
-  const lockedWindow = useSettingsStore((state) => state.getCurrentProfileSettings().lockedWindow);
-  const overlayMode = useSettingsStore((state) => state.getCurrentProfileSettings().overlayMode);
+  const lockedWindow = useSettingsStore((state) => state.lockedWindow);
+  const overlayMode = useSettingsStore((state) => state.overlayMode);
   const setOverlayMode = useSettingsStore((state) => state.setOverlayMode);
   const toggleLockedWindow = useSettingsStore(
     (state) => state.toggleLockedWindow,
