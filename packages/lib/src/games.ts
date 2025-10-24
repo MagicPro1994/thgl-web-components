@@ -23,14 +23,19 @@ export const games: Array<Game> = [
         // playerIcon: "player.webp",
         imageSprite: true,
         zPos: {
-          xyMaxDistance: 10000,
-          zDistance: 400,
+          xyMaxDistance: 100,
+          zDistance: 5,
         },
       },
       games: [
         {
           title: "Blue Protocol: Star Resonance",
-          processNames: ["Star.exe", "BPSR_STEAM.exe"],
+          processNames: [
+            "Star.exe",
+            "BPSR_STEAM.exe",
+            "BPSR.exe",
+            "BPSR_EPIC.exe",
+          ],
         },
       ],
       defaultHotkeys: {

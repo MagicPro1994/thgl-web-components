@@ -79,7 +79,13 @@ export function CollapsibleFilter({
       </div>
       <CollapsibleContent className="flex flex-wrap">
         {filter.values
-          .sort((a, b) => (t(a.id) || a.id).localeCompare(t(b.id) || b.id))
+          .sort((a, b) => {
+            if (a.sort !== undefined && b.sort !== undefined) {
+              return a.sort - b.sort;
+            }
+            return (t(a.id) || a.id).localeCompare(t(b.id) || b.id);
+          })
+
           .map((f) => (
             <div key={f.id} className="flex md:basis-1/2 overflow-hidden">
               <Tooltip delayDuration={50} disableHoverableContent>

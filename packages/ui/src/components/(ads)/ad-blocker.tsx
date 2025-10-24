@@ -13,17 +13,29 @@ import { useEffect, useState } from "react";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import { useT } from "../(providers)";
 
+// Obfuscated key generation to prevent easylist blocking
+function getStorageKey() {
+  const date = new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+
+  // Build key using array operations to avoid String.prototype.concat targeting
+  const parts = ["_", "x", "9", "f", "2", "e", "_"];
+  parts.push(y.toString(), m, d);
+  return parts.join("");
+}
+
 export function AdBlocker() {
   const t = useT();
   const [timeLeft, setTimeLeft] = useState(10);
   const [open, setOpen] = useState(true);
 
-  const today = new Date().toISOString().split("T")[0];
-  const sessionKey = `adBlockerDismissed_${today}`;
+  const sessionKey = getStorageKey();
 
-  const [adBlockerDismissed, setAdBlockerDismissed] = useSessionStorage(
+  const [dismissed, setDismissed] = useSessionStorage<boolean | undefined>(
     sessionKey,
-    false,
+    undefined,
   );
 
   useEffect(() => {
@@ -33,7 +45,7 @@ export function AdBlocker() {
     return () => clearTimeout(timeoutId);
   }, [timeLeft]);
 
-  if (adBlockerDismissed) return null;
+  if (dismissed) return null;
 
   return (
     <AlertDialog open={open}>
@@ -80,7 +92,7 @@ export function AdBlocker() {
         <AlertDialogCancel
           disabled={timeLeft > 0}
           onClick={() => {
-            setAdBlockerDismissed(true);
+            setDismissed(true);
             setOpen(false);
           }}
         >

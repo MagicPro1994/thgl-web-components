@@ -4,6 +4,7 @@ import { getNitroAds } from "./nitro-pay";
 import { NitroScript } from "./nitro-script";
 import { THGLAppConfig } from "@repo/lib";
 import dynamic from "next/dynamic";
+import { IS_DEMO_MODE } from "./constants";
 
 const MovableAdsContainer = dynamic(
   () =>
@@ -49,27 +50,36 @@ function NitroPayAd({
   appConfig: THGLAppConfig;
 }): JSX.Element {
   useEffect(() => {
-    getNitroAds().createAd(id, {
-      refreshTime: 30,
-      renderVisibleOnly: false,
-      outstream: "never",
-      sizes: [
-        ["300", "250"],
-        ["320", "50"],
-        ["320", "100"],
-        ["336", "280"],
-      ],
-      report: {
-        enabled: false,
-        icon: false,
-        wording: "Report Ad",
-        position: "top-left",
-      },
-      skipBidders: ["google"],
-      demo: location.href.includes("localhost"),
-      debug: "silent",
-    });
-  }, []);
+    try {
+      getNitroAds().createAd(id, {
+        targeting: {
+          platform: "thgl-app",
+          game: appConfig.name,
+          view: isOverlay ? "overlay" : "desktop",
+        }, // Use 'platform' as primary discriminator to avoid bleed over with web
+        refreshTime: 30,
+        renderVisibleOnly: false,
+        outstream: "never",
+        sizes: [
+          ["300", "250"],
+          ["320", "50"],
+          ["320", "100"],
+          ["336", "280"],
+        ],
+        report: {
+          enabled: false,
+          icon: false,
+          wording: "Report Ad",
+          position: "top-left",
+        },
+        skipBidders: ["google"],
+        demo: IS_DEMO_MODE,
+        debug: "silent",
+      });
+    } catch (error) {
+      console.error(`[THGLMapAds] Failed to create ad ${id}:`, error);
+    }
+  }, [id]);
 
   return (
     <MovableAdsContainer

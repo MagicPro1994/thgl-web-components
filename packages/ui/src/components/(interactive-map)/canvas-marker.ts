@@ -31,6 +31,7 @@ leaflet.Canvas.include({
     const p = layer._point.round();
     const dx = p.x - radius;
     const dy = p.y - radius;
+
     if (icon !== undefined) {
       if (icon === null || layer.imageElement.width === 0) {
         layerContext.beginPath();
@@ -47,10 +48,20 @@ leaflet.Canvas.include({
       const severityKey = Number.isFinite(colorBlindSeverity)
         ? Number(colorBlindSeverity).toFixed(2)
         : "1.00";
-      const key =
-        "width" in icon
-          ? `${icon.url}${icon.x}${icon.y}@${radius}:${isHighlighted}:${isDiscovered}:${isCluster}${fillColor}${zPos}:${colorBlindMode}:${severityKey}`
-          : `${icon.url}@${radius}:${isHighlighted}:${isDiscovered}:${isCluster}${fillColor}${zPos}:${colorBlindMode}:${severityKey}`;
+      // Optimize cache key generation using array join (faster than string concatenation)
+      const keyParts = [
+        icon.url,
+        "width" in icon ? `${icon.x}${icon.y}` : "",
+        radius,
+        isHighlighted ? "1" : "0",
+        isDiscovered ? "1" : "0",
+        isCluster ? "1" : "0",
+        fillColor || "",
+        zPos || "",
+        colorBlindMode,
+        severityKey,
+      ];
+      const key = keyParts.join(":");
       const cachedCanvas = canvasCache.get(key);
       if (cachedCanvas) {
         layerContext.drawImage(cachedCanvas, dx, dy);
@@ -62,7 +73,10 @@ leaflet.Canvas.include({
       if (isCluster) {
         imageSize /= 1.5;
       }
-      const context = canvas.getContext("2d")!;
+      const context = canvas.getContext("2d", {
+        willReadFrequently: true, // Optimize for frequent getImageData calls
+      })!;
+      // Batch canvas state changes to minimize overhead
       context.shadowOffsetX = 0;
       context.shadowOffsetY = 0;
       context.shadowColor = "black";
@@ -329,6 +343,8 @@ class CanvasMarker extends CircleMarker {
       if (!canvasMarkerImgs[url]) {
         canvasMarkerImgs[url] = document.createElement("img");
         canvasMarkerImgs[url].crossOrigin = "anonymous";
+        // Set decoding hint for better performance
+        canvasMarkerImgs[url].decoding = "async";
         if (!url.startsWith("/") && !url.startsWith("http")) {
           canvasMarkerImgs[url].src = `/icons/${url}`;
         } else {
@@ -369,6 +385,7 @@ class CanvasMarker extends CircleMarker {
       if (!canvasMarkerImgs[url]) {
         canvasMarkerImgs[url] = document.createElement("img");
         canvasMarkerImgs[url].crossOrigin = "anonymous";
+        canvasMarkerImgs[url].decoding = "async";
         canvasMarkerImgs[url].src = getImageURL(url);
         this._onImageLoad = undefined;
       }

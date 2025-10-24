@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useMap } from "./store";
 import { PlayerMarker } from "./player-marker";
 import leaflet from "leaflet";
@@ -45,6 +45,22 @@ export function Player({
 
   const iconCache = useRef<Map<string, string>>(new Map());
 
+  // Memoize icon URL and size to avoid recalculating on every render
+  const iconUrl = useMemo(() => {
+    const iconName = markerOptions.playerIcon
+      ? `/icons/${markerOptions.playerIcon}`
+      : "https://th.gl/global_icons/player.png";
+    return getIconsUrl(appName, iconName, iconsPath);
+  }, [appName, markerOptions.playerIcon, iconsPath]);
+
+  const iconSize = useMemo(
+    () => [
+      36 * baseIconSize * playerIconSize,
+      36 * baseIconSize * playerIconSize,
+    ],
+    [baseIconSize, playerIconSize],
+  );
+
   async function buildIcon(
     iconUrl: string,
     size: number[],
@@ -68,16 +84,15 @@ export function Player({
       });
     }
     try {
-      await new Promise<void>((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error("player-icon-load"));
-        img.src = iconUrl;
+      // Load image once and reuse it for canvas drawing
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("player-icon-load"));
+        image.src = iconUrl;
       });
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = iconUrl;
+
       const canvas = document.createElement("canvas");
       const [w, h] = size;
       canvas.width = w;
@@ -119,17 +134,9 @@ export function Player({
     }
 
     const run = async () => {
-      const iconName = markerOptions.playerIcon
-        ? `/icons/${markerOptions.playerIcon}`
-        : "https://th.gl/global_icons/player.png";
-      const iconUrl = getIconsUrl(appName, iconName, iconsPath);
-      const size = [
-        36 * baseIconSize * playerIconSize,
-        36 * baseIconSize * playerIconSize,
-      ];
       const icon = await buildIcon(
         iconUrl,
-        size,
+        iconSize,
         colorBlindMode,
         colorBlindSeverity,
       );
@@ -148,12 +155,6 @@ export function Player({
         marker.current.setIcon(icon);
         marker.current.updatePosition(player);
       }
-      console.log(
-        "Rebuilding player icon with URL:",
-        iconUrl,
-        icon,
-        marker.current.getIcon(),
-      );
 
       try {
         marker.current.addTo(map);
@@ -180,17 +181,9 @@ export function Player({
   useEffect(() => {
     if (!marker.current) return;
     const run = async () => {
-      const iconName = markerOptions.playerIcon
-        ? `/icons/${markerOptions.playerIcon}`
-        : "https://th.gl/global_icons/player.png";
-      const iconUrl = getIconsUrl(appName, iconName, iconsPath);
-      const size = [
-        36 * baseIconSize * playerIconSize,
-        36 * baseIconSize * playerIconSize,
-      ];
       const newIcon = await buildIcon(
         iconUrl,
-        size,
+        iconSize,
         colorBlindMode,
         colorBlindSeverity,
       );
@@ -199,9 +192,7 @@ export function Player({
       } catch (e) {}
     };
     run();
-  }, [baseIconSize, playerIconSize, colorBlindMode]);
-
-  const lastAnimation = useRef(0);
+  }, [iconUrl, iconSize, colorBlindMode, colorBlindSeverity]);
 
   useThrottledEffect(
     () => {
@@ -216,23 +207,15 @@ export function Player({
       }
 
       if (followPlayerPosition) {
-        const now = Date.now();
-        if (now - lastAnimation.current > 500) {
-          lastAnimation.current = now;
-          document
-            .querySelector(".leaflet-map-pane")
-            ?.classList.add(
-              "transition-transform",
-              "ease-linear",
-              "duration-1000",
-            );
-          map.panTo([player.x, player.y], {
-            animate: false,
-            duration: 0,
-            easeLinearity: 1,
-            noMoveStart: true,
-          });
-        }
+        // Use Leaflet's built-in smooth panning
+        // panTo() internally stops previous animations with proper canvas clearing
+        // Duration of 0.5s provides smooth movement while allowing overlapping animations
+        map.panTo([player.x, player.y], {
+          animate: true,
+          duration: 0.5,
+          easeLinearity: 1,
+          noMoveStart: true,
+        });
       }
     },
     [map?.mapName, player, followPlayerPosition],
@@ -243,7 +226,8 @@ export function Player({
     if (!player?.mapName || !map) {
       return;
     }
-    if (!Object.keys(tilesConfig).includes(player.mapName)) {
+    // Use 'in' operator for efficient object property check instead of Object.keys
+    if (!(player.mapName in tilesConfig)) {
       return;
     }
     if (player.mapName !== map.mapName) {

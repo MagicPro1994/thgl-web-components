@@ -3,18 +3,20 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { AdFreeContainer } from "./ad-free-container";
 import { useEffect } from "react";
 import { getNitroAds } from "./nitro-pay";
-import { AdBlockMessage } from "./ad-block-message";
-import { AdLoadingMessage } from "./ad-loading-message";
+import { IS_DEMO_MODE } from "./constants";
+import { AdPlaceholder } from "./ad-placeholder";
 
 const smallMediaQuery = "(min-width: 768px)";
 export function FloatingMobileBanner({
   bannerId,
   videoId,
+  targeting,
   isLoading = false,
   isBlocked = false,
 }: {
   bannerId: string;
   videoId: string;
+  targeting?: Record<string, string>;
   isLoading?: boolean;
   isBlocked?: boolean;
 }): JSX.Element {
@@ -24,26 +26,35 @@ export function FloatingMobileBanner({
     if (matched || isLoading || isBlocked) {
       return;
     }
-    getNitroAds().createAd(bannerId, {
-      refreshTime: 30,
-      renderVisibleOnly: false,
-      sizes: [["320", "50"]],
-      demo: location.href.includes("localhost"),
-      debug: "silent",
-    });
-    getNitroAds().createAd(videoId, {
-      refreshTime: 30,
-      format: "floating",
-      report: {
-        enabled: true,
-        icon: true,
-        wording: "Report Ad",
-        position: "top-left",
-      },
-      demo: location.href.includes("localhost"),
-      debug: "silent",
-    });
-  }, [matched]);
+    try {
+      getNitroAds().createAd(bannerId, {
+        targeting, // Custom targeting for reporting filters
+        refreshTime: 30,
+        renderVisibleOnly: false,
+        sizes: [["320", "50"]],
+        demo: IS_DEMO_MODE,
+        debug: "silent",
+      });
+      getNitroAds().createAd(videoId, {
+        targeting, // Custom targeting for reporting filters
+        refreshTime: 30,
+        format: "floating",
+        report: {
+          enabled: true,
+          icon: true,
+          wording: "Report Ad",
+          position: "top-left",
+        },
+        demo: IS_DEMO_MODE,
+        debug: "silent",
+      });
+    } catch (error) {
+      console.error(
+        `[FloatingMobileBanner] Failed to create ads ${bannerId}, ${videoId}:`,
+        error,
+      );
+    }
+  }, [matched, bannerId, videoId, targeting, isLoading, isBlocked]);
 
   if (matched) {
     return <></>;
@@ -51,25 +62,24 @@ export function FloatingMobileBanner({
 
   if (isLoading) {
     return (
-      <AdFreeContainer
-        className={"w-fit mx-auto fixed bottom-0 right-0 z-[99999]"}
-      >
-        <div className="rounded h-[50px] w-[320px] bg-zinc-800/30 flex flex-col justify-center text-gray-500 ">
-          <AdLoadingMessage />
-        </div>
-      </AdFreeContainer>
+      <AdPlaceholder
+        type="loading"
+        width="w-[320px]"
+        height="h-[50px]"
+        className="w-fit mx-auto fixed bottom-0 right-0 z-[99999]"
+      />
     );
   }
 
   if (isBlocked) {
     return (
-      <AdFreeContainer
-        className={"w-fit mx-auto fixed bottom-0 right-0 z-[99999]"}
-      >
-        <div className="rounded h-[50px] w-[320px] bg-zinc-800/30 flex flex-col justify-center text-gray-500 ">
-          <AdBlockMessage hideText />
-        </div>
-      </AdFreeContainer>
+      <AdPlaceholder
+        type="blocked"
+        width="w-[320px]"
+        height="h-[50px]"
+        className="w-fit mx-auto fixed bottom-0 right-0 z-[99999]"
+        hideBlockedText
+      />
     );
   }
   return (

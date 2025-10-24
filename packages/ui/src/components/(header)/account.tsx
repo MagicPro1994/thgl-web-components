@@ -22,7 +22,12 @@ export function Account() {
           state.perks.premiumFeatures ||
           state.perks.previewReleaseAccess
         ) {
-          state.setAccount(null, null, defaultPerks);
+          state.setAccount({
+            userId: null,
+            decryptedUserId: null,
+            email: null,
+            perks: defaultPerks,
+          });
         }
         return;
       }
@@ -33,30 +38,56 @@ export function Account() {
         const body = (await response.json()) as {
           expiresIn: number;
           decryptedUserId: string;
+          email: string;
         } & Perks;
         if (!response.ok) {
           console.warn(body);
           if (response.status === 403) {
-            state.setAccount(userId, null, defaultPerks);
+            state.setAccount({
+              userId,
+              decryptedUserId: null,
+              email: null,
+              perks: defaultPerks,
+            });
           } else if (response.status === 404) {
-            state.setAccount(null, null, defaultPerks);
+            state.setAccount({
+              userId: null,
+              decryptedUserId: null,
+              email: null,
+              perks: defaultPerks,
+            });
             Cookies.remove("userId");
           } else if (response.status === 400) {
-            state.setAccount(null, null, defaultPerks);
+            state.setAccount({
+              userId: null,
+              decryptedUserId: null,
+              email: null,
+              perks: defaultPerks,
+            });
             Cookies.remove("userId");
           }
         } else {
           console.log(`Patreon successfully activated`, body);
-          state.setAccount(userId, body.decryptedUserId, {
-            adRemoval: body.adRemoval,
-            previewReleaseAccess: body.previewReleaseAccess,
-            comments: body.comments,
-            premiumFeatures: body.premiumFeatures,
+          state.setAccount({
+            userId,
+            decryptedUserId: body.decryptedUserId,
+            email: body.email,
+            perks: {
+              adRemoval: body.adRemoval,
+              previewReleaseAccess: body.previewReleaseAccess,
+              comments: body.comments,
+              premiumFeatures: body.premiumFeatures,
+            },
           });
         }
       } catch (err) {
         console.error(err);
-        state.setAccount(userId, null, defaultPerks);
+        state.setAccount({
+          userId,
+          decryptedUserId: null,
+          email: null,
+          perks: defaultPerks,
+        });
       }
     };
     refreshState();

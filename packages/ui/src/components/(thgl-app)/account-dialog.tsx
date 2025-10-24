@@ -63,7 +63,12 @@ export function AccountDialog() {
                 variant="destructive"
                 onClick={() => {
                   Cookies.remove("userId");
-                  account.setAccount(null, null, defaultPerks);
+                  account.setAccount({
+                    userId: null,
+                    decryptedUserId: null,
+                    email: null,
+                    perks: defaultPerks,
+                  });
                 }}
               >
                 Sign Out
@@ -122,7 +127,12 @@ export function AccountDialog() {
             variant="destructive"
             onClick={() => {
               Cookies.remove("userId");
-              account.setAccount(null, null, defaultPerks);
+              account.setAccount({
+                userId: null,
+                decryptedUserId: null,
+                email: null,
+                perks: defaultPerks,
+              });
             }}
           >
             Sign Out

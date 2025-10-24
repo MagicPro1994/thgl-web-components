@@ -7,10 +7,15 @@ export function InitializeAccount({ account }: { account: THGLAccount }) {
     const setAccount = useAccountStore.getState().setAccount;
     if (account) {
       console.log("Account received:", account);
-      setAccount(account.userId, account.decryptedUserId, account.perks);
+      setAccount(account);
     } else {
       console.log("No account received");
-      setAccount(null, null, defaultPerks);
+      setAccount({
+        userId: null,
+        decryptedUserId: null,
+        email: null,
+        perks: defaultPerks,
+      });
     }
   }, []);
 

@@ -48,11 +48,13 @@ export class PlayerMarker extends leaflet.Marker {
     if (!this._icon) {
       return;
     }
-    if (this._icon.style.transform) {
-      this._icon.style.transition = "transform 0.1s linear";
+    // Set transition only once, not on every position update
+    // 500ms duration matches map pan duration for synchronized smooth movement
+    if (!this._icon.style.transition) {
+      this._icon.style.transition = "transform 0.5s linear";
+      this._icon.style.transformOrigin = "center";
     }
 
-    this._icon.style.transformOrigin = "center";
     this._icon.style.transform = `translate3d(${pos.x}px,${pos.y}px,0) rotate(${this.options.rotation}deg)`;
     return;
   }

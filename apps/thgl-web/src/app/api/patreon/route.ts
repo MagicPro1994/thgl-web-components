@@ -106,6 +106,7 @@ export async function GET(request: NextRequest) {
       ...perks,
       expiresIn: refreshTokenResult.expires_in,
       decryptedUserId: userId,
+      email: currentUser.data.attributes.email,
     };
     return Response.json(result, {
       headers: responseHeaders,

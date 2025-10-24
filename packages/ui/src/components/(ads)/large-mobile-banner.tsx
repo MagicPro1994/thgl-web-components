@@ -2,24 +2,30 @@
 import { useEffect } from "react";
 import { getNitroAds } from "./nitro-pay";
 import { AdFreeContainer } from "./ad-free-container";
-import { AdBlockMessage } from "./ad-block-message";
-import { AdLoadingMessage } from "./ad-loading-message";
+import { IS_DEMO_MODE } from "./constants";
+import { AdPlaceholder } from "./ad-placeholder";
 
 export function LargeMobileBanner({
   id,
+  targeting,
 }: {
   id: string;
-  mediaQuery?: string;
+  targeting?: Record<string, string>;
 }): JSX.Element {
   useEffect(() => {
-    getNitroAds().createAd(id, {
-      refreshTime: 30,
-      renderVisibleOnly: false,
-      sizes: [["320", "100"]],
-      demo: location.href.includes("localhost"),
-      debug: "silent",
-    });
-  }, []);
+    try {
+      getNitroAds().createAd(id, {
+        targeting, // Custom targeting for reporting filters
+        refreshTime: 30,
+        renderVisibleOnly: false,
+        sizes: [["320", "100"]],
+        demo: IS_DEMO_MODE,
+        debug: "silent",
+      });
+    } catch (error) {
+      console.error(`[LargeMobileBanner] Failed to create ad ${id}:`, error);
+    }
+  }, [id, targeting]);
 
   return (
     <AdFreeContainer className="w-fit mx-auto">
@@ -33,20 +39,23 @@ export function LargeMobileBanner({
 
 export function LargeMobileBannerLoading(): JSX.Element {
   return (
-    <AdFreeContainer className="w-fit mx-auto">
-      <div className="rounded h-[100px] w-[320px] bg-zinc-800/30 flex flex-col justify-center text-gray-500">
-        <AdLoadingMessage />
-      </div>
-    </AdFreeContainer>
+    <AdPlaceholder
+      type="loading"
+      width="w-[320px]"
+      height="h-[100px]"
+      className="w-fit mx-auto"
+    />
   );
 }
 
 export function LargeMobileBannerFallback(): JSX.Element {
   return (
-    <AdFreeContainer className="w-fit mx-auto">
-      <div className="rounded h-[100px] w-[320px] bg-zinc-800/30 flex flex-col justify-center text-gray-500">
-        <AdBlockMessage hideText />
-      </div>
-    </AdFreeContainer>
+    <AdPlaceholder
+      type="blocked"
+      width="w-[320px]"
+      height="h-[100px]"
+      className="w-fit mx-auto"
+      hideBlockedText
+    />
   );
 }

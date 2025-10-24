@@ -5,9 +5,70 @@ import Script from "next/script";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { create } from "zustand";
-import { NitroAds } from "./nitro-pay";
+import { getNitroAds, NitroAds } from "./nitro-pay";
+import { NITROPAY_SITE_ID } from "./constants";
 
-type NitroState = "loading" | "ready" | "error";
+type NitroState = "loading" | "validation" | "ready" | "error";
+
+function isNitroAdsValid(): boolean {
+  if (!("nitroAds" in window)) {
+    return false;
+  }
+
+  const nitroAds = window.nitroAds as NitroAds;
+
+  // Check basic properties
+  if (!nitroAds || nitroAds.siteId !== NITROPAY_SITE_ID) {
+    return false;
+  }
+
+  // Verify critical methods exist and are actual functions
+  // AdGuard strips these while leaving siteId intact
+  if (
+    typeof nitroAds.createAd !== "function" ||
+    typeof nitroAds.addUserToken !== "function" ||
+    typeof nitroAds.clearUserTokens !== "function"
+  ) {
+    return false;
+  }
+
+  // Check that the queue exists (NitroPay uses this for ad management)
+  if (!Array.isArray(nitroAds.queue)) {
+    return false;
+  }
+
+  // Verify loaded state and version
+  if (typeof nitroAds.loaded !== "boolean" || !nitroAds.loaded) {
+    return false;
+  }
+
+  if (typeof nitroAds.version !== "string" || nitroAds.version.length === 0) {
+    return false;
+  }
+
+  return true;
+}
+
+function isNoop(fn: Function): boolean {
+  const src = fn.toString().replace(/\s+/g, "");
+  return (
+    src === "function(){}" ||
+    src === "()=>{}" ||
+    src === "functionnoop(){}" ||
+    (src.startsWith("functionnoop") && src.endsWith("{}"))
+  );
+}
+
+function isNitroAdsManipulated(): boolean {
+  if (!("nitroAds" in window)) {
+    return false;
+  }
+  const nitroAds = window.nitroAds as NitroAds;
+  if (isNoop(nitroAds.createAd) || Object.keys(nitroAds).length === 0) {
+    return true;
+  }
+  return false;
+}
 
 const useNitroState = create<{
   state: NitroState;
@@ -28,18 +89,20 @@ export function NitroScript({
 }): JSX.Element {
   const accountHasHydrated = useAccountStore((state) => state._hasHydrated);
   const adRemoval = useAccountStore((state) => state.perks.adRemoval);
+  const email = useAccountStore((state) => state.email);
   const { state, setState } = useNitroState();
 
   useEffect(() => {
-    if (state !== "loading" || adRemoval || isOverwolf) {
+    if (state !== "validation" || adRemoval || isOverwolf) {
       return;
     }
     const now = Date.now();
     const intervalId = setInterval(() => {
-      if (
-        "nitroAds" in window &&
-        (window.nitroAds as NitroAds).siteId === 1487
-      ) {
+      if (isNitroAdsManipulated()) {
+        setState("error");
+        clearInterval(intervalId);
+        return;
+      } else if (isNitroAdsValid()) {
         setState("ready");
         clearInterval(intervalId);
         return;
@@ -53,7 +116,32 @@ export function NitroScript({
     return () => {
       clearInterval(intervalId);
     };
-  }, [state]);
+  }, [state, adRemoval]);
+
+  useEffect(() => {
+    if (adRemoval || state !== "ready") {
+      return;
+    }
+    try {
+      if (email) {
+        // User logged in - send hashed email to NitroPay
+        getNitroAds()
+          .addUserToken(email, "PLAIN")
+          .then(() => {
+            // console.log("[NitroPay] Hashed email tracking enabled");
+          })
+          .catch(() => {
+            // console.error("[NitroPay] Failed to add user token:", error);
+          });
+      } else {
+        // User logged out - clear tokens
+        getNitroAds().clearUserTokens();
+      }
+    } catch (error) {
+      console.error("[NitroPay] Error managing user tokens:", error);
+      setState("error");
+    }
+  }, [state, email, adRemoval]);
 
   if (!accountHasHydrated) {
     return <>{loading}</>;
@@ -70,14 +158,15 @@ export function NitroScript({
         }}
         strategy="lazyOnload"
         onReady={() => {
-          if (
-            "nitroAds" in window &&
-            (window.nitroAds as NitroAds).siteId === 1487
-          ) {
+          if (isNitroAdsManipulated()) {
+            setState("error");
+          } else if (isNitroAdsValid()) {
             setState("ready");
+          } else {
+            setState("validation");
           }
         }}
-        src="https://s.nitropay.com/ads-1487.js"
+        src={`https://s.nitropay.com/ads-${NITROPAY_SITE_ID}.js`}
       />
       {state === "loading" && loading}
       {state === "ready" && children}

@@ -32,23 +32,44 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="p-4 space-y-1">
-          <p>
-            Sorry.. there was an error. Please join the{" "}
-            <ExternalAnchor
-              href="https://www.th.gl/discord"
-              className="inline-flex gap-1 text-primary hover:underline"
+        <div className="flex items-center justify-center min-h-screen p-4 bg-background">
+          <div className="w-full max-w-2xl space-y-6 p-6 rounded-lg border border-destructive/50 bg-destructive/5">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-destructive">
+                Something went wrong
+              </h2>
+              <p className="text-base text-foreground/90">
+                Sorry, there was an unexpected error. Please join the{" "}
+                <ExternalAnchor
+                  href="https://www.th.gl/discord"
+                  className="inline-flex items-center gap-1 text-primary hover:underline font-medium"
+                >
+                  <span>Discord server</span>
+                  <ExternalLink className="w-3 h-3" />
+                </ExternalAnchor>{" "}
+                for support.
+              </p>
+            </div>
+
+            <Button
+              onClick={() => window.location.reload()}
+              className="w-full sm:w-auto"
             >
-              <span>Discord server</span>
-              <ExternalLink className="w-3 h-3" />
-            </ExternalAnchor>{" "}
-            for support.
-          </p>
-          <Button onClick={() => window.location.reload()}>Reload now!</Button>
-          <div className="text-muted-foreground font-mono">
-            {this.state.error?.stack
-              ?.split("\n")
-              .map((line, index) => <p key={index}>{line}</p>)}
+              Reload now
+            </Button>
+
+            {this.state.error?.stack && (
+              <details className="group">
+                <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  Show error details
+                </summary>
+                <div className="mt-3 p-4 rounded border border-border bg-muted/50 overflow-auto max-h-64">
+                  <pre className="text-xs font-mono text-muted-foreground whitespace-pre-wrap break-all">
+                    {this.state.error.stack}
+                  </pre>
+                </div>
+              </details>
+            )}
           </div>
         </div>
       );

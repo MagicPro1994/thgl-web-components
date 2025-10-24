@@ -72,15 +72,44 @@ If you'd like to see this feature return, feel free to contact the game studio a
     question: "How do I get the log files of the TH.GL Companion App?",
     answer: `
   The logs are stored locally on your system:
-  
-  \`C:\\Users\\<user>\\AppData\\Local\\The Hidden Gaming Lair\`  
+
+  \`C:\\Users\\<user>\\AppData\\Local\\The Hidden Gaming Lair\`
   You can also type \`%appdata%\\..\\Local\\The Hidden Gaming Lair\` into File Explorer.
-  
+
   - \`log.txt\` is the current session
   - \`log.1.txt\` to \`log.5.txt\` are older logs from previous sessions
   - \`crash.txt\` contains crash reports (if any)
-  
+
   Please send these files when reporting bugs or issues.
+    `.trim(),
+    labels: ["Companion App", "Technical"],
+  },
+  {
+    id: "update-companion-app",
+    headline: "How to update the Companion App",
+    question: "How do I update the TH.GL Companion App to the latest version?",
+    answer: `
+The Companion App has multiple ways to update:
+
+## Automatic Update (Recommended)
+The app includes an auto-updater that checks for new versions:
+- When you launch the app
+- Regularly while running (only when you're not in-game)
+
+Just wait and the app will update itself automatically.
+
+## Manual Update Methods
+
+**Method 1: Restart the app**
+1. Right-click the app icon in the system tray
+2. Select "Exit"
+3. Launch the app again - it will check for updates on startup
+
+**Method 2: Run the updater directly**
+Execute the updater manually:
+\`C:\\Program Files (x86)\\The Hidden Gaming Lair\\THGLUpdater.exe\`
+
+Both manual methods will trigger an immediate update check.
     `.trim(),
     labels: ["Companion App", "Technical"],
   },
@@ -543,6 +572,39 @@ See: [Overwolf on Windows Insider](https://support.overwolf.com/en/support/solut
 Follow this guide: [How to get Overwolf logs](https://support.overwolf.com/en/support/solutions/articles/9000176827-how-to-get-your-overwolf-logs)
     `.trim(),
     labels: ["Overwolf", "Technical"],
+  },
+  {
+    id: "alt-hold-overlay-interaction",
+    headline: "Can't interact with overlay while holding ALT",
+    question: "Why can't I click the overlay when holding ALT in games like BPSR or Wuthering Waves?",
+    answer: `
+This is intentional behavior to prevent the mouse cursor from disappearing.
+
+## What happens:
+
+In some games (like Blue Protocol Star Resonance and Wuthering Waves), holding ALT temporarily enables mouse control for in-game UI interaction.
+
+**The problem:**
+- When you hold ALT, the game shows the mouse cursor
+- If you click the overlay, Windows shifts focus away from the game
+- The game detects this focus loss and **immediately hides the cursor**
+- Even though you're still holding ALT, the cursor disappears and you can't interact with anything
+
+## The solution:
+
+While holding ALT, the overlay becomes **click-through** (non-interactive):
+- You can still **see** the overlay for reference
+- All clicks pass through to the game
+- The game keeps focus and the cursor stays visible
+- You can interact with in-game UI without issues
+
+## To interact with the overlay:
+
+Simply release the ALT key first. The overlay will become interactive again and you can click normally.
+
+This ensures smooth gameplay without cursor visibility issues.
+    `.trim(),
+    labels: ["Companion App", "Technical"],
   },
 ];
 

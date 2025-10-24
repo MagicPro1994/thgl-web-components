@@ -13,6 +13,7 @@ export interface PatreonUser {
   data: {
     attributes: {
       full_name: string;
+      email: string;
     };
     id: string;
     relationships: {
@@ -92,7 +93,7 @@ export function postRefreshToken(refreshToken: string) {
 
 export function getCurrentUser(token: PatreonToken) {
   return fetch(
-    `https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields%5Buser%5D=full_name`,
+    `https://www.patreon.com/api/oauth2/v2/identity?include=memberships.currently_entitled_tiers&fields%5Buser%5D=full_name,email`,
     {
       headers: {
         Authorization: `Bearer ${token.access_token}`,

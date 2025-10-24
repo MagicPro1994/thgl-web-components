@@ -1,6 +1,7 @@
 "use client";
 import { AdBlocker } from "./ad-blocker";
 import dynamic from "next/dynamic";
+import { getObfuscatedAdId, AD_TYPES } from "./obfuscated-ids";
 
 const FloatingBanner = dynamic(
   () => import("./floating-banner").then((mod) => mod.FloatingBanner),
@@ -19,37 +20,50 @@ const NitroPayVideoPlayer = dynamic(
 import { NitroScript } from "./nitro-script";
 
 export function FloatingAds({ id }: { id: string }): JSX.Element {
+  // Generate generic obfuscated IDs (shared across all subdomains for better dynamic flooring)
+  const videoId = getObfuscatedAdId(AD_TYPES.VIDEO);
+  const bannerId = getObfuscatedAdId(AD_TYPES.FLOATING_BANNER);
+  const mobileBannerId = getObfuscatedAdId(AD_TYPES.MOBILE_BANNER);
+  const mobileVideoId = getObfuscatedAdId(AD_TYPES.MOBILE_VIDEO);
+
+  // Targeting for filtering in NitroPay reporting
+  // Use 'platform' as primary discriminator to avoid bleed over between web/app
+  const targeting = { platform: "web", game: id };
+
   return (
     <NitroScript
       fallback={
         <>
           <AdBlocker />
-          <NitroPayVideoPlayer id={`${id}:video`} isBlocked />
-          <FloatingBanner id={`${id}:floating-banner`} isBlocked />
+          <NitroPayVideoPlayer id={videoId} targeting={targeting} isBlocked />
+          <FloatingBanner id={bannerId} targeting={targeting} isBlocked />
           <FloatingMobileBanner
-            bannerId={`${id}:mobile-banner`}
-            videoId={`${id}:mobile-video`}
+            bannerId={mobileBannerId}
+            videoId={mobileVideoId}
+            targeting={targeting}
             isBlocked
           />
         </>
       }
       loading={
         <>
-          <NitroPayVideoPlayer id={`${id}:video`} isLoading />
-          <FloatingBanner id={`${id}:floating-banner`} isLoading />
+          <NitroPayVideoPlayer id={videoId} targeting={targeting} isLoading />
+          <FloatingBanner id={bannerId} targeting={targeting} isLoading />
           <FloatingMobileBanner
-            bannerId={`${id}:mobile-banner`}
-            videoId={`${id}:mobile-video`}
+            bannerId={mobileBannerId}
+            videoId={mobileVideoId}
+            targeting={targeting}
             isLoading
           />
         </>
       }
     >
-      <NitroPayVideoPlayer id={`${id}:video`} />
-      <FloatingBanner id={`${id}:floating-banner`} />
+      <NitroPayVideoPlayer id={videoId} targeting={targeting} />
+      <FloatingBanner id={bannerId} targeting={targeting} />
       <FloatingMobileBanner
-        bannerId={`${id}:mobile-banner`}
-        videoId={`${id}:mobile-video`}
+        bannerId={mobileBannerId}
+        videoId={mobileVideoId}
+        targeting={targeting}
       />
     </NitroScript>
   );

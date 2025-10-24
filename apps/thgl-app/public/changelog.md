@@ -1,4 +1,30 @@
-# 2.12.1
+# 2.18.0
+
+## Blue Protocol: Star Resonance
+
+- Feat: Add Epic Games Launcher support
+- Fix: Fix mouse interaction issues when using the app in overlay mode
+- Fix: Fix SHIFT key availability in-game when using the app
+- Fix: Holding ALT key doesn't interact with the overlay anymore to prevent game input issues.
+
+# 2.17.0
+
+- Feat: **Blue Protocol: Star Resonance** Add live tracking support for Documents (Books, Letters, etc.)
+- Fix: **Blue Protocol: Star Resonance** Live tracking didn't show all locations
+
+# 2.16.0
+
+- Feat: **Blue Protocol: Star Resonance** Add live tracking support for Resources
+
+# 2.15.2
+
+- Fix: **Blue Protocol: Star Resonance** Fix game detection for official launcher version (BPSR.exe). The position detection might break on future updates again.
+
+# 2.15.0
+
+- Feat: **Blue Protocol: Star Resonance** Add live tracking support for Chests (more coming soon)
+
+# 2.14.1
 
 - Fix: **Blue Protocol: Star Resonance** Player position detection after game update
 

@@ -35,17 +35,23 @@ export default async function RummagePile() {
     .find((f) => f.group === "players")!
     .values.find((v) => v.id === "other_player")!.icon;
 
-  const respone = await fetch(
+  const timedLootPilesResponse = await fetch(
     "https://palia-api.th.gl/nodes?type=timedLootPiles",
     {
-      cache: "force-cache",
-      next: { tags: ["rummage-pile"] },
+      next: {
+        revalidate: 300, // Auto-revalidate every 5 minutes
+        tags: ["rummage-pile"], // Allow manual revalidation
+      },
     },
   );
-  const data = (await respone.json()) as TimedLootPiles;
+  const data = (await timedLootPilesResponse.json()) as TimedLootPiles;
 
   const url = `${DATA_FORGE_URL}/api/palia/search?q=stable`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    next: {
+      revalidate: 300, // Auto-revalidate every 5 minutes
+    },
+  });
   const buffer = await response.arrayBuffer();
   const stableNodes = decodeFromBuffer<Spawns>(new Uint8Array(buffer));
   const stableNodeIcon = filters

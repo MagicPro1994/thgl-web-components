@@ -40,25 +40,41 @@ export function UserDialog() {
       const body = (await response.json()) as {
         expiresIn: number;
         decryptedUserId: string;
+        email: string;
       } & Perks;
       if (!response.ok) {
         console.warn(body);
         if (response.status === 403) {
-          account.setAccount(userId, null, defaultPerks);
+          account.setAccount({
+            userId,
+            decryptedUserId: null,
+            email: null,
+            perks: defaultPerks,
+          });
           toast("User is not a subscriber");
         } else if (response.status === 404) {
-          account.setAccount(null, null, defaultPerks);
+          account.setAccount({
+            userId: null,
+            decryptedUserId: null,
+            email: null,
+            perks: defaultPerks,
+          });
           toast("Invalid secret");
         } else if ("error" in body && typeof body.error === "string") {
           toast(body.error);
         }
       } else {
         console.log(`Subscription enabled`, body);
-        account.setAccount(userId, body.decryptedUserId, {
-          adRemoval: body.adRemoval,
-          previewReleaseAccess: body.previewReleaseAccess,
-          comments: body.comments,
-          premiumFeatures: body.premiumFeatures,
+        account.setAccount({
+          userId,
+          decryptedUserId: body.decryptedUserId,
+          email: body.email,
+          perks: {
+            adRemoval: body.adRemoval,
+            previewReleaseAccess: body.previewReleaseAccess,
+            comments: body.comments,
+            premiumFeatures: body.premiumFeatures,
+          },
         });
         toast("Subscription enabled");
       }
@@ -100,7 +116,12 @@ export function UserDialog() {
               variant="destructive"
               onClick={() => {
                 Cookies.remove("userId");
-                account.setAccount(null, null, defaultPerks);
+                account.setAccount({
+                  userId: null,
+                  decryptedUserId: null,
+                  email: null,
+                  perks: defaultPerks,
+                });
               }}
             >
               Sign Out
