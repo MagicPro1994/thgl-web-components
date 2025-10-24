@@ -573,6 +573,39 @@ Follow this guide: [How to get Overwolf logs](https://support.overwolf.com/en/su
     `.trim(),
     labels: ["Overwolf", "Technical"],
   },
+  {
+    id: "alt-hold-overlay-interaction",
+    headline: "Can't interact with overlay while holding ALT",
+    question: "Why can't I click the overlay when holding ALT in games like BPSR or Wuthering Waves?",
+    answer: `
+This is intentional behavior to prevent the mouse cursor from disappearing.
+
+## What happens:
+
+In some games (like Blue Protocol Star Resonance and Wuthering Waves), holding ALT temporarily enables mouse control for in-game UI interaction.
+
+**The problem:**
+- When you hold ALT, the game shows the mouse cursor
+- If you click the overlay, Windows shifts focus away from the game
+- The game detects this focus loss and **immediately hides the cursor**
+- Even though you're still holding ALT, the cursor disappears and you can't interact with anything
+
+## The solution:
+
+While holding ALT, the overlay becomes **click-through** (non-interactive):
+- You can still **see** the overlay for reference
+- All clicks pass through to the game
+- The game keeps focus and the cursor stays visible
+- You can interact with in-game UI without issues
+
+## To interact with the overlay:
+
+Simply release the ALT key first. The overlay will become interactive again and you can click normally.
+
+This ensures smooth gameplay without cursor visibility issues.
+    `.trim(),
+    labels: ["Companion App", "Technical"],
+  },
 ];
 
 export const allLabels: FAQLabel[] = [

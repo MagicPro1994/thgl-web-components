@@ -1,3 +1,12 @@
+# 2.18.0
+
+## Blue Protocol: Star Resonance
+
+- Feat: Add Epic Games Launcher support
+- Fix: Fix mouse interaction issues when using the app in overlay mode
+- Fix: Fix SHIFT key availability in-game when using the app
+- Fix: Holding ALT key doesn't interact with the overlay anymore to prevent game input issues.
+
 # 2.17.0
 
 - Feat: **Blue Protocol: Star Resonance** Add live tracking support for Documents (Books, Letters, etc.)
