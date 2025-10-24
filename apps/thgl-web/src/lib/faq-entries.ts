@@ -72,15 +72,44 @@ If you'd like to see this feature return, feel free to contact the game studio a
     question: "How do I get the log files of the TH.GL Companion App?",
     answer: `
   The logs are stored locally on your system:
-  
-  \`C:\\Users\\<user>\\AppData\\Local\\The Hidden Gaming Lair\`  
+
+  \`C:\\Users\\<user>\\AppData\\Local\\The Hidden Gaming Lair\`
   You can also type \`%appdata%\\..\\Local\\The Hidden Gaming Lair\` into File Explorer.
-  
+
   - \`log.txt\` is the current session
   - \`log.1.txt\` to \`log.5.txt\` are older logs from previous sessions
   - \`crash.txt\` contains crash reports (if any)
-  
+
   Please send these files when reporting bugs or issues.
+    `.trim(),
+    labels: ["Companion App", "Technical"],
+  },
+  {
+    id: "update-companion-app",
+    headline: "How to update the Companion App",
+    question: "How do I update the TH.GL Companion App to the latest version?",
+    answer: `
+The Companion App has multiple ways to update:
+
+## Automatic Update (Recommended)
+The app includes an auto-updater that checks for new versions:
+- When you launch the app
+- Regularly while running (only when you're not in-game)
+
+Just wait and the app will update itself automatically.
+
+## Manual Update Methods
+
+**Method 1: Restart the app**
+1. Right-click the app icon in the system tray
+2. Select "Exit"
+3. Launch the app again - it will check for updates on startup
+
+**Method 2: Run the updater directly**
+Execute the updater manually:
+\`C:\\Program Files (x86)\\The Hidden Gaming Lair\\THGLUpdater.exe\`
+
+Both manual methods will trigger an immediate update check.
     `.trim(),
     labels: ["Companion App", "Technical"],
   },
