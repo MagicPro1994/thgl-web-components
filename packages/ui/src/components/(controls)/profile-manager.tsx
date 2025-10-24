@@ -7,7 +7,6 @@ import {
   openFileOrFiles,
   writeFileOverwolf,
   Profile,
-  DEFAULT_PROFILE,
 } from "@repo/lib";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
@@ -43,11 +42,10 @@ import { toast } from "sonner";
 import {
   Trash2,
   Copy,
-  FileOutput,
-  Import,
+  Download,
+  Upload,
   Edit,
   UserPlus,
-  ShieldCheck,
 } from "lucide-react";
 
 export function ProfileManager({ activeApp }: { activeApp: string }) {
@@ -119,15 +117,11 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
       toast.error("Cannot delete the last profile");
       return;
     }
-    if (profileId === "default") {
-      toast.error("Cannot delete the default profile");
-      return;
-    }
     settingsStore.deleteProfile(profileId);
     toast.success(`Profile "${profileName}" deleted`);
   };
 
-  const handleExportProfile = (profileId: string) => {
+  const handleDownloadProfile = (profileId: string) => {
     const profile = settingsStore.exportProfile(profileId);
     if (!profile) {
       toast.error("Profile not found");
@@ -147,10 +141,10 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
         fileName,
       );
     }
-    toast.success(`Profile "${profile.name}" exported`);
+    toast.success(`Profile "${profile.name}" downloaded`);
   };
 
-  const handleImportProfile = async () => {
+  const handleUploadProfile = async () => {
     const file = await openFileOrFiles();
     if (!file) return;
 
@@ -178,7 +172,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
         }
 
         settingsStore.importProfile(profile);
-        toast.success(`Profile "${profile.name}" imported`);
+        toast.success(`Profile "${profile.name}" uploaded`);
       } catch (error) {
         toast.error("Failed to parse profile file");
       }
@@ -232,14 +226,7 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
           <SelectContent>
             {settingsStore.profiles.map((profile) => (
               <SelectItem key={profile.id} value={profile.id}>
-                <span className="flex items-center gap-2 truncate">
-                  {profile.id === DEFAULT_PROFILE.id && (
-                    <ShieldCheck className="h-4 w-4 flex-shrink-0" />
-                  )}
-                  <span className="truncate" title={profile.name}>
-                    {profile.name}
-                  </span>
-                </span>
+                {profile.name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -412,10 +399,10 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
               size="sm"
               variant="outline"
               className="h-8 px-2 text-amber-600 dark:text-amber-400"
-              title="Export profile"
-              onClick={() => handleExportProfile(currentProfile.id)}
+              title="Download profile"
+              onClick={() => handleDownloadProfile(currentProfile.id)}
             >
-              <FileOutput className="h-4 w-4" />
+              <Download className="h-4 w-4" />
             </Button>
           </>
         )}
@@ -424,51 +411,51 @@ export function ProfileManager({ activeApp }: { activeApp: string }) {
           size="sm"
           variant="outline"
           className="h-8 px-2 text-cyan-600 dark:text-cyan-400"
-          title="Import profile"
-          onClick={handleImportProfile}
+          title="Upload profile"
+          onClick={handleUploadProfile}
         >
-          <Import className="h-4 w-4" />
+          <Upload className="h-4 w-4" />
         </Button>
 
-        {currentProfile &&
-          currentProfile.id !== "default" &&
-          settingsStore.profiles.length > 1 && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-8 px-2 text-red-600 dark:text-red-400"
-                  title="Delete profile"
+        {currentProfile && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 px-2 text-red-600 dark:text-red-400"
+                title={
+                  settingsStore.profiles.length <= 1
+                    ? "Cannot delete the last profile"
+                    : "Delete profile"
+                }
+                disabled={settingsStore.profiles.length <= 1}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Profile</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete the profile "
+                  {currentProfile.name}"? This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() =>
+                    handleDeleteProfile(currentProfile.id, currentProfile.name)
+                  }
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Profile</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to delete the profile "
-                    {currentProfile.name}"? This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      handleDeleteProfile(
-                        currentProfile.id,
-                        currentProfile.name,
-                      )
-                    }
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
 
       {currentProfile && (

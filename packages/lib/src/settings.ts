@@ -383,7 +383,6 @@ export const useSettingsStore = create(
         deleteProfile: (profileId: string) => {
           const state = get();
           if (state.profiles.length <= 1) return; // Don't delete the last profile
-          if (profileId === "default") return; // Don't delete default profile
 
           const newProfiles = state.profiles.filter((p) => p.id !== profileId);
           const newCurrentProfileId =
